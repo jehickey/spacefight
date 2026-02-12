@@ -127,20 +127,27 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""42b5e805-ee3e-4548-8f1d-198ab74503cf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PitchYaw"",
+                    ""type"": ""Value"",
+                    ""id"": ""b0335cd1-1980-4e69-b595-959472f81abf"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""782a05ba-bfa9-48b8-b25c-524834a758f8"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pitch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": ""1D Axis"",
                     ""id"": ""ffdece58-7ec5-4856-8d8f-a4b120b0ec5c"",
@@ -175,17 +182,6 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""8e69f58c-ab60-48a2-a716-947161f7159f"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""1D Axis"",
                     ""id"": ""badd230c-1d5c-4915-8062-87cd4c16cb2a"",
                     ""path"": ""1DAxis"",
@@ -217,17 +213,6 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""Yaw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4fc0b2cc-3b32-402f-867f-7a296c6af5c4"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""1D Axis"",
@@ -294,6 +279,72 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""Throttle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""fe0a386f-efb0-49e0-bdc6-d214c1991ffc"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""7c5da195-a938-4b98-8ba4-7744a39233e0"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""c7fb11f4-a8b1-4aad-b677-f84bcdecb8d9"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffaf6e32-2c3d-40ee-98d8-4fffc64a4a97"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f47e99ab-0bb9-49bf-bf93-f76301439274"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d19bf656-5261-4ed3-baf0-56b84686b191"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PitchYaw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -306,6 +357,8 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_Flight_Yaw = m_Flight.FindAction("Yaw", throwIfNotFound: true);
         m_Flight_Roll = m_Flight.FindAction("Roll", throwIfNotFound: true);
         m_Flight_Throttle = m_Flight.FindAction("Throttle", throwIfNotFound: true);
+        m_Flight_Fire = m_Flight.FindAction("Fire", throwIfNotFound: true);
+        m_Flight_PitchYaw = m_Flight.FindAction("PitchYaw", throwIfNotFound: true);
     }
 
     ~@FlightControls()
@@ -390,6 +443,8 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Flight_Yaw;
     private readonly InputAction m_Flight_Roll;
     private readonly InputAction m_Flight_Throttle;
+    private readonly InputAction m_Flight_Fire;
+    private readonly InputAction m_Flight_PitchYaw;
     /// <summary>
     /// Provides access to input actions defined in input action map "Flight".
     /// </summary>
@@ -417,6 +472,14 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Flight/Throttle".
         /// </summary>
         public InputAction @Throttle => m_Wrapper.m_Flight_Throttle;
+        /// <summary>
+        /// Provides access to the underlying input action "Flight/Fire".
+        /// </summary>
+        public InputAction @Fire => m_Wrapper.m_Flight_Fire;
+        /// <summary>
+        /// Provides access to the underlying input action "Flight/PitchYaw".
+        /// </summary>
+        public InputAction @PitchYaw => m_Wrapper.m_Flight_PitchYaw;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -455,6 +518,12 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @Throttle.started += instance.OnThrottle;
             @Throttle.performed += instance.OnThrottle;
             @Throttle.canceled += instance.OnThrottle;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
+            @PitchYaw.started += instance.OnPitchYaw;
+            @PitchYaw.performed += instance.OnPitchYaw;
+            @PitchYaw.canceled += instance.OnPitchYaw;
         }
 
         /// <summary>
@@ -478,6 +547,12 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @Throttle.started -= instance.OnThrottle;
             @Throttle.performed -= instance.OnThrottle;
             @Throttle.canceled -= instance.OnThrottle;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
+            @PitchYaw.started -= instance.OnPitchYaw;
+            @PitchYaw.performed -= instance.OnPitchYaw;
+            @PitchYaw.canceled -= instance.OnPitchYaw;
         }
 
         /// <summary>
@@ -546,5 +621,19 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrottle(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFire(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PitchYaw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPitchYaw(InputAction.CallbackContext context);
     }
 }

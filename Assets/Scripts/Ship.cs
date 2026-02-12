@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Ship : MonoBehaviour
 {
@@ -8,7 +10,7 @@ public class Ship : MonoBehaviour
     public float Yaw;
     public float Throttle;    //current thrust setting, 0-1
     public float StickResponse = .25f;
-
+    public Vector3 targetSteering;
 
     //limits and capabilities
     public float MaxSpeed;      //meters per second
@@ -20,16 +22,24 @@ public class Ship : MonoBehaviour
     public float Speed;         //current velocity magnitude, meters per second
     public Vector3 Velocity;    //current velocity vector, meters per second
 
+    public List<Weapon> weapons = new List<Weapon>();
+
 
 
     void Start()
     {
-
-        
+        foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
+        {
+            weapons.Add(weapon);
+        }
     }
 
     void Update()
     {
+        Pitch = Mathf.MoveTowards(Pitch, targetSteering.z, StickResponse * Time.deltaTime);
+        Yaw = Mathf.MoveTowards(Yaw, targetSteering.x, StickResponse * Time.deltaTime);
+        Roll = Mathf.MoveTowards(Roll, targetSteering.y, StickResponse * Time.deltaTime);
+
         float pitchTurn = Pitch * TurnRate * Time.deltaTime;
         float yawTurn = Yaw * TurnRate * Time.deltaTime;
         float rollTurn = Roll * RollRate * Time.deltaTime;
@@ -39,6 +49,8 @@ public class Ship : MonoBehaviour
         Velocity = transform.forward * Speed;
         transform.position += Velocity * Time.deltaTime;
 
+
+
     }
 
 
@@ -47,19 +59,19 @@ public class Ship : MonoBehaviour
     public void SetYaw(float value)
     {
         value = Mathf.Clamp(value, -1f, 1f);
-        Yaw = Mathf.MoveTowards(Yaw, value, StickResponse*Time.deltaTime);
+        targetSteering.x = value;
     }
 
     public void SetPitch(float value)
     {
         value = Mathf.Clamp(value, -1f, 1f);
-        Pitch = Mathf.MoveTowards(Pitch, value, StickResponse * Time.deltaTime);
+        targetSteering.z = value;
     }
 
     public void SetRoll(float value)
     {
         value = Mathf.Clamp(value, -1f, 1f);
-        Roll = Mathf.MoveTowards(Roll, value, StickResponse * Time.deltaTime);
+        targetSteering.y = value;
     }
 
 
@@ -72,6 +84,11 @@ public class Ship : MonoBehaviour
 
     public void Fire()
     {
+        //check for weapons and fire them
+        foreach (Weapon weapon in weapons)
+        {
+            weapon.Fire();
+        }
     }
 
 
