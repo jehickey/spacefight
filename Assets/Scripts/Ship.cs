@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Ship : MonoBehaviour
 {
@@ -25,9 +24,11 @@ public class Ship : MonoBehaviour
     public List<Weapon> weapons = new List<Weapon>();
 
 
+    private Simulation sim;
 
     void Start()
     {
+        sim = FindFirstObjectByType<Simulation>();
         foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
         {
             weapons.Add(weapon);

@@ -4,8 +4,11 @@ using static UnityEngine.Rendering.DebugUI;
 public class KeyboardControl : MonoBehaviour
 {
 
+    public bool MouseSteering = true;
+
     private Ship ship;
     private FlightControls controls;
+
 
     void Start()
     {
@@ -25,17 +28,20 @@ public class KeyboardControl : MonoBehaviour
             ship.SetThrottle(controls.Flight.Throttle.ReadValue<float>());
             if (controls.Flight.Fire.IsPressed()) ship.Fire();
 
-            Vector2 pitchyaw = controls.Flight.PitchYaw.ReadValue<Vector2>();
-            pitchyaw.x = ((pitchyaw.x / Screen.width) * 2f - 1f);
-            pitchyaw.y = -((pitchyaw.y / Screen.height) * 2f - 1f);
-
-            Vector2 smooth = Vector2.zero;
-            smooth.y = SmoothAxis(pitchyaw.y, .1f, 1.5f);
-            smooth.x = SmoothAxis(pitchyaw.x, .1f, 1.5f);
-            if (smooth.magnitude > 0)
+            if (MouseSteering)
             {
-                ship.SetPitch(smooth.y);
-                ship.SetYaw(smooth.x);
+                Vector2 pitchyaw = controls.Flight.PitchYaw.ReadValue<Vector2>();
+                pitchyaw.x = ((pitchyaw.x / Screen.width) * 2f - 1f);
+                pitchyaw.y = -((pitchyaw.y / Screen.height) * 2f - 1f);
+
+                Vector2 smooth = Vector2.zero;
+                smooth.y = SmoothAxis(pitchyaw.y, .1f, 1.5f);
+                smooth.x = SmoothAxis(pitchyaw.x, .1f, 1.5f);
+                if (smooth.magnitude > 0)
+                {
+                    ship.SetPitch(smooth.y);
+                    ship.SetYaw(smooth.x);
+                }
             }
 
         }
