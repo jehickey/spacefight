@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Moon : Body
@@ -13,6 +14,11 @@ public class Moon : Body
     protected override void Start()
     {
         base.Start();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
         if (transform.parent)
         {
             parentBody = transform.parent.GetComponent<Body>();
@@ -23,13 +29,13 @@ public class Moon : Body
 
     protected override void Update()
     {
+        base.Update();
         if (TidalLock && parentBody)
         {
             RotationPeriod = OrbitPeriod;
         }
 
-        base.Update();
-        if (Application.isPlaying)
+        if (Application.isPlaying && OrbitPeriod>0)
         {
             OrbitPhase += sim.TimeDelta / OrbitPeriod;
         }

@@ -6,6 +6,11 @@ public class Simulation : MonoBehaviour
     public float TimeDelta => Time.deltaTime * TimeScale;
     public Ship PlayerShip;
 
+    [Header("Config Settings")]
+    public float StickControlLimit = 0.5f;       //this is a percentage of the screen
+    public float StickControlDeadzone = 0.25f;   //this is a percentage of the screen
+
+
     void Start()
     {
         //look for any competing instances and warn (don't delete)

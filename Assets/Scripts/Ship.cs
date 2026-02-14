@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,10 @@ public class Ship : MonoBehaviour
     public float Yaw;
     public float Throttle;    //current thrust setting, 0-1
     public float StickResponse = .25f;
-    public Vector3 targetSteering;
+    public Vector3 Stick = Vector3.zero;    //controllable stick position, does not reflect actual position
+    public Vector3 realStick = Vector3.zero; //actual stick position, influenced by controllable setting
+
+    public float StickZeroRate = 0.5f; //rate stick returns to center without input
 
     //limits and capabilities
     public float MaxSpeed;      //meters per second
@@ -28,51 +32,86 @@ public class Ship : MonoBehaviour
 
     void Start()
     {
-        sim = FindFirstObjectByType<Simulation>();
-        foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
+    }
+
+    private void OnEnable()
+    {
+        if (!sim) sim = FindFirstObjectByType<Simulation>();
+        if (weapons.Count == 0)
         {
-            weapons.Add(weapon);
+            foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
+            {
+                weapons.Add(weapon);
+            }
         }
     }
 
     void Update()
     {
-        Pitch = Mathf.MoveTowards(Pitch, targetSteering.z, StickResponse * Time.deltaTime);
-        Yaw = Mathf.MoveTowards(Yaw, targetSteering.x, StickResponse * Time.deltaTime);
-        Roll = Mathf.MoveTowards(Roll, targetSteering.y, StickResponse * Time.deltaTime);
-
-        float pitchTurn = Pitch * TurnRate * Time.deltaTime;
-        float yawTurn = Yaw * TurnRate * Time.deltaTime;
-        float rollTurn = Roll * RollRate * Time.deltaTime;
-        transform.Rotate(pitchTurn, yawTurn, rollTurn, Space.Self);
+        StickManagement();
+        ApplySteering();
 
         Speed = Throttle * MaxSpeed;
         Velocity = transform.forward * Speed;
         transform.position += Velocity * Time.deltaTime;
 
-
-
     }
 
 
-    //interface:
+    private void StickManagement()
+    {
+
+        //apply individual Pitch/Yaw/Roll commands (hard unprocessed values)
+        if (Pitch != 0) Stick.z = Pitch;
+        if (Yaw != 0) Stick.x = Yaw;
+        if (Roll != 0) Stick.y = Roll;
+
+        //Limit steering - keep x and z within a circular range
+        Vector2 stickLimit = new Vector2(Stick.x, Stick.z);
+        if (stickLimit.sqrMagnitude > 1f) stickLimit = stickLimit.normalized;
+        Stick.x = stickLimit.x;
+        Stick.z = stickLimit.y;
+
+        //Limit roll
+        Stick.y = Mathf.Clamp(Stick.y, -1f, 1f);
+
+
+        //apply Stick value to realStick with easing
+        realStick = Vector3.MoveTowards(realStick, Stick, StickResponse * Time.deltaTime);
+        //push the virtual stick towards zero
+        Stick = Vector3.MoveTowards(Stick, Vector3.zero, StickZeroRate * Time.deltaTime);
+
+        //clear control values
+        Pitch = 0;
+        Yaw = 0;
+        Roll = 0;
+        //Stick = Vector3.zero;
+    }
+
+    private void ApplySteering()
+    {
+        //apply roll and turn rates to movement
+        Vector3 result = realStick;
+        result.y = realStick.x * TurnRate;  //pitch
+        result.x = realStick.z * TurnRate;  //yaw
+        result.z = realStick.y * RollRate;  //roll
+        result *= Time.deltaTime;
+        transform.Rotate(result, Space.Self);
+    }
 
     public void SetYaw(float value)
     {
-        value = Mathf.Clamp(value, -1f, 1f);
-        targetSteering.x = value;
+        Yaw = Mathf.Clamp(value, -1f, 1f);
     }
 
     public void SetPitch(float value)
     {
-        value = Mathf.Clamp(value, -1f, 1f);
-        targetSteering.z = value;
+        Pitch = Mathf.Clamp(value, -1f, 1f);
     }
 
     public void SetRoll(float value)
     {
-        value = Mathf.Clamp(value, -1f, 1f);
-        targetSteering.y = value;
+        Roll = Mathf.Clamp(value, -1f, 1f);
     }
 
 

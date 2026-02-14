@@ -1,5 +1,5 @@
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+
 
 public class KeyboardControl : MonoBehaviour
 {
@@ -7,19 +7,41 @@ public class KeyboardControl : MonoBehaviour
     public bool MouseSteering = true;
 
     private Ship ship;
-    private FlightControls controls;
+    private FlightControls flightControls;
 
+    private Simulation sim;
+    private float screenSize;
+
+    private FlightControls controls
+    {
+        get {
+            if (flightControls == null) flightControls = new FlightControls();
+            return flightControls;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (!sim) sim = FindFirstObjectByType<Simulation>();
+        if (!ship) ship = GetComponent<Ship>();
+        if (flightControls == null) flightControls = new FlightControls();
+        flightControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        flightControls?.Disable();
+    }
+
+    
 
     void Start()
     {
-        ship = GetComponent<Ship>();
-        if (!ship) Debug.LogError("KeyboardControl can't find a Ship to control");
-        controls = new FlightControls();
-        controls.Enable();
     }
 
     void Update()
     {
+        screenSize = Mathf.Min(Screen.width, Screen.height);
         if (ship)
         {
             ship.SetPitch(controls.Flight.Pitch.ReadValue<float>());
@@ -28,11 +50,15 @@ public class KeyboardControl : MonoBehaviour
             ship.SetThrottle(controls.Flight.Throttle.ReadValue<float>());
             if (controls.Flight.Fire.IsPressed()) ship.Fire();
 
+            MouseToStickVector();
+            /*
             if (MouseSteering)
             {
                 Vector2 pitchyaw = controls.Flight.PitchYaw.ReadValue<Vector2>();
-                pitchyaw.x = ((pitchyaw.x / Screen.width) * 2f - 1f);
-                pitchyaw.y = -((pitchyaw.y / Screen.height) * 2f - 1f);
+                pitchyaw.x = (pitchyaw.x / screenSize) * 2f -1;
+                pitchyaw.y = -((pitchyaw.y / screenSize) * 2f - 1f);
+
+                //pitchyaw = (pitchyaw / screenSize * sim.StickControlLimit) * 2f;
 
                 Vector2 smooth = Vector2.zero;
                 smooth.y = SmoothAxis(pitchyaw.y, .1f, 1.5f);
@@ -43,15 +69,53 @@ public class KeyboardControl : MonoBehaviour
                     ship.SetYaw(smooth.x);
                 }
             }
-
+            */
         }
 
     }
 
 
+    public void MouseToStickVector()
+    {
+        if (!MouseSteering) return;
+        Vector2 mousePos = controls.Flight.PitchYaw.ReadValue<Vector2>();
+
+        // Convert mouse position into a centered coordinate system
+        // mousePos is already relative to screen center (e.g., -0.5..0.5 if normalized)
+        // But if it's in pixels, convert to centered pixels:
+        mousePos = mousePos - new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+
+        // Compute radius in pixels
+        float deadzoneRadius = screenSize * sim.StickControlDeadzone;
+        float limitRadius = screenSize * sim.StickControlLimit;
+
+        // Distance from center
+        float dist = mousePos.magnitude;
+        if (dist < deadzoneRadius) return;
+
+        // Clamp to limit radius
+        if (dist > limitRadius)
+            mousePos = mousePos.normalized * limitRadius;
+
+        // Normalize into 0..1 range between deadzone and limit
+        float t = Mathf.InverseLerp(deadzoneRadius, limitRadius, mousePos.magnitude);
+
+        // Direction (unit vector)
+        Vector2 dir = mousePos.normalized;
+
+        // Final circular stick vector (x = yaw, z = pitch)
+        //Vector3 result = new Vector3(dir.x * t, 0f, dir.y * t);
+        ship.Stick.x = dir.x * t;
+        ship.Stick.z = dir.y * t;
+    }
+
+
+
     float SmoothAxis(float value, float deadzone, float exponent)
     {
+        //needs to be rewritten to use the sim's deadzone and limit settings
         float abs = Mathf.Abs(value);
+        //float deadzone = sim.StickControlDeadzone;
 
         // Inside deadzone - no movement
         if (abs < deadzone)

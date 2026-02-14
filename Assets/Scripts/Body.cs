@@ -19,8 +19,12 @@ public class Body : MonoBehaviour
 
     protected virtual void Start()
     {
-        sim = FindFirstObjectByType<Simulation>();
 
+    }
+
+    protected virtual void OnEnable()
+    {
+        if (!sim) sim = FindFirstObjectByType<Simulation>();
         filter = GetComponent<MeshFilter>();
         if (!filter) filter = gameObject.AddComponent<MeshFilter>();
         mesh = Icosphere.Generate(2);
@@ -39,6 +43,7 @@ public class Body : MonoBehaviour
         if (material) { render.sharedMaterial = material; }
         else { material = render.sharedMaterial; }
         */
+
     }
 
     protected virtual void Update()
