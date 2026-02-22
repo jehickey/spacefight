@@ -20,6 +20,25 @@ public class BotControl : MonoBehaviour
     public float ThrottleAimBias = .5f;     //0=aggressive, 1=gentle
 
 
+
+    public class ThreatEntry
+    {
+        public Ship ship;
+        public float score;
+        public float distance;
+        public float aspectAngle;   //relative direction (unsigned) - 0=heading towards, 180=heading away
+
+        public ThreatEntry(Ship threatShip)
+        {
+            ship = threatShip;
+            score = 0;
+            distance = 0;
+            aspectAngle = 0;
+        }
+    }
+    public List<ThreatEntry> threats = new List<ThreatEntry>();
+
+
     void Start()
     {
         ship = GetComponent<Ship>();
@@ -30,8 +49,8 @@ public class BotControl : MonoBehaviour
     {
         ship ??= GetComponent<Ship>();
         if (!ship) return;
-        //simple throttle forward
-        //ship.SetThrottle(1f);
+
+        UpdateThreats();
 
         //if (Waypoints.Count == 0) GetWaypoints();
         //if no waypoint, pick one at random
@@ -51,17 +70,24 @@ public class BotControl : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (ship && ship.team)
+        {
+            Gizmos.color = ship.team.color;
+            Gizmos.DrawWireSphere(transform.position, 0.25f);
+        }
+
         if (TargetObject)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(TargetObject.transform.position, 1f);
+            Gizmos.color = Color.red * .5f;
+            if (ship.IsFiring) Gizmos.color = Color.red;
+            //Gizmos.DrawWireSphere(TargetObject.transform.position, 1f);
             Gizmos.DrawLine(transform.position, TargetObject.transform.position);
         }
         if (FireOnTarget)
         {
             Gizmos.color = Color.yellow;
             //Gizmos.DrawWireSphere(transform.position, FiringRange);
-            Gizmos.DrawLine(transform.position, transform.position + transform.forward * FiringRange);
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * ship.Throttle);
         }
 
     }
@@ -79,9 +105,12 @@ public class BotControl : MonoBehaviour
     void PickTarget()
     {
         //Waypoint[] targets = GameObject.FindObjectsByType<type>(FindObjectsSortMode.None);
-        var targets = GameObject.FindObjectsByType<Ship>(FindObjectsSortMode.None);
-        if (targets.Length == 0) return;
-        TargetObject = targets[Random.Range(0, targets.Length)].gameObject;
+        //var targets = GameObject.FindObjectsByType<Ship>(FindObjectsSortMode.None);
+        //if (targets.Length == 0) return;
+        //TargetObject = targets[Random.Range(0, targets.Length)].gameObject;
+
+        if (threats.Count == 0) return;
+        TargetObject = threats[0].ship.gameObject;
 
     }
 
@@ -154,6 +183,38 @@ public class BotControl : MonoBehaviour
         Debug.Log("Shoot!");
     }
 
+
+    void UpdateThreats()
+    {
+        threats.Clear();
+        if (!ship.team) return;
+        foreach (Ship threat in ship.team.Threats)
+        {
+            if (threat == ship) continue;
+            if (threat == null) continue;
+            ThreatEntry entry = new ThreatEntry(threat);
+            AssessThreat(entry);
+            threats.Add(entry);
+        }
+        threats.Sort((a,b) => b.score.CompareTo(a.score));   //highest score first
+    }
+
+    //Examine a specific threat to collect data and score it
+    void AssessThreat (ThreatEntry threat)
+    {
+        if (threat == null) return;
+        if (threat.ship == null) return;
+        //get distance to threat
+        threat.distance = Vector3.Distance(transform.position, threat.ship.transform.position);
+        if (threat.distance==0) threat.distance = .001f;    //apply a safe minimum
+
+        //get aspect angle to threat
+        Vector3 toObserver = (transform.position - threat.ship.transform.position).normalized;
+        float dot = Vector3.Dot(threat.ship.transform.forward, toObserver);
+        threat.aspectAngle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+        //threat.score = threat.distance + threat.aspectAngle * 0.5f - threat.ship.team.ShipsKilled * 0.25f;
+        threat.score = 1f / threat.distance;
+    }
 
 }
 

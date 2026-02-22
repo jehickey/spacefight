@@ -26,7 +26,12 @@ public class Ship : MonoBehaviour
     public Vector3 Velocity;    //current velocity vector, meters per second
 
     public List<Weapon> weapons = new List<Weapon>();
+    public bool IsFiring = false;
+    public float IsFiringCooldown = .25f;
+    private float lastFireTime = 0;
 
+
+    public Team team;
 
     private Simulation sim;
 
@@ -46,6 +51,12 @@ public class Ship : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (team) team.Ships.Remove(this);
+    }
+
+
     void Update()
     {
         StickManagement();
@@ -54,7 +65,7 @@ public class Ship : MonoBehaviour
         Speed = Throttle * MaxSpeed;
         Velocity = transform.forward * Speed;
         transform.position += Velocity * Time.deltaTime;
-
+        UpdateFiringStatus();
     }
 
 
@@ -129,7 +140,17 @@ public class Ship : MonoBehaviour
         {
             weapon.Fire();
         }
+        IsFiring = true;
+        lastFireTime = Time.time;
     }
 
+
+    private void UpdateFiringStatus()
+    {
+        if (IsFiring && Time.time - lastFireTime >= IsFiringCooldown)
+        {
+            IsFiring = false;
+        }
+    }
 
 }

@@ -1,17 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Spawner : MonoBehaviour
 {
     public GameObject Prototype;
     public float Radius = 1;
     public int Count = 10;
+    public float SpawnRate = 1f;    //number of ships spawned per second
 
     private List<GameObject> index = new List<GameObject>();
+    private Team team;
+    private float lastSpawnTime = -1f;
 
     void Start()
     {
         
+    }
+
+    private void OnEnable()
+    {
+        team = GetComponent<Team>();
     }
 
     void Update()
@@ -29,11 +38,9 @@ public class Spawner : MonoBehaviour
     void MaintainCount()
     {
         if (!Prototype) return;
-        while (index.Count < Count)
+        if (index.Count < Count && SpawnRate > 0)
         {
-            int startingCount = index.Count;
-            SpawnPrototype();
-            if (index.Count == startingCount) break;
+            if (Time.time - lastSpawnTime >= 1f / SpawnRate) SpawnPrototype();
         }
     }
 
@@ -44,5 +51,12 @@ public class Spawner : MonoBehaviour
         Quaternion orientation = Random.rotation;
         GameObject obj = Instantiate(Prototype, position, orientation);
         index.Add(obj);
+        Ship ship = obj.GetComponent<Ship>();
+        if (ship && team)
+        {
+            ship.team = team;
+            team.Ships.Add(ship);
+        }
+        lastSpawnTime = Time.time;
     }
 }
