@@ -5,6 +5,7 @@ public class KeyboardControl : MonoBehaviour
 {
 
     public bool MouseSteering = true;
+    public bool InvertPitch = false;
 
     private Ship ship;
     private FlightControls flightControls;
@@ -26,6 +27,9 @@ public class KeyboardControl : MonoBehaviour
         if (!ship) ship = GetComponent<Ship>();
         if (flightControls == null) flightControls = new FlightControls();
         flightControls.Enable();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void OnDisable()
@@ -91,7 +95,7 @@ public class KeyboardControl : MonoBehaviour
 
         // Distance from center
         float dist = mousePos.magnitude;
-        if (dist < deadzoneRadius) return;
+        if (dist < deadzoneRadius) dist=0;
 
         // Clamp to limit radius
         if (dist > limitRadius)
@@ -106,7 +110,8 @@ public class KeyboardControl : MonoBehaviour
         // Final circular stick vector (x = yaw, z = pitch)
         //Vector3 result = new Vector3(dir.x * t, 0f, dir.y * t);
         ship.Stick.x = dir.x * t;
-        ship.Stick.z = dir.y * t;
+        ship.Stick.z = -dir.y * t;
+        if (InvertPitch) ship.Stick.z *= -1;
     }
 
 

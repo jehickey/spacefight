@@ -47,6 +47,10 @@ public class Weapon : MonoBehaviour
             {
                 projectile.Speed += ship.Speed;
             }
+
+            //emitter flare
+            Flare flare = Flare.Spawn(emitter.transform.position, Color.white, 0.25f, 0.25f, 0.001f, 0.01f);
+            flare.transform.parent = emitter.transform;
         }
         lastFireTime = Time.time;
     }

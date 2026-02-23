@@ -429,7 +429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Team
   teamName: Alpha
-  color: {r: 0, g: 0.1897316, b: 1, a: 0}
+  color: {r: 0, g: 0.1897316, b: 1, a: 1}
   ShipsTotal: 0
   ShipsLost: 0
   ShipsKilled: 0
@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Team
   teamName: Beta
-  color: {r: 1, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 0, b: 0, a: 1}
   ShipsTotal: 0
   ShipsLost: 0
   ShipsKilled: 0

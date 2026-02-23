@@ -83,7 +83,7 @@ public class BotControl : MonoBehaviour
             //Gizmos.DrawWireSphere(TargetObject.transform.position, 1f);
             Gizmos.DrawLine(transform.position, TargetObject.transform.position);
         }
-        if (FireOnTarget)
+        if (TargetObject && FireOnTarget)
         {
             Gizmos.color = Color.yellow;
             //Gizmos.DrawWireSphere(transform.position, FiringRange);

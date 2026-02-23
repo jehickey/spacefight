@@ -24,8 +24,13 @@ public class Ship : MonoBehaviour
     //current status
     public float Speed;         //current velocity magnitude, meters per second
     public Vector3 Velocity;    //current velocity vector, meters per second
+    public float Health = 10f;
+    public float MaxHealth = 10f;
 
     public List<Weapon> weapons = new List<Weapon>();
+    public int WeaponIndex = 0; //index of next gun in the sequence
+    public float WeaponIndexDelay = .1f; //delay between continuation of sequence
+    public bool WeaponsFireInterlinked = false; //guns all fire together
     public bool IsFiring = false;
     public float IsFiringCooldown = .25f;
     private float lastFireTime = 0;
@@ -49,6 +54,7 @@ public class Ship : MonoBehaviour
                 weapons.Add(weapon);
             }
         }
+        SelectWeapon();
     }
 
     private void OnDestroy()
@@ -66,6 +72,7 @@ public class Ship : MonoBehaviour
         Velocity = transform.forward * Speed;
         transform.position += Velocity * Time.deltaTime;
         UpdateFiringStatus();
+        UpdateHealth();
     }
 
 
@@ -133,13 +140,42 @@ public class Ship : MonoBehaviour
         Throttle = Mathf.MoveTowards(Throttle, throttle, ThrottleRate * Time.deltaTime);
     }
 
+    //There's only one weapon right now
+    public void SelectWeapon()
+    {
+        //set firing index delay to keep fire continuous
+        if (weapons.Count > 0)
+        {
+            float rateAvg = 0;
+            foreach (Weapon weapon in weapons) rateAvg += weapon.FireRate;
+            rateAvg /= weapons.Count;
+            if (rateAvg > 0)
+            {
+                WeaponIndexDelay = (1f / rateAvg) / weapons.Count;
+            }
+        }
+
+        //if (Time.time - lastFireTime < 1/FireRate) return; //enforce fire rate
+
+    }
+
     public void Fire()
     {
+        if (weapons.Count == 0) return;
+        if (Time.time - lastFireTime < WeaponIndexDelay) return;
+
         //check for weapons and fire them
-        foreach (Weapon weapon in weapons)
+        if (WeaponsFireInterlinked)
         {
-            weapon.Fire();
+            foreach (Weapon weapon in weapons) weapon.Fire();
         }
+        else
+        {
+                if (WeaponIndex >= weapons.Count) WeaponIndex = 0;
+                weapons[WeaponIndex].Fire();
+                WeaponIndex++;
+        }
+
         IsFiring = true;
         lastFireTime = Time.time;
     }
@@ -150,6 +186,22 @@ public class Ship : MonoBehaviour
         if (IsFiring && Time.time - lastFireTime >= IsFiringCooldown)
         {
             IsFiring = false;
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (damage <= 0) return;
+        Health -= damage;
+    }
+
+    private void UpdateHealth()
+    {
+        Health = Mathf.Clamp(Health, 0, MaxHealth);
+        if (Health <= 0)
+        {
+            Flare.Spawn(transform.position, Color.white, 1f, 0.15f, 0.025f, 0.25f);
+            Destroy(gameObject);
         }
     }
 

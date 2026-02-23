@@ -14,7 +14,6 @@ public class Body : MonoBehaviour
 
     protected MeshFilter filter;
     protected MeshRenderer render;
-
     protected Simulation sim;
 
     protected virtual void Start()

@@ -37,7 +37,10 @@ public class Moon : Body
 
         if (Application.isPlaying && OrbitPeriod>0)
         {
-            OrbitPhase += sim.TimeDelta / OrbitPeriod;
+            if (sim)
+            {
+                OrbitPhase += sim.TimeDelta / OrbitPeriod;
+            }
         }
         if (OrbitPhase > 1) OrbitPhase = 0;
         SetOrbitalPosition();

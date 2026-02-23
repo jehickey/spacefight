@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8203477760218386618}
   - component: {fileID: 555656821079333040}
+  - component: {fileID: 4413659966978389538}
   m_Layer: 0
   m_Name: Bolt
   m_TagString: Untagged
@@ -45,8 +46,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7d9e12186ad9a4c8eb00abdc823c21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
+  Length: 0.01
   Speed: 1
+  Damage: 1
   TTL: 5
+--- !u!65 &4413659966978389538
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430818486453743231}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.21569692, y: 0.21176243, z: 3.981956}
+  m_Center: {x: -0.0010745367, y: 0.002559123, z: 1.1729602}
 --- !u!1 &8702421722360221264
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +179,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
