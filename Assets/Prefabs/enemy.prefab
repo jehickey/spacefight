@@ -348,6 +348,9 @@ MonoBehaviour:
   Health: 10
   MaxHealth: 10
   weapons: []
+  WeaponIndex: 0
+  WeaponIndexDelay: 0.1
+  WeaponsFireInterlinked: 0
   IsFiring: 0
   IsFiringCooldown: 0.25
   team: {fileID: 0}
@@ -367,7 +370,7 @@ MonoBehaviour:
   DistanceToTarget: 0
   AngleToTarget: 0
   FireOnTarget: 1
-  FiringRange: 25
+  FiringRange: 1
   FiringAngle: 10
   Waypoints: []
   ThrottleUpMaxAngle: 90

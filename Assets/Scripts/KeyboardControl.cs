@@ -7,7 +7,7 @@ public class KeyboardControl : MonoBehaviour
     public bool MouseSteering = true;
     public bool InvertPitch = false;
 
-    private Ship ship;
+    public Ship ship;
     private FlightControls flightControls;
 
     private Simulation sim;

@@ -180,7 +180,6 @@ public class BotControl : MonoBehaviour
         if (DistanceToTarget > FiringRange) return;
         if (AngleToTarget > FiringAngle) return;
         ship.Fire();
-        Debug.Log("Shoot!");
     }
 
 
