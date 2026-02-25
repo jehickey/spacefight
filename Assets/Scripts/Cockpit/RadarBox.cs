@@ -133,7 +133,7 @@ public class RadarBox : MonoBehaviour
     public Vector2 PolarProject2(Vector3 worldPos)
     {
         // 1. World - local (ship/cockpit space)
-        Vector3 local = transform.InverseTransformPoint(worldPos);
+        Vector3 local = myShip.transform.InverseTransformPoint(worldPos);
 
         // 2. Direction in local space
         Vector3 dir = local.normalized;
