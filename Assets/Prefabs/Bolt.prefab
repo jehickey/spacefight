@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   Length: 0.01
-  Speed: 1
+  Speed: 5
   Damage: 1
   TTL: 5
 --- !u!65 &4413659966978389538

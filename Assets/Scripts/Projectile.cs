@@ -8,11 +8,14 @@ public class Projectile : MonoBehaviour
     public float TTL;        //time to live, seconds (0 = infinite)
     private float startTime;
 
+    private Simulation sim;
 
     void Start()
     {
         startTime = Time.time;
+        sim = FindFirstObjectByType<Simulation>();
     }
+
 
     void Update()
     {
@@ -21,7 +24,7 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
 
-        transform.position += transform.forward * Speed * Time.deltaTime;
+        transform.position += transform.forward * Speed * sim.SpeedUnit * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)

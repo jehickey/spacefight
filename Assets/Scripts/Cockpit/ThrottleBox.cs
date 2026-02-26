@@ -2,21 +2,43 @@ using UnityEngine;
 
 public class ThrottleBox : MonoBehaviour
 {
-    public float ThrowPosition = 0;
-    public Transform ThrottleBar;
-    public Vector3 ThrowCenter = Vector3.zero;
-    public Vector3 ThrowAxis = Vector3.forward;
-    public float ThrowMin = -1.0f;
-    public float ThrowMax = 1.0f;
+    public float InputPosition = 0;
+
+    public float NeutralPosition = .5f;
+    public float NeutralDriftRate = .5f;
+
+    [SerializeField]
+    private Vector3 ThrowCenter = Vector3.zero;
+    [SerializeField]
+    private Vector3 ThrowAxis = Vector3.forward;
+    [SerializeField]
+    private float ThrowMin = -1.0f;
+    [SerializeField]
+    private float ThrowMax = 1.0f;
+
+    [SerializeField]
+    private Transform ThrottleBar;
+
+
+    private ThrottleSystem throttleSystem;
 
     void Start()
     {
         
     }
 
+    private void OnEnable()
+    {
+        if (!throttleSystem) throttleSystem = GetComponentInParent<ThrottleSystem>();
+    }
+
     void Update()
     {
+        //neutral drift
+        InputPosition = Mathf.Lerp(InputPosition, NeutralPosition, Time.deltaTime * NeutralDriftRate);
+
         UpdateThrowbar();
+        if (throttleSystem) throttleSystem.Input = InputPosition;
 
     }
 
@@ -44,9 +66,9 @@ public class ThrottleBox : MonoBehaviour
     private void UpdateThrowbar()
     {
         if (!ThrottleBar) return;
-        ThrowPosition = Mathf.Clamp(ThrowPosition, 0f, 1.0f);
+        InputPosition = Mathf.Clamp(InputPosition, 0f, 1.0f);
         //float relPos = Mathf.InverseLerp(0,1, ThrowPosition);
-        float pos = Mathf.Lerp(ThrowMin, ThrowMax, ThrowPosition);
+        float pos = Mathf.Lerp(ThrowMin, ThrowMax, InputPosition);
         //ThrowAxis = transform.forward;
         Vector3 center = ThrowCenter;
         Vector3 throwPos = center + ThrowAxis.normalized * pos;

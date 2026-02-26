@@ -45,7 +45,7 @@ public class Weapon : MonoBehaviour
             Projectile projectile = obj.GetComponent<Projectile>();
             if (projectile)
             {
-                projectile.Speed += ship.Speed;
+                //projectile.Speed += ship.Speed;
             }
 
             //emitter flare

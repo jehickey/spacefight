@@ -1,32 +1,45 @@
+using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class Ship : MonoBehaviour
 {
     //flight controls
-    public float Pitch;
-    public float Roll;
-    public float Yaw;
-    public float Throttle;    //current thrust setting, 0-1
-    public float StickResponse = .25f;
-    public Vector3 Stick = Vector3.zero;    //controllable stick position, does not reflect actual position
-    public Vector3 realStick = Vector3.zero; //actual stick position, influenced by controllable setting
-
-    public float StickZeroRate = 0.5f; //rate stick returns to center without input
-
-    //limits and capabilities
-    public float MaxSpeed;      //meters per second
-    public float TurnRate;      //handles pitch and yaw. degrees per second
-    public float RollRate;      //handles roll. degrees per second
-    public float ThrottleRate;    //speed of thrust change per second (0-1)
-
-    //current status
-    public float Speed;         //current velocity magnitude, meters per second
+    public Team team;
     public Vector3 Velocity;    //current velocity vector, meters per second
     public float Health = 10f;
     public float MaxHealth = 10f;
 
+    [SerializeField]
+    private float RumbleIntensity = 0;
+    [SerializeField]
+    private float RumbleFade = 1;
+    [SerializeField]
+    private float RumbleMax = 5;
+private     Vector3 baseCamLocalPos;
+    private Quaternion baseCamLocalRot;
+
+
+
+    [Header("Steering System")]
+    public float TurnRate;      //handles pitch and yaw. degrees per second
+    public float RollRate;      //handles roll. degrees per second
+    public float StickZeroRate = 0.5f; //rate stick returns to center without input
+    public float StickResponse = .25f;
+    public float Pitch;
+    public float Roll;
+    public float Yaw;
+    public Vector3 Stick = Vector3.zero;    //controllable stick position, does not reflect actual position
+    public Vector3 realStick = Vector3.zero; //actual stick position, influenced by controllable setting
+
+//    public float ThrottleActual;      //current thrust setting, 0-1
+//    public float ThrottleRate;  //speed of thrust change per second (0-1)
+//    public float Speed;         //current velocity magnitude, meters per second
+//    public float MaxSpeed;      //meters per second
+
+    [Header("Weapons System")]
     public List<Weapon> weapons = new List<Weapon>();
     public int WeaponIndex = 0; //index of next gun in the sequence
     public float WeaponIndexDelay = .1f; //delay between continuation of sequence
@@ -35,10 +48,9 @@ public class Ship : MonoBehaviour
     public float IsFiringCooldown = .25f;
     private float lastFireTime = 0;
 
-
-    public Team team;
-
     private Simulation sim;
+    private ThrottleSystem Throttle;
+    private Camera cam;
 
     void Start()
     {
@@ -47,6 +59,8 @@ public class Ship : MonoBehaviour
     private void OnEnable()
     {
         if (!sim) sim = FindFirstObjectByType<Simulation>();
+        if (!Throttle) Throttle = GetComponent<ThrottleSystem>();
+
         if (weapons.Count == 0)
         {
             foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
@@ -55,6 +69,16 @@ public class Ship : MonoBehaviour
             }
         }
         SelectWeapon();
+        //add ship to its team if not already present
+        if (team && !team.Ships.Contains(this)) team.Ships.Add(this);
+
+        if (!cam) cam = GetComponentInChildren<Camera>();
+        if (cam)
+        {
+            baseCamLocalPos = cam.transform.localPosition;
+            baseCamLocalRot = cam.transform.localRotation;
+        }
+
     }
 
     private void OnDestroy()
@@ -65,14 +89,46 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
+
         StickManagement();
         ApplySteering();
 
-        Speed = Throttle * MaxSpeed;
-        Velocity = transform.forward * Speed;
+        //throttle and propulsion
+        Velocity = transform.forward * Throttle.Thrust * sim.SpeedUnit;
         transform.position += Velocity * Time.deltaTime;
+
         UpdateFiringStatus();
         UpdateHealth();
+        DoRumble();
+    }
+
+    public void AddRumble(float value)
+    {
+        RumbleIntensity += value * Time.deltaTime;
+        RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
+    }
+
+    private void DoRumble()
+    {
+        RumbleIntensity -= RumbleFade* Time.deltaTime;
+        RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
+        if (cam)
+        {
+            float shakeFrequency = 12f;
+            float shakePosAmplitude = 0.02f;
+            float shakeRotAmplitude = 0.5f;
+
+            float t = Time.time * shakeFrequency;
+
+            // Smooth Perlin noise offsets
+            float px = (Mathf.PerlinNoise(t, 0f) - 0.5f) * shakePosAmplitude * RumbleIntensity;
+            float py = (Mathf.PerlinNoise(0f, t) - 0.5f) * shakePosAmplitude * RumbleIntensity;
+
+            float rx = (Mathf.PerlinNoise(t, t) - 0.5f) * shakeRotAmplitude * RumbleIntensity;
+
+            cam.transform.localPosition = baseCamLocalPos + new Vector3(px, py, 0f);
+            cam.transform.localRotation = baseCamLocalRot * Quaternion.Euler(rx, 0f, 0f);
+        }
     }
 
 
@@ -133,12 +189,14 @@ public class Ship : MonoBehaviour
     }
 
 
+    /*
     public void SetThrottle(float throttle)
     {
         if (throttle == 0) return;
         throttle = Mathf.Clamp01(throttle);
-        Throttle = Mathf.MoveTowards(Throttle, throttle, ThrottleRate * Time.deltaTime);
+        ThrottleActual = Mathf.MoveTowards(ThrottleActual, throttle, ThrottleRate * Time.deltaTime);
     }
+    */
 
     //There's only one weapon right now
     public void SelectWeapon()

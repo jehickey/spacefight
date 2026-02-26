@@ -301,6 +301,9 @@ PrefabInstance:
       addedObject: {fileID: 536226885212900498}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 7015353510775188265}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 4297599727100275329}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
@@ -331,29 +334,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83035dfb93b58734c8d6665e91ed21d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ship
-  Pitch: 0
-  Roll: 0
-  Yaw: 0
-  Throttle: 0
-  StickResponse: 2
-  Stick: {x: 0, y: 0, z: 0}
-  realStick: {x: 0, y: 0, z: 0}
-  StickZeroRate: 0.5
-  MaxSpeed: 5
-  TurnRate: 200
-  RollRate: 50
-  ThrottleRate: 1
-  Speed: 0
+  team: {fileID: 0}
   Velocity: {x: 0, y: 0, z: 0}
   Health: 10
   MaxHealth: 10
+  TurnRate: 200
+  RollRate: 50
+  StickZeroRate: 0.5
+  StickResponse: 2
+  Pitch: 0
+  Roll: 0
+  Yaw: 0
+  Stick: {x: 0, y: 0, z: 0}
+  realStick: {x: 0, y: 0, z: 0}
+  Throttle: {fileID: 0}
   weapons: []
   WeaponIndex: 0
   WeaponIndexDelay: 0.1
   WeaponsFireInterlinked: 0
   IsFiring: 0
   IsFiringCooldown: 0.25
-  team: {fileID: 0}
+--- !u!114 &7015353510775188265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022959836189550384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e547290e71487ef48b84948a46e943ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrottleSystem
+  Input: 0
+  Actual: 0
+  Rate: 1
+  Thrust: 0
+  MaxThrust: 1
 --- !u!114 &4297599727100275329
 MonoBehaviour:
   m_ObjectHideFlags: 0

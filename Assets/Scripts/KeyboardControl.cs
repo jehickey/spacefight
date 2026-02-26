@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
@@ -7,11 +8,16 @@ public class KeyboardControl : MonoBehaviour
     public bool MouseSteering = true;
     public bool InvertPitch = false;
 
-    public Ship ship;
+    [Tooltip("Defines how rapidly a keypress influences the throttle")]
+    public float ThrottlePush = 1;
+
+    private Ship ship;
     private FlightControls flightControls;
 
     private Simulation sim;
     private float screenSize;
+
+    private ThrottleBox throttleBox;
 
     private FlightControls controls
     {
@@ -27,6 +33,8 @@ public class KeyboardControl : MonoBehaviour
         if (!ship) ship = GetComponent<Ship>();
         if (flightControls == null) flightControls = new FlightControls();
         flightControls.Enable();
+
+        throttleBox = GetComponentInChildren<ThrottleBox>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
@@ -50,8 +58,17 @@ public class KeyboardControl : MonoBehaviour
         {
             ship.SetPitch(controls.Flight.Pitch.ReadValue<float>());
             ship.SetYaw(controls.Flight.Yaw.ReadValue<float>());
-            ship.SetRoll(controls.Flight.Roll.ReadValue<float>());
-            ship.SetThrottle(controls.Flight.Throttle.ReadValue<float>());
+            ship.SetRoll(-controls.Flight.Roll.ReadValue<float>());
+            //ship.SetThrottle(controls.Flight.Throttle.ReadValue<float>());
+            //ship.Throttle.Input = controls.Flight.Throttle.ReadValue<float>();
+
+            if (throttleBox && controls.Flight.Throttle.IsPressed())
+            {
+                float input = controls.Flight.Throttle.ReadValue<float>();
+                input *= ThrottlePush * Time.deltaTime;
+                throttleBox.InputPosition += input;
+            }
+
             if (controls.Flight.Fire.IsPressed()) ship.Fire();
 
             MouseToStickVector();

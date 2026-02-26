@@ -10,6 +10,7 @@ public class Simulation : MonoBehaviour
     public float StickControlLimit = 0.5f;       //this is a percentage of the screen
     public float StickControlDeadzone = 0.25f;   //this is a percentage of the screen
 
+    public float SpeedUnit = 1f;
 
     void Start()
     {

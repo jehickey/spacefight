@@ -19,7 +19,7 @@ public class BotControl : MonoBehaviour
     public float BreakoffDistance = 1f;
     public float ThrottleAimBias = .5f;     //0=aggressive, 1=gentle
 
-
+    private ThrottleSystem throttle;
 
     public class ThreatEntry
     {
@@ -41,8 +41,14 @@ public class BotControl : MonoBehaviour
 
     void Start()
     {
+    }
+
+    private void OnEnable()
+    {
         ship = GetComponent<Ship>();
         if (!ship) Debug.LogError("BotControl can't find a Ship to control");
+        throttle = GetComponentInChildren<ThrottleSystem>();
+
     }
 
     void Update()
@@ -87,7 +93,7 @@ public class BotControl : MonoBehaviour
         {
             Gizmos.color = Color.yellow;
             //Gizmos.DrawWireSphere(transform.position, FiringRange);
-            Gizmos.DrawLine(transform.position, transform.position + transform.forward * ship.Throttle);
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * throttle.Actual);
         }
 
     }
@@ -165,11 +171,11 @@ public class BotControl : MonoBehaviour
 
     void AdjustThrottle()
     {
-        ship.Throttle = ThrottleDefault;
+        throttle.Input = ThrottleDefault;
         if (!TargetObject) return;
         if (AngleToTarget > ThrottleUpMaxAngle) return;
         float angNorm = 1f - (AngleToTarget / ThrottleUpMaxAngle);
-        ship.Throttle = ThrottleDefault + (1f-ThrottleDefault) * Mathf.Pow(angNorm, ThrottleAimBias);
+        throttle.Input = ThrottleDefault + (1f-ThrottleDefault) * Mathf.Pow(angNorm, ThrottleAimBias);
     }
 
     void AttackTarget()
