@@ -26,16 +26,19 @@ public class HUD : MonoBehaviour
     private float screenSize;
     private float reticleSize;
 
-    void Start()
-    {
-        
-    }
+    private SteeringSystem steering;
+
 
     private void OnEnable()
     {
         if (!sim) sim = FindFirstObjectByType<Simulation>();
         if (!canvas) canvas = GetComponent<Canvas>();
         if (!canvasRect) canvasRect = canvas.GetComponent<RectTransform>();
+        if (!steering) steering = GetComponentInParent<SteeringSystem>();
+        if (!steering)
+        {
+            Debug.Log("HUD can't find SteeringSystem");
+        }
     }
 
     void Update()
@@ -62,8 +65,8 @@ public class HUD : MonoBehaviour
         Vector2 pos = Vector2.zero;
         if (ship)
         {
-            pos.x = ship.realStick.x * StickMax;
-            pos.y = ship.realStick.z * StickMax;
+            pos.x = steering.realStick.x * StickMax;
+            pos.y = steering.realStick.z * StickMax;
         }
         StickPosition.rectTransform.anchoredPosition = pos;
     }

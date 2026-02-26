@@ -1,8 +1,5 @@
-using NUnit.Framework.Internal;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
-[System.Serializable]
 public class ThrottleSystem: MonoBehaviour
 {
     public float Input = 0;

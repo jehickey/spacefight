@@ -8,16 +8,19 @@ public class JoystickBox : MonoBehaviour
     public Vector3 StickNeutral = Vector3.zero;
     public float MovementRange = 0.5f;
     public Quaternion NeutralPosition;
+    public Vector3 OutputStick = Vector3.zero;
 
-    void Start()
+    private SteeringSystem steering;
+
+    private void OnEnable()
     {
-        
+        if (!steering) steering = GetComponentInParent<SteeringSystem>();
     }
 
     void Update()
     {
         UpdateJoystickPosition();
-
+        if (steering) steering.Stick = OutputStick;
     }
 
     private void OnValidate()
@@ -31,10 +34,19 @@ public class JoystickBox : MonoBehaviour
         //impose safe limits
         StickPosition.x = Mathf.Clamp(StickPosition.x, -1, 1);
         StickPosition.y = Mathf.Clamp(StickPosition.z, -1, 1);
-        StickPosition.z = 0;// Mathf.Clamp(StickPosition.z, -1, 1);
+        //StickPosition.z = 0;// Mathf.Clamp(StickPosition.z, -1, 1);
         //work out deflection (stick position limited by movement range)
         Vector3 offset = StickPosition * MovementRange;
         //move the stick
         Joystick.localRotation = Quaternion.FromToRotation(StickNeutral, StickNeutral-offset);
+        OutputStick.x = StickPosition.x;
+        //OutputStick.y = 0;
+        OutputStick.z = StickPosition.y;
     }
+
+    public void SetRoll(float value)
+    {
+        OutputStick.y = Mathf.Clamp(value, -1f, 1f);
+    }
+
 }

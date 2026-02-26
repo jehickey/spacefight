@@ -23,7 +23,7 @@ public class Cockpit : MonoBehaviour
         if (ThrottleLightPanel) ThrottleLightPanel.Value = throttle.Actual;
         if (Joystick)
         {
-            Joystick.StickPosition = ship.realStick;
+            //Joystick.StickPosition = ship.realStick;
         }
     }
 

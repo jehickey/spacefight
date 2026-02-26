@@ -462,6 +462,7 @@ GameObject:
   - component: {fileID: 466119814}
   - component: {fileID: 466119812}
   - component: {fileID: 466119813}
+  - component: {fileID: 466119816}
   - component: {fileID: 466119815}
   m_Layer: 0
   m_Name: Player
@@ -504,15 +505,6 @@ MonoBehaviour:
   RumbleIntensity: 0
   RumbleFade: 1.5
   RumbleMax: 5
-  TurnRate: 50
-  RollRate: 50
-  StickZeroRate: 0.5
-  StickResponse: 2
-  Pitch: 0
-  Roll: 0
-  Yaw: 0
-  Stick: {x: 0, y: 0, z: 0}
-  realStick: {x: 0, y: 0, z: 0}
   weapons: []
   WeaponIndex: 0
   WeaponIndexDelay: 0.1
@@ -539,6 +531,7 @@ Transform:
   - {fileID: 1570820717}
   - {fileID: 921402642}
   - {fileID: 563827709}
+  - {fileID: 1219947422}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &466119815
@@ -559,6 +552,28 @@ MonoBehaviour:
   Thrust: 0
   MaxThrust: 1
   MaxRumble: 1.5
+--- !u!114 &466119816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466119811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71394f64921273741817f7eb81d76db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SteeringSystem
+  TurnRate: 50
+  RollRate: 50
+  StickZeroRate: 0.5
+  StickResponse: 2
+  Pitch: 0
+  Roll: 0
+  Yaw: 0
+  Stick: {x: 0, y: 0, z: 0}
+  realStick: {x: 0, y: 0, z: 0}
+  Result: {x: 0, y: 0, z: 0}
 --- !u!1 &518436761
 GameObject:
   m_ObjectHideFlags: 0
@@ -1366,6 +1381,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: friendly base
       objectReference: {fileID: 0}
+    - target: {fileID: 4356217760121001257, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5279378521183007192, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: teamName
       value: Friendlies
@@ -1405,10 +1424,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Starfield
   StarDataSource: {fileID: 4900000, guid: 7fba226c2a7d10344aae64b61c2fc10d, type: 3}
-  MaxMagnitude: 7
+  MaxMagnitude: 5
   FieldRadius: 1000
-  starSizeMin: 0.5
-  starSizeMax: 3
+  starSizeMin: 5
+  starSizeMax: 10
   referenceCamera: {fileID: 330585545}
   quadMesh: {fileID: 0}
   starMaterial: {fileID: 2100000, guid: 1552221595ae3ab4ba38e7d70ea0007c, type: 2}
@@ -1816,7 +1835,7 @@ GameObject:
   - component: {fileID: 1219947420}
   - component: {fileID: 1219947419}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: HUDCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1900,7 +1919,7 @@ RectTransform:
   - {fileID: 1654460625}
   - {fileID: 926792879}
   - {fileID: 236277059}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 466119814}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2301,6 +2320,7 @@ MonoBehaviour:
   StickNeutral: {x: 0, y: 0, z: -1}
   MovementRange: 1
   NeutralPosition: {x: 0, y: 0, z: 0, w: 1}
+  OutputStick: {x: 0, y: 0, z: 0}
 --- !u!1 &1654460624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2442,6 +2462,10 @@ PrefabInstance:
     - target: {fileID: 4356217760121001257, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_Name
       value: enemy base
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356217760121001257, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5279378521183007192, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: color.b
@@ -2883,7 +2907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8022959836189550384, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2899,7 +2923,6 @@ SceneRoots:
   - {fileID: 305087150}
   - {fileID: 466119814}
   - {fileID: 1230273653}
-  - {fileID: 1219947422}
   - {fileID: 518436764}
   - {fileID: 2119462450}
   - {fileID: 6766606765268652611}

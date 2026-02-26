@@ -20,6 +20,7 @@ public class BotControl : MonoBehaviour
     public float ThrottleAimBias = .5f;     //0=aggressive, 1=gentle
 
     private ThrottleSystem throttle;
+    private SteeringSystem steering;
 
     public class ThreatEntry
     {
@@ -48,6 +49,7 @@ public class BotControl : MonoBehaviour
         ship = GetComponent<Ship>();
         if (!ship) Debug.LogError("BotControl can't find a Ship to control");
         throttle = GetComponentInChildren<ThrottleSystem>();
+        steering = GetComponentInChildren<SteeringSystem>();
 
     }
 
@@ -161,7 +163,7 @@ public class BotControl : MonoBehaviour
         float turnAmount = Mathf.Abs(yaw);
         float roll = Mathf.Lerp(rollLevel, rollTurn, turnAmount);
 
-        ship.Stick = new Vector3(yaw, roll, -pitch);
+        steering.Stick = new Vector3(yaw, roll, -pitch);
 
         if (DistanceToTarget < BreakoffDistance)
         {

@@ -18,26 +18,9 @@ public class Ship : MonoBehaviour
     private float RumbleFade = 1;
     [SerializeField]
     private float RumbleMax = 5;
-private     Vector3 baseCamLocalPos;
+    private     Vector3 baseCamLocalPos;
     private Quaternion baseCamLocalRot;
 
-
-
-    [Header("Steering System")]
-    public float TurnRate;      //handles pitch and yaw. degrees per second
-    public float RollRate;      //handles roll. degrees per second
-    public float StickZeroRate = 0.5f; //rate stick returns to center without input
-    public float StickResponse = .25f;
-    public float Pitch;
-    public float Roll;
-    public float Yaw;
-    public Vector3 Stick = Vector3.zero;    //controllable stick position, does not reflect actual position
-    public Vector3 realStick = Vector3.zero; //actual stick position, influenced by controllable setting
-
-//    public float ThrottleActual;      //current thrust setting, 0-1
-//    public float ThrottleRate;  //speed of thrust change per second (0-1)
-//    public float Speed;         //current velocity magnitude, meters per second
-//    public float MaxSpeed;      //meters per second
 
     [Header("Weapons System")]
     public List<Weapon> weapons = new List<Weapon>();
@@ -50,6 +33,7 @@ private     Vector3 baseCamLocalPos;
 
     private Simulation sim;
     private ThrottleSystem Throttle;
+    private SteeringSystem Steering;
     private Camera cam;
 
     void Start()
@@ -60,6 +44,7 @@ private     Vector3 baseCamLocalPos;
     {
         if (!sim) sim = FindFirstObjectByType<Simulation>();
         if (!Throttle) Throttle = GetComponent<ThrottleSystem>();
+        if (!Steering) Steering = GetComponent<SteeringSystem>();
 
         if (weapons.Count == 0)
         {
@@ -89,12 +74,11 @@ private     Vector3 baseCamLocalPos;
 
     void Update()
     {
-
-        StickManagement();
-        ApplySteering();
+        //apply steering
+        if (Steering) transform.Rotate(Steering.Result, Space.Self);
 
         //throttle and propulsion
-        Velocity = transform.forward * Throttle.Thrust * sim.SpeedUnit;
+        if (Throttle) Velocity = transform.forward * Throttle.Thrust * sim.SpeedUnit;
         transform.position += Velocity * Time.deltaTime;
 
         UpdateFiringStatus();
@@ -131,72 +115,6 @@ private     Vector3 baseCamLocalPos;
         }
     }
 
-
-    private void StickManagement()
-    {
-
-        //apply individual Pitch/Yaw/Roll commands (hard unprocessed values)
-        if (Pitch != 0) Stick.z = Pitch;
-        if (Yaw != 0) Stick.x = Yaw;
-        if (Roll != 0) Stick.y = Roll;
-
-        //Limit steering - keep x and z within a circular range
-        Vector2 stickLimit = new Vector2(Stick.x, Stick.z);
-        if (stickLimit.sqrMagnitude > 1f) stickLimit = stickLimit.normalized;
-        Stick.x = stickLimit.x;
-        Stick.z = stickLimit.y;
-
-        //Limit roll
-        Stick.y = Mathf.Clamp(Stick.y, -1f, 1f);
-
-
-        //apply Stick value to realStick with easing
-        realStick = Vector3.MoveTowards(realStick, Stick, StickResponse * Time.deltaTime);
-        //push the virtual stick towards zero
-        Stick = Vector3.MoveTowards(Stick, Vector3.zero, StickZeroRate * Time.deltaTime);
-
-        //clear control values
-        Pitch = 0;
-        Yaw = 0;
-        Roll = 0;
-        //Stick = Vector3.zero;
-    }
-
-    private void ApplySteering()
-    {
-        //apply roll and turn rates to movement
-        Vector3 result = realStick;
-        result.y = realStick.x * TurnRate;  //pitch
-        result.x = realStick.z * TurnRate;  //yaw
-        result.z = realStick.y * RollRate;  //roll
-        result *= Time.deltaTime;
-        transform.Rotate(result, Space.Self);
-    }
-
-    public void SetYaw(float value)
-    {
-        Yaw = Mathf.Clamp(value, -1f, 1f);
-    }
-
-    public void SetPitch(float value)
-    {
-        Pitch = Mathf.Clamp(value, -1f, 1f);
-    }
-
-    public void SetRoll(float value)
-    {
-        Roll = Mathf.Clamp(value, -1f, 1f);
-    }
-
-
-    /*
-    public void SetThrottle(float throttle)
-    {
-        if (throttle == 0) return;
-        throttle = Mathf.Clamp01(throttle);
-        ThrottleActual = Mathf.MoveTowards(ThrottleActual, throttle, ThrottleRate * Time.deltaTime);
-    }
-    */
 
     //There's only one weapon right now
     public void SelectWeapon()

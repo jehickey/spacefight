@@ -18,6 +18,7 @@ public class KeyboardControl : MonoBehaviour
     private float screenSize;
 
     private ThrottleBox throttleBox;
+    private JoystickBox steering;
 
     private FlightControls controls
     {
@@ -35,6 +36,7 @@ public class KeyboardControl : MonoBehaviour
         flightControls.Enable();
 
         throttleBox = GetComponentInChildren<ThrottleBox>();
+        steering = GetComponentInChildren<JoystickBox>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
@@ -56,12 +58,11 @@ public class KeyboardControl : MonoBehaviour
         screenSize = Mathf.Min(Screen.width, Screen.height);
         if (ship)
         {
-            ship.SetPitch(controls.Flight.Pitch.ReadValue<float>());
-            ship.SetYaw(controls.Flight.Yaw.ReadValue<float>());
-            ship.SetRoll(-controls.Flight.Roll.ReadValue<float>());
-            //ship.SetThrottle(controls.Flight.Throttle.ReadValue<float>());
-            //ship.Throttle.Input = controls.Flight.Throttle.ReadValue<float>();
+            //steering.SetPitch(controls.Flight.Pitch.ReadValue<float>());
+            //ship.SetYaw(controls.Flight.Yaw.ReadValue<float>());
+            steering.SetRoll(-controls.Flight.Roll.ReadValue<float>());
 
+            //throttle control
             if (throttleBox && controls.Flight.Throttle.IsPressed())
             {
                 float input = controls.Flight.Throttle.ReadValue<float>();
@@ -72,25 +73,6 @@ public class KeyboardControl : MonoBehaviour
             if (controls.Flight.Fire.IsPressed()) ship.Fire();
 
             MouseToStickVector();
-            /*
-            if (MouseSteering)
-            {
-                Vector2 pitchyaw = controls.Flight.PitchYaw.ReadValue<Vector2>();
-                pitchyaw.x = (pitchyaw.x / screenSize) * 2f -1;
-                pitchyaw.y = -((pitchyaw.y / screenSize) * 2f - 1f);
-
-                //pitchyaw = (pitchyaw / screenSize * sim.StickControlLimit) * 2f;
-
-                Vector2 smooth = Vector2.zero;
-                smooth.y = SmoothAxis(pitchyaw.y, .1f, 1.5f);
-                smooth.x = SmoothAxis(pitchyaw.x, .1f, 1.5f);
-                if (smooth.magnitude > 0)
-                {
-                    ship.SetPitch(smooth.y);
-                    ship.SetYaw(smooth.x);
-                }
-            }
-            */
         }
 
     }
@@ -126,9 +108,9 @@ public class KeyboardControl : MonoBehaviour
 
         // Final circular stick vector (x = yaw, z = pitch)
         //Vector3 result = new Vector3(dir.x * t, 0f, dir.y * t);
-        ship.Stick.x = dir.x * t;
-        ship.Stick.z = -dir.y * t;
-        if (InvertPitch) ship.Stick.z *= -1;
+        steering.StickPosition.x = dir.x * t;
+        steering.StickPosition.z = -dir.y * t;
+        if (InvertPitch) steering.StickPosition.z *= -1;
     }
 
 
