@@ -298,6 +298,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4297599727100275329}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 536226885212900498}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
@@ -305,9 +308,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9043391831691439790}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4297599727100275329}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 98396485923994060}
@@ -325,6 +325,30 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
   m_PrefabInstance: {fileID: 7175974352385530465}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4297599727100275329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022959836189550384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BotControl
+  TargetObject: {fileID: 0}
+  DistanceToTarget: 0
+  AngleToTarget: 0
+  FireOnTarget: 1
+  FiringRange: 2
+  FiringAngle: 10
+  Waypoints: []
+  ThrottleUpMaxAngle: 90
+  ThrottleDefault: 0.5
+  BreakoffDistance: 0.1
+  ThrottleAimBias: 0.5
+  precisionAngle: 5
 --- !u!114 &536226885212900498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,24 +365,20 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0, z: 0}
   Health: 10
   MaxHealth: 10
+  Mass: 100
   RumbleIntensity: 0
   RumbleFade: 1
   RumbleMax: 5
-  TurnRate: 200
-  RollRate: 50
-  StickZeroRate: 0.5
-  StickResponse: 2
-  Pitch: 0
-  Roll: 0
-  Yaw: 0
-  Stick: {x: 0, y: 0, z: 0}
-  realStick: {x: 0, y: 0, z: 0}
   weapons: []
   WeaponIndex: 0
   WeaponIndexDelay: 0.1
   WeaponsFireInterlinked: 0
   IsFiring: 0
   IsFiringCooldown: 0.25
+  collider: {fileID: 0}
+  forcedDisplacement: {x: 0, y: 0, z: 0}
+  externalForce: {x: 0, y: 0, z: 0}
+  externalAngularForce: {x: 0, y: 0, z: 0}
 --- !u!114 &7015353510775188265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,6 +397,7 @@ MonoBehaviour:
   Thrust: 0
   MaxThrust: 1
   MaxRumble: 1
+  MinThrust: 0.01
 --- !u!114 &9043391831691439790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,29 +420,6 @@ MonoBehaviour:
   Stick: {x: 0, y: 0, z: 0}
   realStick: {x: 0, y: 0, z: 0}
   Result: {x: 0, y: 0, z: 0}
---- !u!114 &4297599727100275329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8022959836189550384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BotControl
-  TargetObject: {fileID: 0}
-  DistanceToTarget: 0
-  AngleToTarget: 0
-  FireOnTarget: 1
-  FiringRange: 1
-  FiringAngle: 10
-  Waypoints: []
-  ThrottleUpMaxAngle: 90
-  ThrottleDefault: 0.5
-  BreakoffDistance: 1
-  ThrottleAimBias: 0.5
 --- !u!65 &98396485923994060
 BoxCollider:
   m_ObjectHideFlags: 0

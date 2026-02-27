@@ -10,6 +10,8 @@ public class ThrottleSystem: MonoBehaviour
 
     public float MaxRumble = 1;
 
+    public float MinThrust = 0.01f;
+
     private Ship ship;
 
     private void OnEnable()
@@ -22,6 +24,7 @@ public class ThrottleSystem: MonoBehaviour
         Input = Mathf.Clamp01(Input);
         Actual = Mathf.MoveTowards(Actual, Input, Rate * Time.deltaTime);
         Thrust = Actual * MaxThrust;
+        if (Thrust < MinThrust) Thrust = 0;
 
         if (ship) ship.AddRumble(Actual * MaxRumble);
     }

@@ -12,6 +12,10 @@ public class Simulation : MonoBehaviour
 
     public float SpeedUnit = 1f;
 
+    public float ForceDecayRate = 1f;
+    public float ImpactDamageMultiplier = .25f;
+    public float ImpactForceMultiplier = 2f;
+
     void Start()
     {
         //look for any competing instances and warn (don't delete)

@@ -299,6 +299,9 @@ MonoBehaviour:
   StickControlLimit: 0.5
   StickControlDeadzone: 0.25
   SpeedUnit: 1
+  ForceDecayRate: 1
+  ImpactDamageMultiplier: 0.25
+  ImpactForceMultiplier: 2
 --- !u!4 &305087150
 Transform:
   m_ObjectHideFlags: 0
@@ -461,9 +464,12 @@ GameObject:
   m_Component:
   - component: {fileID: 466119814}
   - component: {fileID: 466119812}
+  - component: {fileID: 466119817}
   - component: {fileID: 466119813}
   - component: {fileID: 466119816}
   - component: {fileID: 466119815}
+  - component: {fileID: 466119819}
+  - component: {fileID: 466119818}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -485,7 +491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KeyboardControl
   MouseSteering: 1
   InvertPitch: 0
-  ThrottlePush: 1
+  ThrottlePush: 1.25
 --- !u!114 &466119813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,8 +506,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ship
   team: {fileID: 1915279971}
   Velocity: {x: 0, y: 0, z: 0}
-  Health: 1
-  MaxHealth: 1
+  Health: 100
+  MaxHealth: 100
+  Mass: 100
   RumbleIntensity: 0
   RumbleFade: 1.5
   RumbleMax: 5
@@ -511,6 +518,10 @@ MonoBehaviour:
   WeaponsFireInterlinked: 0
   IsFiring: 0
   IsFiringCooldown: 0.25
+  collider: {fileID: 0}
+  forcedDisplacement: {x: 0, y: 0, z: 0}
+  externalForce: {x: 0, y: 0, z: 0}
+  externalAngularForce: {x: 0, y: 0, z: 0}
 --- !u!4 &466119814
 Transform:
   m_ObjectHideFlags: 0
@@ -552,6 +563,7 @@ MonoBehaviour:
   Thrust: 0
   MaxThrust: 1
   MaxRumble: 1.5
+  MinThrust: 0.01
 --- !u!114 &466119816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,6 +586,78 @@ MonoBehaviour:
   Stick: {x: 0, y: 0, z: 0}
   realStick: {x: 0, y: 0, z: 0}
   Result: {x: 0, y: 0, z: 0}
+--- !u!114 &466119817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466119811}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BotControl
+  TargetObject: {fileID: 0}
+  DistanceToTarget: 0
+  AngleToTarget: 0
+  FireOnTarget: 1
+  FiringRange: 0.5
+  FiringAngle: 10
+  Waypoints: []
+  ThrottleUpMaxAngle: 90
+  ThrottleDefault: 0.5
+  BreakoffDistance: 1
+  ThrottleAimBias: 0.5
+  precisionAngle: 5
+--- !u!54 &466119818
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466119811}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 3
+--- !u!65 &466119819
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466119811}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2, y: 0.1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &518436761
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,7 +1250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrottleBox
   InputPosition: 0
-  NeutralPosition: 0.5
+  NeutralPosition: 0
   NeutralDriftRate: 1
   ThrowCenter: {x: 0, y: 0, z: 0}
   ThrowAxis: {x: 0, y: 1, z: 0}
@@ -1335,7 +1419,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2014118797109983381, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: Count
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3981098870216249235, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2318,7 +2402,7 @@ MonoBehaviour:
   ReferenceDir: {x: 0, y: 1, z: 0}
   StickPosition: {x: 0, y: 0, z: 0}
   StickNeutral: {x: 0, y: 0, z: -1}
-  MovementRange: 1
+  MovementRange: 0.75
   NeutralPosition: {x: 0, y: 0, z: 0, w: 1}
   OutputStick: {x: 0, y: 0, z: 0}
 --- !u!1 &1654460624
@@ -2417,7 +2501,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2014118797109983381, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: Count
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3981098870216249235, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2861,17 +2945,37 @@ PrefabInstance:
       propertyPath: MaxSpeed
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
+      propertyPath: FiringRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
+      propertyPath: BreakoffDistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7015353510775188265, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
+      propertyPath: Thrust
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7015353510775188265, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
+      propertyPath: MaxThrust
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7015353510775188265, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7213807666538069386, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.009
+      value: -0.001
       objectReference: {fileID: 0}
     - target: {fileID: 7213807666538069386, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.043
+      value: -0.014
       objectReference: {fileID: 0}
     - target: {fileID: 7213807666538069386, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.365
+      value: 1.003
       objectReference: {fileID: 0}
     - target: {fileID: 7213807666538069386, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2908,6 +3012,10 @@ PrefabInstance:
     - target: {fileID: 8022959836189550384, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9043391831691439790, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     public float TTL;        //time to live, seconds (0 = infinite)
     private float startTime;
 
+    public Transform parentOrigin;
     private Simulation sim;
 
     void Start()
@@ -27,10 +28,20 @@ public class Projectile : MonoBehaviour
         transform.position += transform.forward * Speed * sim.SpeedUnit * Time.deltaTime;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 0.25f);
+        Gizmos.DrawSphere(transform.position, .05f);
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Ship target = other.GetComponent<Ship>();
         Vector3 pos = other.ClosestPoint(transform.position);
+        if (other.transform == parentOrigin) return;
+        //Debug.Log($"Collision: {other.name}");
         Detonate(target, pos);
     }
 

@@ -45,6 +45,7 @@ public class Weapon : MonoBehaviour
             Projectile projectile = obj.GetComponent<Projectile>();
             if (projectile)
             {
+                projectile.parentOrigin = ship.transform;
                 //projectile.Speed += ship.Speed;
             }
 

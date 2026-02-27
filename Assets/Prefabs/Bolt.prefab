@@ -49,7 +49,7 @@ MonoBehaviour:
   Length: 0.01
   Speed: 5
   Damage: 1
-  TTL: 5
+  TTL: 3
 --- !u!65 &4413659966978389538
 BoxCollider:
   m_ObjectHideFlags: 0

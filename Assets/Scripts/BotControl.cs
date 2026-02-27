@@ -19,6 +19,8 @@ public class BotControl : MonoBehaviour
     public float BreakoffDistance = 1f;
     public float ThrottleAimBias = .5f;     //0=aggressive, 1=gentle
 
+    public float precisionAngle = 5f; // degrees
+
     private ThrottleSystem throttle;
     private SteeringSystem steering;
 
@@ -89,13 +91,15 @@ public class BotControl : MonoBehaviour
             Gizmos.color = Color.red * .5f;
             if (ship.IsFiring) Gizmos.color = Color.red;
             //Gizmos.DrawWireSphere(TargetObject.transform.position, 1f);
-            Gizmos.DrawLine(transform.position, TargetObject.transform.position);
+            Vector3 fireDir = (transform.forward-TargetObject.transform.position).normalized;
+            Gizmos.DrawLine(transform.position, transform.position + fireDir*FiringRange);
         }
         if (TargetObject && FireOnTarget)
         {
             Gizmos.color = Color.yellow;
             //Gizmos.DrawWireSphere(transform.position, FiringRange);
-            Gizmos.DrawLine(transform.position, transform.position + transform.forward * throttle.Actual);
+            //Gizmos.DrawLine(transform.position, transform.position + transform.forward * throttle.Thrust);
+            Gizmos.DrawLine(transform.position, transform.position + ship.Velocity*Time.deltaTime);
         }
 
     }
@@ -150,9 +154,21 @@ public class BotControl : MonoBehaviour
         float pitch = Mathf.Clamp(localDir.y, -1f, 1f);
 
         //steering is proportional to angle to target
+        /*
         float steerScale = Mathf.Clamp01(AngleToTarget / 90f);
         yaw *= steerScale;
         pitch *= steerScale;
+        */
+        
+        if (AngleToTarget < precisionAngle)
+        {
+            float t = AngleToTarget / precisionAngle; // 0-1
+            float precisionScale = Mathf.Lerp(0.5f, 1f, t);
+            yaw *= precisionScale;
+            pitch *= precisionScale;
+        }
+
+
 
         //signed roll angle around the forward axis
         float rollTurn = -yaw * 0.75f;      //roll a bit into the turn
@@ -193,6 +209,7 @@ public class BotControl : MonoBehaviour
 
     void UpdateThreats()
     {
+
         threats.Clear();
         if (!ship.team) return;
         foreach (Ship threat in ship.team.Threats)

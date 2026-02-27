@@ -1,6 +1,8 @@
 using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Burst;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 
@@ -11,6 +13,7 @@ public class Ship : MonoBehaviour
     public Vector3 Velocity;    //current velocity vector, meters per second
     public float Health = 10f;
     public float MaxHealth = 10f;
+    public float Mass = 100;
 
     [SerializeField]
     private float RumbleIntensity = 0;
@@ -36,12 +39,23 @@ public class Ship : MonoBehaviour
     private SteeringSystem Steering;
     private Camera cam;
 
+    public new Collider collider;
+
+    [SerializeField]
+    private Vector3 forcedDisplacement = Vector3.zero;
+    [SerializeField]
+    private Vector3 externalForce = Vector3.zero;
+    [SerializeField]
+    private Vector3 externalAngularForce = Vector3.zero;
+
     void Start()
     {
     }
 
     private void OnEnable()
     {
+        collider = GetComponent<Collider>();
+
         if (!sim) sim = FindFirstObjectByType<Simulation>();
         if (!Throttle) Throttle = GetComponent<ThrottleSystem>();
         if (!Steering) Steering = GetComponent<SteeringSystem>();
@@ -63,7 +77,6 @@ public class Ship : MonoBehaviour
             baseCamLocalPos = cam.transform.localPosition;
             baseCamLocalRot = cam.transform.localRotation;
         }
-
     }
 
     private void OnDestroy()
@@ -74,17 +87,69 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
-        //apply steering
-        if (Steering) transform.Rotate(Steering.Result, Space.Self);
-
-        //throttle and propulsion
-        if (Throttle) Velocity = transform.forward * Throttle.Thrust * sim.SpeedUnit;
-        transform.position += Velocity * Time.deltaTime;
-
+        CollisionChecks();
         UpdateFiringStatus();
         UpdateHealth();
         DoRumble();
     }
+
+    private void LateUpdate()
+    {
+        Vector3 posDelta = forcedDisplacement;
+        Vector3 rotDelta = Vector3.zero;
+
+        //apply steering
+        if (Steering) rotDelta += Steering.Result;
+
+        //throttle and propulsion
+        //Velocity = Vector3.zero;
+        if (Throttle) Velocity = transform.forward * Throttle.Thrust * sim.SpeedUnit;
+        posDelta += Velocity * Time.deltaTime;
+
+        //apply external forces
+        if (Mass <= 0) Mass = .001f;
+        posDelta += (externalForce / Mass) * Time.deltaTime;
+        rotDelta += (externalAngularForce / Mass) * Time.deltaTime;
+
+        //apply all movement
+        transform.position += posDelta;
+        transform.Rotate(rotDelta, Space.Self);
+
+        forcedDisplacement = Vector3.zero;
+        externalForce *= Mathf.Exp( -sim.ForceDecayRate * Time.deltaTime);
+        externalAngularForce *= Mathf.Exp(-sim.ForceDecayRate * Time.deltaTime);
+    }
+
+    private void CollisionChecks()
+    {
+        //compare against every other ship
+        foreach (Ship ship in FindObjectsByType<Ship>(FindObjectsSortMode.None))
+        {
+            if (ship && ship != this)
+            {
+                if (Physics.ComputePenetration(
+                    collider, transform.position, transform.rotation,
+                    ship.collider, ship.transform.position, ship.transform.rotation,
+                    out Vector3 direction, out float distance))
+                {
+                    Vector3 point = (transform.position + ship.transform.position) * .5f;
+                    float impact = (Velocity + ship.Velocity).magnitude;
+                    float flareSize = .03f * impact;
+                    Flare.Spawn(point, Color.white, .15f, .25f, flareSize*.1f, flareSize);
+                    //Debug.Log($"ship {name} struck ship {ship.name}");
+                    forcedDisplacement += (direction * (distance*.5f+.0001f));
+                    externalForce += direction.normalized * impact * sim.ImpactForceMultiplier;
+                    TakeDamage(sim.ImpactDamageMultiplier * impact);
+                    Debug.Log($"Impact: {impact}");
+                }
+            }
+        }
+    }
+
+    private void CollisionCheck()
+    {
+    }
+
 
     public void AddRumble(float value)
     {
@@ -169,6 +234,7 @@ public class Ship : MonoBehaviour
     {
         if (damage <= 0) return;
         Health -= damage;
+        AddRumble(10);
     }
 
     private void UpdateHealth()

@@ -55,6 +55,7 @@ public class Flare : MonoBehaviour
         if (TTL <= 0) TTL = .01f;               //thou shalt not divide by zero
         startTime = Time.time;
         peakTime = TTL * PeakFraction;
+        transform.localScale = Vector3.one * MinRadius;
     }
 
     void Update()

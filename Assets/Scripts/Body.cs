@@ -81,6 +81,7 @@ public class Body : MonoBehaviour
     private int GetDistanceDetail()
     {
         if (!sim) return 3;
+        if (!sim.PlayerShip) return 3;
         DistanceFromPlayer = Vector3.Distance(transform.position, sim.PlayerShip.transform.position);
         if (DistanceFromPlayer < Radius * 3) return 4;
         if (DistanceFromPlayer < Radius * 10) return 3;
