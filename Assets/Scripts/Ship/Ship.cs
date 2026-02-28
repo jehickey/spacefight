@@ -140,7 +140,7 @@ public class Ship : MonoBehaviour
                     forcedDisplacement += (direction * (distance*.5f+.0001f));
                     externalForce += direction.normalized * impact * sim.ImpactForceMultiplier;
                     TakeDamage(sim.ImpactDamageMultiplier * impact);
-                    Debug.Log($"Impact: {impact}");
+                    //Debug.Log($"Impact: {impact}");
                 }
             }
         }

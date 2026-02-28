@@ -44,6 +44,9 @@ public class SteeringSystem : MonoBehaviour
         //push the virtual stick towards zero
         Stick = Vector3.MoveTowards(Stick, Vector3.zero, StickZeroRate * Time.deltaTime);
 
+        Stick.x = Mathf.Clamp(Stick.x, -1f, 1f);
+        Stick.y = Mathf.Clamp(Stick.x, -1f, 1f);
+        Stick.z = Mathf.Clamp(Stick.x, -1f, 1f);
         //clear control values
         Pitch = 0;
         Yaw = 0;
