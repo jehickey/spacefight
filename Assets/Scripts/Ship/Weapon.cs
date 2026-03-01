@@ -1,3 +1,4 @@
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -6,20 +7,32 @@ public class Weapon : MonoBehaviour
     public GameObject projectilePrefab;
     public bool doFire;
 
+    public float FireVolume = 1;
+    public float FirePitch = 1;
+    public float FireRandomization = .25f;
+
     private Ship ship;
     private Emitter emitter;
     private Recoil recoil;
     private float lastFireTime;
 
+    private new AudioSource audio;
+    private Simulation sim;
 
     void Start()
     {
+        sim = FindFirstObjectByType<Simulation>();
+
         emitter = GetComponentInChildren<Emitter>();
         if (!emitter) Debug.LogError("Weapon is missing an emitter");
         recoil = GetComponentInChildren<Recoil>();
         if (!recoil) Debug.LogError("Weapon is missing a recoil");
         ship = GetComponentInParent<Ship>();
         if (!ship) Debug.LogError("Weapon can't find Ship controller");
+
+        
+        audio = GetComponent<AudioSource>();
+        if (ship != sim.PlayerShip) Destroy(audio);
     }
 
     void Update()
@@ -52,8 +65,23 @@ public class Weapon : MonoBehaviour
             //emitter flare
             Flare flare = Flare.Spawn(emitter.transform.position, Color.white, 0.25f, 0.25f, 0.001f, 0.01f);
             flare.transform.parent = emitter.transform;
+            playFireSound();
         }
         lastFireTime = Time.time;
+    }
+
+
+    private void playFireSound()
+    {
+        if (!audio) return;
+        float pitch = FirePitch * (1 + Random.value * FireRandomization);
+        float volume = FireVolume * (1 + Random.value * FireRandomization);
+        audio.pitch = pitch;
+        audio.volume = volume;
+        audio.loop = false;
+        if (transform.position.x > 0) audio.panStereo = 1;
+        if (transform.position.x < 0) audio.panStereo = -1;
+        audio.Play();
     }
 
 }

@@ -15,6 +15,9 @@ public class Ship : MonoBehaviour
     public float MaxHealth = 10f;
     public float Mass = 100;
 
+    public float DistanceFromPlayer;
+    private AudioListener listener;
+
     [SerializeField]
     private float RumbleIntensity = 0;
     [SerializeField]
@@ -87,6 +90,10 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
+        if (!listener) listener = FindFirstObjectByType<AudioListener>();
+        DistanceFromPlayer = -1;    //default if no sim or no player
+        if (listener) DistanceFromPlayer = Vector3.Distance(transform.position, listener.transform.position);
+
         CollisionChecks();
         UpdateFiringStatus();
         UpdateHealth();

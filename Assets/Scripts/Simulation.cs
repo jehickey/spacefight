@@ -16,6 +16,10 @@ public class Simulation : MonoBehaviour
     public float ImpactDamageMultiplier = .25f;
     public float ImpactForceMultiplier = 2f;
 
+    public float AudioCutoffRange = 10;         //how close before audio is activated
+    public float AudioCutoffPadding = 1;        //how far out of range before audio is deactivated
+
+
     void Start()
     {
         //look for any competing instances and warn (don't delete)
