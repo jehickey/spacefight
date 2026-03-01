@@ -13,6 +13,7 @@ public class BotControl : MonoBehaviour
     //public Vector3 TargetLocation = Vector3.zero;
     [Header("Target Information")]
     public GameObject TargetObject;
+    private Ship targetShip;
     [SerializeField, ReadOnly(true)]
     private float distanceToTarget = 0f;
     [SerializeField, ReadOnly(true)]
@@ -21,6 +22,17 @@ public class BotControl : MonoBehaviour
     private Vector3 vectorToTarget;
     [SerializeField, ReadOnly(true)]
     private Vector3 localTargetDir;
+    [SerializeField, ReadOnly(true)]
+    private Vector3 relativeVelocityVector;
+    [SerializeField, ReadOnly(true)]
+    private float closingSpeed;
+
+    [Header("Target Selection")]
+    public float ReselectBaseTimer = 3;
+    public float ReselectRandomization = .25f;
+    [SerializeField, ReadOnly(true)]
+    private float reselectTimerActual = 0f;
+    private float reselectTimeLast = 0;
 
     [Header("Firing Behavior Settings")]
     public bool FireOnTarget = false;
@@ -32,7 +44,6 @@ public class BotControl : MonoBehaviour
     public float ThrottleDefault = .5f;
     public float ThrottleAimBias = .5f;     //0=aggressive, 1=gentle
     public float precisionAngle = 5f; // degrees
-
 
     [Header("Distance Baselines")]
     public float baselineRangeBreakoff = .1f;
@@ -56,6 +67,8 @@ public class BotControl : MonoBehaviour
     private float factorNearIdeal;
     [SerializeField]
     private float factorInsideIdeal;
+
+
 
 
     private ThrottleSystem throttle;
@@ -108,30 +121,15 @@ public class BotControl : MonoBehaviour
         if (steering) steering.Stick = Vector3.zero;
 
         UpdateThreats();
+        PickTarget();
         GetTargetInfo();    //this should have already been done during threat assessment
         ProcessRanges();
 
-        //if (Waypoints.Count == 0) GetWaypoints();
-        //if no waypoint, pick one at random
-        if (!TargetObject)
-        {
-            distanceToTarget = 0;
-            PickTarget();
-            //PickRandomWaypoint();
-        }
-
         AimAtTarget();
-        TurnAway();
+        CollisionAvoidance();
         Rolling();
         AdjustThrottle();
         AttackTarget();
-
-        //forget current target (disabled for now)
-        if (distanceToTarget < rangeBreakoff)
-        {
-            //TargetObject = null;
-        }
-
 
     }
 
@@ -181,6 +179,25 @@ public class BotControl : MonoBehaviour
         ProcessRanges();
     }
 
+    void PickTarget()
+    {
+        //has timer expired?
+        if (Time.time - reselectTimeLast > reselectTimerActual)
+        {
+            TargetObject = null;
+            reselectTimeLast = Time.time;
+            reselectTimerActual = ReselectBaseTimer * (1 + Random.Range(-ReselectRandomization, ReselectRandomization));
+        }
+
+        if (TargetObject) return;       //already have a target
+
+        //choose a new target
+        if (threats.Count == 0) return;
+        TargetObject = threats[0].ship.gameObject;
+
+    }
+
+
     void GetTargetInfo()
     {
         if (!TargetObject)
@@ -189,15 +206,30 @@ public class BotControl : MonoBehaviour
             angleToTarget = 0;
             vectorToTarget = Vector3.zero;
             localTargetDir = Vector3.zero;
+            relativeVelocityVector = Vector3.zero;
+            closingSpeed = 0;
+            targetShip = null;
             return;
         }
-        distanceToTarget = Vector3.Distance(transform.position, TargetObject.transform.position);
-        vectorToTarget = (TargetObject.transform.position - transform.position).normalized;
+
+        if (!targetShip) targetShip = TargetObject.GetComponent<Ship>();
+
+        //distanceToTarget = Vector3.Distance(transform.position, TargetObject.transform.position);
+        vectorToTarget = (TargetObject.transform.position - transform.position);//.normalized;
+        distanceToTarget = vectorToTarget.magnitude;
+        vectorToTarget.Normalize();
 
         //convert to local space so roll is automatically accounted for
         localTargetDir = transform.InverseTransformDirection(vectorToTarget);
 
         angleToTarget = Vector3.Angle(Vector3.forward, localTargetDir);
+
+        if (targetShip)
+        {
+            relativeVelocityVector = targetShip.Velocity - ship.Velocity;
+            closingSpeed = -Vector3.Dot(relativeVelocityVector, vectorToTarget);
+        }
+
     }
 
 
@@ -224,17 +256,6 @@ public class BotControl : MonoBehaviour
     }
 
 
-    void PickTarget()
-    {
-        //Waypoint[] targets = GameObject.FindObjectsByType<type>(FindObjectsSortMode.None);
-        //var targets = GameObject.FindObjectsByType<Ship>(FindObjectsSortMode.None);
-        //if (targets.Length == 0) return;
-        //TargetObject = targets[Random.Range(0, targets.Length)].gameObject;
-
-        if (threats.Count == 0) return;
-        TargetObject = threats[0].ship.gameObject;
-
-    }
 
     void PickRandomWaypoint()
     {
@@ -262,7 +283,7 @@ public class BotControl : MonoBehaviour
             precisionScale = Mathf.Lerp(0.5f, 1f, t);
         }
 
-        if (factorInsideIdeal>0 && angleToTarget >= 140) precisionScale = 0;
+        if (factorInsideIdeal>0 && angleToTarget >= 120) precisionScale = 0;
 
 
         precisionScale *= (1f-factorBreakoff);
@@ -271,25 +292,46 @@ public class BotControl : MonoBehaviour
         if (steering) steering.Stick += new Vector3(yaw, steering.Stick.y, -pitch);
     }
 
-    void TurnAway()
+    void CollisionAvoidance()
     {
-        if (!TargetObject) return;
-
-        //steering is proportional to angle to target
-        float precisionScale = 1;
-        if (angleToTarget < precisionAngle)
+        foreach (Ship other in FindObjectsByType<Ship>(FindObjectsSortMode.None))
         {
-            float t = angleToTarget / precisionAngle; // 0-1
-            //precisionScale = Mathf.Lerp(0.5f, 1f, t);
+            //don't check yourself
+            if (other != ship)
+            {
+                //avoid checking the target, which gets its own check
+                //if (!TargetObject || other != TargetObject.gameObject)
+                {
+                    CollisionAvoidance(other);
+
+                }
+            }
         }
+    }
+
+    void CollisionAvoidance(Ship other)
+    {
+        if (!ship) return;
+
+        Vector3 toOther = other.transform.position - transform.position;
+        float dist = toOther.magnitude;
+        if (dist > rangeBreakoff) return;
+        toOther.Normalize();
+        Vector3 tangent = Vector3.Cross(toOther, transform.up).normalized;
+        if (Random.value > .5f) tangent = -tangent;     //random reversal
+        Vector3 upBias = transform.up * .15f;
+        Vector3 breakawayDir = (tangent+upBias).normalized;
+        Vector3 localBreakaway = transform.InverseTransformDirection(breakawayDir);
+
+        float precisionScale = 1;
 
         //strength is proportional to breakoff
         precisionScale *= factorBreakoff * 2f;// * (angleToTarget/180f);   
-
-        float yaw = Mathf.Clamp(-localTargetDir.x, -1f, 1f) * precisionScale;
-        float pitch = Mathf.Clamp(-localTargetDir.y, -1f, 1f) * precisionScale;
+        float yaw = Mathf.Clamp(localBreakaway.x, -1f, 1f) * precisionScale;
+        float pitch = Mathf.Clamp(localBreakaway.y, -1f, 1f) * precisionScale;
         if (steering) steering.Stick += new Vector3(yaw, steering.Stick.y, -pitch);
     }
+
 
     void Rolling()
     {

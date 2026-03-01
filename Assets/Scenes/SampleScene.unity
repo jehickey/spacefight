@@ -603,6 +603,11 @@ MonoBehaviour:
   angleToTarget: 0
   vectorToTarget: {x: 0, y: 0, z: 0}
   localTargetDir: {x: 0, y: 0, z: 0}
+  relativeVelocityVector: {x: 0, y: 0, z: 0}
+  closingSpeed: 0
+  ReselectBaseTimer: 3
+  ReselectRandomization: 0.25
+  reselectTimerActual: 0
   FireOnTarget: 1
   FiringAngle: 10
   Waypoints: []
@@ -1433,7 +1438,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3981098870216249235, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13.326214
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3981098870216249235, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2515,7 +2520,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3981098870216249235, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.507246
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 3981098870216249235, guid: 1d5ef9e63ea4b084aa32ad01e609a5f1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2951,58 +2956,6 @@ PrefabInstance:
       propertyPath: team
       value: 
       objectReference: {fileID: 1711002388}
-    - target: {fileID: 536226885212900498, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: MaxSpeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: rangeIdeal
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: FiringRange
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: rangeFiring
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: angleToTarget
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: rangeBreakoff
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: BreakoffDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: baselineRangeIdeal
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: baselineRangeFiring
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297599727100275329, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: baselineRangeBreakoff
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7015353510775188265, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: Thrust
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7015353510775188265, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: MaxThrust
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7015353510775188265, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7213807666538069386, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.001
@@ -3046,14 +2999,6 @@ PrefabInstance:
     - target: {fileID: 8022959836189550384, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
       propertyPath: m_Name
       value: enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8022959836189550384, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043391831691439790, guid: 60697ea64d316cf4eafd6f3a6183a558, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

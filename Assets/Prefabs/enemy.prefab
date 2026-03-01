@@ -221,15 +221,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.014
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.24
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -338,17 +338,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotControl
   TargetObject: {fileID: 0}
-  DistanceToTarget: 0
-  AngleToTarget: 0
+  distanceToTarget: 0
+  angleToTarget: 0
+  vectorToTarget: {x: 0, y: 0, z: 0}
+  localTargetDir: {x: 0, y: 0, z: 0}
+  relativeVelocityVector: {x: 0, y: 0, z: 0}
+  closingSpeed: 0
+  ReselectBaseTimer: 3
+  ReselectRandomization: 0.25
+  reselectTimerActual: 0
   FireOnTarget: 1
-  FiringRange: 2
   FiringAngle: 10
   Waypoints: []
   ThrottleUpMaxAngle: 90
   ThrottleDefault: 0.5
-  BreakoffDistance: 0.1
   ThrottleAimBias: 0.5
   precisionAngle: 5
+  baselineRangeBreakoff: 1
+  baselineRangeFiring: 4
+  baselineRangeIdeal: 3
+  rangeBreakoff: 1
+  rangeFiring: 4
+  rangeIdeal: 3
+  factorBreakoff: 0
+  factorFiring: 0
+  factorNearIdeal: 0
+  factorInsideIdeal: 0
 --- !u!114 &536226885212900498
 MonoBehaviour:
   m_ObjectHideFlags: 0
