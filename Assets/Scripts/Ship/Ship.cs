@@ -1,10 +1,5 @@
-using NUnit.Framework.Internal;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Burst;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class Ship : MonoBehaviour
 {
