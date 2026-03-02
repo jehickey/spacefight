@@ -40,7 +40,10 @@ public class Ship : MonoBehaviour
     public float IsFiringCooldown = .25f;
     private float lastFireTime = 0;
 
+    private Transform lastHitBy;
+
     private Simulation sim;
+    private Game game;
     private ThrottleSystem Throttle;
     private SteeringSystem Steering;
     private Camera cam;
@@ -63,6 +66,7 @@ public class Ship : MonoBehaviour
         collider = GetComponent<Collider>();
 
         if (!sim) sim = FindFirstObjectByType<Simulation>();
+        if (!game) game = FindFirstObjectByType<Game>();
         if (!Throttle) Throttle = GetComponent<ThrottleSystem>();
         if (!Steering) Steering = GetComponent<SteeringSystem>();
 
@@ -74,8 +78,6 @@ public class Ship : MonoBehaviour
             }
         }
         SelectWeapon();
-        //add ship to its team if not already present
-        if (team && !team.Ships.Contains(this)) team.Ships.Add(this);
 
         if (!cam) cam = GetComponentInChildren<Camera>();
         if (cam)
@@ -93,6 +95,9 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
+        //add ship to its team if not already present
+        if (team && !team.Ships.Contains(this)) team.Ships.Add(this);
+
         if (!listener) listener = FindFirstObjectByType<AudioListener>();
         DistanceFromPlayer = -1;    //default if no sim or no player
         if (listener) DistanceFromPlayer = Vector3.Distance(transform.position, listener.transform.position);
@@ -240,12 +245,13 @@ public class Ship : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Transform origin = null)
     {
         if (damage <= 0) return;
         Health -= damage;
         AddRumble(10);
         if (soundGotHit) soundGotHit.Play();
+        if (origin) lastHitBy = origin;
     }
 
     private void UpdateHealth()
@@ -254,6 +260,14 @@ public class Ship : MonoBehaviour
         if (Health <= 0)
         {
             Flare flare = Flare.Spawn(transform.position, Color.white, 2f, 0.15f, 0.025f, 0.25f, clipExplosion);
+            if (this == game.PlayerShip)
+            {
+                game.AddDeath();
+            }
+            else
+            {
+                if (game.PlayerShip && lastHitBy == game.PlayerShip.transform) game.AddKill();
+            }
             Destroy(gameObject);
         }
     }

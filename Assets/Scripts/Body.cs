@@ -15,6 +15,7 @@ public class Body : MonoBehaviour
     protected MeshFilter filter;
     protected MeshRenderer render;
     protected Simulation sim;
+    protected Game game;
 
     protected virtual void Start()
     {
@@ -24,6 +25,7 @@ public class Body : MonoBehaviour
     protected virtual void OnEnable()
     {
         if (!sim) sim = FindFirstObjectByType<Simulation>();
+        if (!game) game = FindFirstObjectByType<Game>();
         filter = GetComponent<MeshFilter>();
         if (!filter) filter = gameObject.AddComponent<MeshFilter>();
         mesh = Icosphere.Generate(2);
@@ -81,8 +83,8 @@ public class Body : MonoBehaviour
     private int GetDistanceDetail()
     {
         if (!sim) return 3;
-        if (!sim.PlayerShip) return 3;
-        DistanceFromPlayer = Vector3.Distance(transform.position, sim.PlayerShip.transform.position);
+        if (!game.PlayerShip) return 3;
+        DistanceFromPlayer = Vector3.Distance(transform.position, game.PlayerShip.transform.position);
         if (DistanceFromPlayer < Radius * 3) return 4;
         if (DistanceFromPlayer < Radius * 10) return 3;
         return 2;

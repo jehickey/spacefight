@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
     public float SpawnRate = 1f;    //number of ships spawned per second
 
     private List<GameObject> index = new List<GameObject>();
-    private Team team;
+    public Team team;
     private float lastSpawnTime = -1f;
 
     void Start()
@@ -20,7 +20,7 @@ public class Spawner : MonoBehaviour
 
     private void OnEnable()
     {
-        team = GetComponent<Team>();
+        //team = GetComponent<Team>();
     }
 
     void Update()

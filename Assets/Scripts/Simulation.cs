@@ -4,7 +4,7 @@ public class Simulation : MonoBehaviour
 {
     public float TimeScale = 1f;
     public float TimeDelta => Time.deltaTime * TimeScale;
-    public Ship PlayerShip;
+    //public Ship PlayerShip;
 
     [Header("Config Settings")]
     public float StickControlLimit = 0.5f;       //this is a percentage of the screen

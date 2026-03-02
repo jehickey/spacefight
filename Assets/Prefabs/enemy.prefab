@@ -206,6 +206,7 @@ MonoBehaviour:
   Looping: 0
   IsStereo: 0
   IsPlaying: 0
+  PlayOnStart: 0
 --- !u!1001 &6924111123685685822
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -454,13 +455,14 @@ MonoBehaviour:
   team: {fileID: 0}
   Velocity: {x: 0, y: 0, z: 0}
   Health: 10
-  MaxHealth: 10
+  MaxHealth: 2
   Mass: 100
   DistanceFromPlayer: 0
   RumbleIntensity: 0
   RumbleFade: 1
   RumbleMax: 5
   soundGotHit: {fileID: 3241921424684419130}
+  clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
   weapons: []
   WeaponIndex: 0
   WeaponIndexDelay: 0.1
@@ -531,6 +533,7 @@ MonoBehaviour:
   Looping: 0
   IsStereo: 0
   IsPlaying: 0
+  PlayOnStart: 0
 --- !u!65 &98396485923994060
 BoxCollider:
   m_ObjectHideFlags: 0

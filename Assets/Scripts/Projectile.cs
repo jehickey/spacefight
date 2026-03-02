@@ -50,7 +50,7 @@ public class Projectile : MonoBehaviour
     {
         if (target)
         {
-            target.TakeDamage(Damage);
+            target.TakeDamage(Damage, parentOrigin);
         }
         Vector3 pos = position;
         Flare.Spawn(pos, Color.yellow, 0.25f, 0.25f, 0.0025f, 0.025f);

@@ -14,6 +14,7 @@ public class KeyboardControl : MonoBehaviour
     private FlightControls flightControls;
 
     private Simulation sim;
+    private Game game;
     private float screenSize;
 
     private ThrottleBox throttleBox;
@@ -30,6 +31,7 @@ public class KeyboardControl : MonoBehaviour
     private void OnEnable()
     {
         if (!sim) sim = FindFirstObjectByType<Simulation>();
+        if (!game) game = FindFirstObjectByType<Game>();
         if (!ship) ship = GetComponent<Ship>();
         if (flightControls == null) flightControls = new FlightControls();
         flightControls.Enable();
@@ -54,6 +56,11 @@ public class KeyboardControl : MonoBehaviour
 
     void Update()
     {
+        if (game)
+        {
+            if (game.Paused) flightControls.Flight.Disable();
+            if (!game.Paused) flightControls.Flight.Enable();
+        }
         screenSize = Mathf.Min(Screen.width, Screen.height);
         if (ship)
         {

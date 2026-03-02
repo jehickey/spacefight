@@ -16,25 +16,26 @@ public class SoundMachine : MonoBehaviour
     private new AudioSource audio;
     private AudioListener listener;
     private Simulation sim;
+    private Game game;
     private float distanceFromPlayer;
 
     private void OnEnable()
     {
         sim = FindFirstObjectByType<Simulation>();
         if (!sim) return;
-
+        game = FindFirstObjectByType<Game>();
         //create audio source
         audio = gameObject.AddComponent<AudioSource>();
         audio.playOnAwake= false;
-        listener = FindFirstObjectByType<AudioListener>();
 
         //judge if audio source is player or not
         Ship ship = GetComponentInParent<Ship>();
-        IsPlayer = (ship && ship == sim.PlayerShip);
+        IsPlayer = (ship && ship == game.PlayerShip);
     }
 
     void Update()
     {
+        if (!listener) listener = FindFirstObjectByType<AudioListener>();
         ToggleAudio();
         if (audio && audio.enabled)
         {
@@ -99,7 +100,7 @@ public class SoundMachine : MonoBehaviour
 
             return;
         }
-        distanceFromPlayer = Vector3.Distance(transform.position, listener.transform.position);
+        if (listener) distanceFromPlayer = Vector3.Distance(transform.position, listener.transform.position);
 
         //have they entered audio range?
         if (!audio.isActiveAndEnabled)

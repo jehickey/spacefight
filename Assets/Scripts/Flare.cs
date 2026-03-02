@@ -69,7 +69,7 @@ public class Flare : MonoBehaviour
                 sound.Volume = sim.AudioLevelExplosions;
                 sound.PlayOnStart = true;
                 //sound.Play();
-                Debug.Log("BOOM");
+                //Debug.Log("BOOM");
             }
         }
     }
