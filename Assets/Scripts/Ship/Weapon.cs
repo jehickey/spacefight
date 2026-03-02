@@ -16,7 +16,8 @@ public class Weapon : MonoBehaviour
     private Recoil recoil;
     private float lastFireTime;
 
-    private new AudioSource audio;
+    //private new AudioSource audio;
+    public SoundMachine sound;
     private Simulation sim;
 
     void Start()
@@ -31,8 +32,10 @@ public class Weapon : MonoBehaviour
         if (!ship) Debug.LogError("Weapon can't find Ship controller");
 
         
-        audio = GetComponent<AudioSource>();
-        if (ship != sim.PlayerShip) Destroy(audio);
+        //audio = GetComponent<AudioSource>();
+        //if (ship != sim.PlayerShip) Destroy(audio);
+        if (!sound) sound = GetComponent<SoundMachine>();
+
     }
 
     void Update()
@@ -73,15 +76,15 @@ public class Weapon : MonoBehaviour
 
     private void playFireSound()
     {
-        if (!audio) return;
+        if (!sound) return;
         float pitch = FirePitch * (1 + Random.value * FireRandomization);
         float volume = FireVolume * (1 + Random.value * FireRandomization);
-        audio.pitch = pitch;
-        audio.volume = volume;
-        audio.loop = false;
-        if (transform.position.x > 0) audio.panStereo = 1;
-        if (transform.position.x < 0) audio.panStereo = -1;
-        audio.Play();
+        sound.Pitch = pitch;
+        sound.Volume = volume * sim.AudioLevelWeapons;
+        sound.Looping = false;
+        //if (transform.position.x > 0) audio.panStereo = 1;
+        //if (transform.position.x < 0) audio.panStereo = -1;
+        sound.Play();
     }
 
 }

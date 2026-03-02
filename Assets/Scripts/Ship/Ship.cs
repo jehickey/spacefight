@@ -27,6 +27,9 @@ public class Ship : MonoBehaviour
     private     Vector3 baseCamLocalPos;
     private Quaternion baseCamLocalRot;
 
+    [Header("Ship Audio")]
+    public SoundMachine soundGotHit;
+    public AudioClip clipExplosion;
 
     [Header("Weapons System")]
     public List<Weapon> weapons = new List<Weapon>();
@@ -242,6 +245,7 @@ public class Ship : MonoBehaviour
         if (damage <= 0) return;
         Health -= damage;
         AddRumble(10);
+        if (soundGotHit) soundGotHit.Play();
     }
 
     private void UpdateHealth()
@@ -249,7 +253,7 @@ public class Ship : MonoBehaviour
         Health = Mathf.Clamp(Health, 0, MaxHealth);
         if (Health <= 0)
         {
-            Flare.Spawn(transform.position, Color.white, 1f, 0.15f, 0.025f, 0.25f);
+            Flare flare = Flare.Spawn(transform.position, Color.white, 2f, 0.15f, 0.025f, 0.25f, clipExplosion);
             Destroy(gameObject);
         }
     }

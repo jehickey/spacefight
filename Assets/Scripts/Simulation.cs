@@ -18,6 +18,11 @@ public class Simulation : MonoBehaviour
 
     public float AudioCutoffRange = 10;         //how close before audio is activated
     public float AudioCutoffPadding = 1;        //how far out of range before audio is deactivated
+    public float AudioExternalSuppression = .5f;    //How much to suppress audio from outside ship
+
+    public float AudioLevelWeapons = 1;
+    public float AudioLevelEngines = 1;
+    public float AudioLevelExplosions = 1;
 
 
     void Start()

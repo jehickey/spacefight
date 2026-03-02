@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -13,17 +14,19 @@ public class Flare : MonoBehaviour
     private float peakTime;
 
     public int SphereDetail = 3;
+    public AudioClip clipSound;
 
     protected MeshFilter filter;
     protected MeshRenderer render;
 
     public Mesh mesh;
     private Material material;
-
-
+    private SoundMachine sound;
+    private Simulation sim;
     private void OnEnable()
     {
         mesh = Icosphere.Generate(3);
+        sim = FindFirstObjectByType<Simulation>();
 
         if (!material) material = new Material(Shader.Find("Unlit/Color"));
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -47,6 +50,7 @@ public class Flare : MonoBehaviour
         if (!render) render = gameObject.AddComponent<MeshRenderer>();
         render.sharedMaterial = material;
 
+
         Init();
     }
 
@@ -56,6 +60,18 @@ public class Flare : MonoBehaviour
         startTime = Time.time;
         peakTime = TTL * PeakFraction;
         transform.localScale = Vector3.one * MinRadius;
+        if (clipSound)
+        {
+            if (!sound) sound = gameObject.AddComponent<SoundMachine>();
+            if (sound)
+            {
+                sound.Sound = clipSound;
+                sound.Volume = sim.AudioLevelExplosions;
+                sound.PlayOnStart = true;
+                //sound.Play();
+                Debug.Log("BOOM");
+            }
+        }
     }
 
     void Update()
@@ -101,7 +117,7 @@ public class Flare : MonoBehaviour
     }
 
 
-    public static Flare Spawn(Vector3 position, Color color, float ttl = .5f, float peakFraction = .25f, float minRadius = .01f, float maxRadius = .05f)
+    public static Flare Spawn(Vector3 position, Color color, float ttl = .5f, float peakFraction = .25f, float minRadius = .01f, float maxRadius = .05f, AudioClip soundEffect = null)
     {
         GameObject obj = new GameObject("Flare");
         obj.transform.position = position;
@@ -111,6 +127,7 @@ public class Flare : MonoBehaviour
         flare.MinRadius = minRadius;
         flare.MaxRadius = maxRadius;
         flare.color = color;
+        flare.clipSound = soundEffect;
         flare.Init();
         return flare;
     }
