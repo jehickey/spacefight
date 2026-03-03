@@ -12,6 +12,27 @@ public class Icosphere : MonoBehaviour
         }
     }
 
+    public static void FlipMesh(Mesh mesh)
+    {
+        if (!mesh) return;
+        // Flip normals
+        var normals = mesh.normals;
+        for (int i = 0; i < normals.Length; i++)
+            normals[i] = -normals[i];
+        mesh.normals = normals;
+
+        // Reverse triangle winding
+        var triangles = mesh.triangles;
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            int temp = triangles[i];
+            triangles[i] = triangles[i + 1];
+            triangles[i + 1] = temp;
+        }
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
+    }
+
     public static Mesh Generate(int subdivisions)
     {
         subdivisions = Mathf.Clamp(subdivisions, 0, 6);
@@ -147,6 +168,7 @@ public class Icosphere : MonoBehaviour
         mesh.triangles = tris;
 
         mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
         return mesh;
     }
 

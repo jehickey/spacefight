@@ -70,12 +70,14 @@ public class Game : MonoBehaviour
         }
         if (!PlayerShip && !deathcam)
         {
+            /*
             deathcam=new GameObject("Deathcam").AddComponent<Camera>();
             deathcam.transform.position=deathcamPos;
             deathcam.transform.rotation=deathcamRot;
             deathcam.backgroundColor = Color.black;
             deathcam.clearFlags = CameraClearFlags.SolidColor;
             deathcam.nearClipPlane = 0.01f;
+            */
         }
         if (PlayerShip && deathcam) Destroy(deathcam);
 

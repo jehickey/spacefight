@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Starfield : MonoBehaviour
@@ -6,13 +7,26 @@ public class Starfield : MonoBehaviour
     public TextAsset StarDataSource;
     public float MaxMagnitude = 10f;
     public float FieldRadius = 1000f;
-    public float starSizeMin = .5f;
-    public float starSizeMax = 3f;
+    private float starSizeMin;
+    private float starSizeMax;
 
-    public Camera referenceCamera;
+    public float minPixels = 1.5f;
+    public float MaxRelToMin = 3f;
+
+    private Camera cam;
+    //public Transform anchorTransform;
+    private Quaternion orientation;
 
     public Mesh quadMesh;
     public Material starMaterial;
+
+    private StellarBackground background;
+    public bool useBackground = true;
+    public float BackgroundBuffer = 10f;
+    [Range(0,5)]
+    public float BackgroundBrightness = 1;
+
+
 
     [System.Serializable]
     public struct StarData
@@ -26,25 +40,83 @@ public class Starfield : MonoBehaviour
     const int batchSize = 1023; // Max instances per batch for DrawMeshInstanced
 
 
+    private Simulation sim;
+    private Game game;
+    //private Transform focalPoint;
 
-    void Start()
+
+    private void OnEnable()
     {
         LoadStarData();
         quadMesh = CreateQuad();
+        sim = FindFirstObjectByType<Simulation>();
+        game = FindFirstObjectByType<Game>();
+        orientation = Quaternion.identity;
+
+        background = GetComponentInChildren<StellarBackground>();
+        
+        if (background)
+        {
+            background.Radius = FieldRadius + BackgroundBuffer;
+        }
+        else
+        {
+            Debug.Log("Startfield has no background!");
+        }
+
+        if (FindObjectsByType<Starfield>(FindObjectsSortMode.None).Length > 1)
+        {
+            Debug.Log("Multiple Starfield objects!");
+        }
+
+
+
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, FieldRadius);
     }
 
     void Update()
     {
-        
+        //note: if star positioning problems arise, it's likely due to orientation
+        //being based on ship orientation rather than camera
+        cam = Camera.main;
+
+
+        //if the player ceases to exist, orientation and position should not change
+        if (cam)
+        {
+            orientation = cam.transform.rotation;
+            transform.position = cam.transform.position;
+
+            float fov = cam.fieldOfView * Mathf.Deg2Rad;
+            starSizeMin = minPixels * FieldRadius * (2f * Mathf.Tan(fov * .5f)) / cam.pixelHeight;
+            starSizeMax = starSizeMin * MaxRelToMin;
+        }
+
+
+        if (background)
+        {
+            background.gameObject.SetActive(useBackground);
+            background.Brightness = BackgroundBrightness;
+        }
+
+
+
     }
 
     private void LateUpdate()
     {
+        /*
         if (!referenceCamera)
         {
             Debug.Log("Starfield has no reference camera");
             return;
         }
+        */
         BuildMatrices();
         foreach (var batch in batches)
         {
@@ -96,14 +168,15 @@ public class Starfield : MonoBehaviour
     void BuildMatrices()
     {
         batches.Clear();
-        Quaternion starRotation = referenceCamera.transform.rotation;
+        //Quaternion starRotation = referenceCamera.transform.rotation;
         List<Matrix4x4> currBatch = new List<Matrix4x4>(batchSize);
         foreach (var star in Stars)
         {
-            float magFactor = Mathf.InverseLerp(7, 0, star.magnitude);
+            //float magFactor = Mathf.InverseLerp(7, 0, star.magnitude);
+            float magFactor = Mathf.Exp(-0.4f * (star.magnitude - 1f));
             Vector3 scale = Vector3.one * Mathf.Lerp(starSizeMin, starSizeMax, magFactor);
             Vector3 pos = transform.position + star.direction * FieldRadius;
-            Matrix4x4 matrix = Matrix4x4.TRS(pos, starRotation, scale);
+            Matrix4x4 matrix = Matrix4x4.TRS(pos, orientation, scale);
             currBatch.Add(matrix);
             if (currBatch.Count >= batchSize)
             {
