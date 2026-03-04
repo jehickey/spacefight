@@ -345,6 +345,15 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShowFPS"",
+                    ""type"": ""Button"",
+                    ""id"": ""9fe8b07d-94e8-4fd7-8ca3-e5fe50922a10"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -391,6 +400,17 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b99788e-2640-42af-848d-467a016b4dfd"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShowFPS"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -410,6 +430,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_Game_Exit = m_Game.FindAction("Exit", throwIfNotFound: true);
         m_Game_Restart = m_Game.FindAction("Restart", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
+        m_Game_ShowFPS = m_Game.FindAction("ShowFPS", throwIfNotFound: true);
     }
 
     ~@FlightControls()
@@ -645,6 +666,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Exit;
     private readonly InputAction m_Game_Restart;
     private readonly InputAction m_Game_Pause;
+    private readonly InputAction m_Game_ShowFPS;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -668,6 +690,10 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Pause".
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/ShowFPS".
+        /// </summary>
+        public InputAction @ShowFPS => m_Wrapper.m_Game_ShowFPS;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -703,6 +729,9 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @ShowFPS.started += instance.OnShowFPS;
+            @ShowFPS.performed += instance.OnShowFPS;
+            @ShowFPS.canceled += instance.OnShowFPS;
         }
 
         /// <summary>
@@ -723,6 +752,9 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @ShowFPS.started -= instance.OnShowFPS;
+            @ShowFPS.performed -= instance.OnShowFPS;
+            @ShowFPS.canceled -= instance.OnShowFPS;
         }
 
         /// <summary>
@@ -834,5 +866,12 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ShowFPS" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShowFPS(InputAction.CallbackContext context);
     }
 }

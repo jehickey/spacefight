@@ -17,8 +17,9 @@ public class KeyboardControl : MonoBehaviour
     private Game game;
     private float screenSize;
 
-    private ThrottleBox throttleBox;
-    private JoystickBox steering;
+    public ThrottleBox throttleBox;
+    public JoystickBox steering;
+    public WeaponsSystem weapons;
 
     private FlightControls controls
     {
@@ -38,6 +39,7 @@ public class KeyboardControl : MonoBehaviour
 
         throttleBox = GetComponentInChildren<ThrottleBox>();
         steering = GetComponentInChildren<JoystickBox>();
+        weapons = GetComponentInChildren<WeaponsSystem>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
@@ -76,7 +78,7 @@ public class KeyboardControl : MonoBehaviour
                 throttleBox.InputPosition += input;
             }
 
-            if (controls.Flight.Fire.IsPressed()) ship.Fire();
+            if (controls.Flight.Fire.IsPressed() && weapons) weapons.Fire();
 
             MouseToStickVector();
         }

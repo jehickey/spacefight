@@ -259,6 +259,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ShowFPS",
+                    "type": "Button",
+                    "id": "9fe8b07d-94e8-4fd7-8ca3-e5fe50922a10",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -303,6 +312,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b99788e-2640-42af-848d-467a016b4dfd",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShowFPS",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

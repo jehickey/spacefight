@@ -26,9 +26,9 @@ public class Weapon : MonoBehaviour
         emitter = GetComponentInChildren<Emitter>();
         if (!emitter) Debug.LogError("Weapon is missing an emitter");
         recoil = GetComponentInChildren<Recoil>();
-        if (!recoil) Debug.LogError("Weapon is missing a recoil");
+        //if (!recoil) Debug.LogError("Weapon is missing a recoil");
         ship = GetComponentInParent<Ship>();
-        if (!ship) Debug.LogError("Weapon can't find Ship controller");
+        //if (!ship) Debug.LogError("Weapon can't find Ship controller");
 
         
         //audio = GetComponent<AudioSource>();
@@ -58,7 +58,7 @@ public class Weapon : MonoBehaviour
         {
             GameObject obj = Instantiate(projectilePrefab, emitter.transform.position, emitter.transform.rotation);
             Projectile projectile = obj.GetComponent<Projectile>();
-            if (projectile)
+            if (projectile && ship)
             {
                 projectile.parentOrigin = ship.transform;
                 //projectile.Speed += ship.Speed;

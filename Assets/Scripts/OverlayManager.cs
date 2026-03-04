@@ -5,14 +5,21 @@ public class OverlayManager : MonoBehaviour
 {
     public int scoreKills = 0;
     public int scoreDeaths = 0;
-    public bool Paused = false;
     public int Countdown = 0;
+
+    public bool Paused = false;
+    public float PauseBrightness = .5f;
+
+
+    public bool ShowFPS= false;
+    public float FPS = 0;
 
     public Text txtKills;
     public Text txtDeaths;
     public Text txtPause;
     public Text txtKeys;
     public Text txtCountdown;
+    public Text txtFPS;
     public Image background;
 
     public Color backgroundColor = Color.black;
@@ -34,7 +41,7 @@ public class OverlayManager : MonoBehaviour
         txtPause.enabled = Paused;
         txtKeys.enabled = Paused;
         background.enabled = Paused;
-        if (Paused && Countdown==0) backgroundColor.a = .25f;
+        if (Paused && Countdown == 0) backgroundColor.a = PauseBrightness;
         txtKills.text = $"Kills: {scoreKills}";
         txtDeaths.text = $"Deaths: {scoreDeaths}";
 
@@ -57,9 +64,21 @@ public class OverlayManager : MonoBehaviour
         {
             audio.PlayOneShot(SpawnBeep);
         }
-        lastCountdown= Countdown;
+        lastCountdown = Countdown;
 
         background.color = backgroundColor;
+
+        if (txtFPS)
+        {
+            if (ShowFPS)
+            {
+                txtFPS.text = $"FPS:\n{Mathf.RoundToInt(FPS)}";
+            }
+            else
+            {
+                txtFPS.text = "";
+            }
+        }
 
     }
 }

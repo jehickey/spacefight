@@ -9,6 +9,7 @@ using static UnityEngine.Rendering.DebugUI;
 public class BotControl : MonoBehaviour
 {
     private Ship ship;
+    public float ActivationCountdown = 0;
 
     //public Vector3 TargetLocation = Vector3.zero;
     [Header("Target Information")]
@@ -73,6 +74,7 @@ public class BotControl : MonoBehaviour
 
     private ThrottleSystem throttle;
     private SteeringSystem steering;
+    private WeaponsSystem weapons;
 
     public class ThreatEntry
     {
@@ -106,10 +108,11 @@ public class BotControl : MonoBehaviour
 
     private void OnEnable()
     {
-        ship = GetComponent<Ship>();
+        ship = GetComponentInParent<Ship>();
         if (!ship) Debug.LogError("BotControl can't find a Ship to control");
         throttle = GetComponentInChildren<ThrottleSystem>();
         steering = GetComponentInChildren<SteeringSystem>();
+        weapons = GetComponentInChildren<WeaponsSystem>();
 
     }
 
@@ -118,7 +121,15 @@ public class BotControl : MonoBehaviour
         ship ??= GetComponent<Ship>();
         if (!ship) return;
 
+        //Don't start behavior until the timer expires
+        if (ActivationCountdown > 0)
+        {
+            ActivationCountdown -= Time.deltaTime;
+            return;
+        }
+
         if (steering) steering.Stick = Vector3.zero;
+
 
         UpdateThreats();
         PickTarget();
@@ -145,7 +156,7 @@ public class BotControl : MonoBehaviour
         if (TargetObject)
         {
             Gizmos.color = Color.red * .5f;
-            if (ship.IsFiring) Gizmos.color = Color.red;
+            if (weapons && weapons.IsFiring) Gizmos.color = Color.red;
             //Gizmos.DrawWireSphere(TargetObject.transform.position, 1f);
             Vector3 fireDir = (transform.forward-TargetObject.transform.position).normalized;
             Gizmos.DrawLine(transform.position, transform.position + fireDir*rangeFiring);
@@ -283,6 +294,7 @@ public class BotControl : MonoBehaviour
             precisionScale = Mathf.Lerp(0.5f, 1f, t);
         }
 
+        //don't change direction if flying away from target while too close
         if (factorInsideIdeal>0 && angleToTarget >= 120) precisionScale = 0;
 
 
@@ -290,6 +302,19 @@ public class BotControl : MonoBehaviour
         float yaw = Mathf.Clamp(localTargetDir.x, -1f, 1f) * precisionScale;
         float pitch = Mathf.Clamp(localTargetDir.y, -1f, 1f) * precisionScale;
         if (steering) steering.Stick += new Vector3(yaw, steering.Stick.y, -pitch);
+    }
+
+    public static Vector3 Aim(GameObject shooter, GameObject target)
+    {
+        if (!shooter || !target) return Vector3.zero;
+
+        Vector3 vectorToTarget = (target.transform.position - shooter.transform.position).normalized;
+        //convert to local space so roll is automatically accounted for
+        Vector3 localTargetDir = shooter.transform.InverseTransformDirection(vectorToTarget);
+        //does not factor precision - result is always precise
+        float yaw = Mathf.Clamp(localTargetDir.x, -1f, 1f);
+        float pitch = Mathf.Clamp(localTargetDir.y, -1f, 1f);
+        return new Vector3(yaw, 0, -pitch);
     }
 
     void CollisionAvoidance()
@@ -367,7 +392,7 @@ public class BotControl : MonoBehaviour
         //if (distanceToTarget > rangeFiring) return;
         if (factorFiring <= 0) return;
         if (angleToTarget > FiringAngle) return;
-        ship.Fire();
+        if (weapons) weapons.Fire();
     }
 
 

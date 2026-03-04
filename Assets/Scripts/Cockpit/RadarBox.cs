@@ -74,7 +74,7 @@ public class RadarBox : MonoBehaviour
             if (ship && ship != myShip)
             {
                 Vector2 p = PolarProject2(ship.transform.position);
-                DrawDot((int)p.x, (int)p.y, ship.team.color);
+                if (ship.team) DrawDot((int)p.x, (int)p.y, ship.team.color);
 
                 /*
                 //transform position to screen coordinate

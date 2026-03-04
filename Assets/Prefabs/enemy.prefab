@@ -377,6 +377,9 @@ PrefabInstance:
       addedObject: {fileID: 536226885212900498}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
+      addedObject: {fileID: -6752362979495582281}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 7015353510775188265}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
@@ -413,6 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotControl
+  ActivationCountdown: 0
   TargetObject: {fileID: 0}
   distanceToTarget: 0
   angleToTarget: 0
@@ -463,16 +467,28 @@ MonoBehaviour:
   RumbleMax: 5
   soundGotHit: {fileID: 3241921424684419130}
   clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
+  collider: {fileID: 0}
+  forcedDisplacement: {x: 0, y: 0, z: 0}
+  externalForce: {x: 0, y: 0, z: 0}
+  externalAngularForce: {x: 0, y: 0, z: 0}
+--- !u!114 &-6752362979495582281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022959836189550384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37d075e86ef46c41aab38450f50c8b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponsSystem
   weapons: []
   WeaponIndex: 0
   WeaponIndexDelay: 0.1
   WeaponsFireInterlinked: 0
   IsFiring: 0
   IsFiringCooldown: 0.25
-  collider: {fileID: 0}
-  forcedDisplacement: {x: 0, y: 0, z: 0}
-  externalForce: {x: 0, y: 0, z: 0}
-  externalAngularForce: {x: 0, y: 0, z: 0}
 --- !u!114 &7015353510775188265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,7 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e547290e71487ef48b84948a46e943ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrottleSystem
-  Input: 0
+  Input: 1
   Actual: 0
   Rate: 1
   Thrust: 0

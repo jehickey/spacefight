@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 319464331351644227}
   - component: {fileID: 8967535683130982750}
   - component: {fileID: 7209219195275270955}
+  - component: {fileID: 8508862270921960221}
   - component: {fileID: 2191292373568440623}
   - component: {fileID: 4885994613553760103}
   - component: {fileID: 1558615600047209355}
@@ -480,6 +481,9 @@ MonoBehaviour:
   MouseSteering: 1
   InvertPitch: 0
   ThrottlePush: 1.25
+  throttleBox: {fileID: 0}
+  steering: {fileID: 0}
+  weapons: {fileID: 0}
 --- !u!114 &8967535683130982750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotControl
+  ActivationCountdown: 0
   TargetObject: {fileID: 0}
   distanceToTarget: 0
   angleToTarget: 0
@@ -533,8 +538,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ship
   team: {fileID: 0}
   Velocity: {x: 0, y: 0, z: 0}
-  Health: 20
-  MaxHealth: 20
+  Health: 1000
+  MaxHealth: 1000
   Mass: 100
   DistanceFromPlayer: 0
   RumbleIntensity: 0
@@ -542,17 +547,11 @@ MonoBehaviour:
   RumbleMax: 5
   soundGotHit: {fileID: 8449233989803189964}
   clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
-  weapons: []
-  WeaponIndex: 0
-  WeaponIndexDelay: 0.1
-  WeaponsFireInterlinked: 0
-  IsFiring: 0
-  IsFiringCooldown: 0.25
   collider: {fileID: 0}
   forcedDisplacement: {x: 0, y: 0, z: 0}
   externalForce: {x: 0, y: 0, z: 0}
   externalAngularForce: {x: 0, y: 0, z: 0}
---- !u!114 &2191292373568440623
+--- !u!114 &8508862270921960221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -560,6 +559,24 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7534400422700832365}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37d075e86ef46c41aab38450f50c8b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponsSystem
+  weapons: []
+  WeaponIndex: 0
+  WeaponIndexDelay: 0.1
+  WeaponsFireInterlinked: 0
+  IsFiring: 0
+  IsFiringCooldown: 0.25
+--- !u!114 &2191292373568440623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7534400422700832365}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71394f64921273741817f7eb81d76db6, type: 3}
   m_Name: 
@@ -581,7 +598,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7534400422700832365}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e547290e71487ef48b84948a46e943ae, type: 3}
   m_Name: 

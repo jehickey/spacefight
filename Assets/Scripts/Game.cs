@@ -24,6 +24,13 @@ public class Game : MonoBehaviour
     private Quaternion deathcamRot = Quaternion.identity;
     private Camera deathcam;
 
+    //fps info
+    private float updateInterval = .5f;
+    private int frames = 0;
+    private float timeAccumulator = 0;
+    public float FPS = 0;
+
+
     void OnEnable()
     {
         if (controls==null) controls = new FlightControls();
@@ -46,12 +53,14 @@ public class Game : MonoBehaviour
         if (controls.Game.Exit.WasPressedThisFrame()) Application.Quit();
         if (controls.Game.Restart.WasPressedThisFrame()) SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         if (controls.Game.Pause.WasPressedThisFrame()) Paused = !Paused;
+        if (controls.Game.ShowFPS.WasPressedThisFrame()) overlay.ShowFPS = !overlay.ShowFPS;
 
         if (overlay)
         {
             overlay.Paused = Paused;
             overlay.scoreKills = KillCount;
             overlay.scoreDeaths = DeathCount;
+            overlay.FPS = FPS;
         }
         if (Paused)
         {
@@ -61,6 +70,10 @@ public class Game : MonoBehaviour
         {
             Time.timeScale = 1;
         }
+
+
+        
+
 
         //maintain info for deathcam
         if (Camera.main)
@@ -83,6 +96,17 @@ public class Game : MonoBehaviour
 
         UpdateRespawn();
 
+        //fps management
+        frames++;
+        timeAccumulator += Time.unscaledDeltaTime;
+        if (timeAccumulator >= updateInterval)
+        {
+            FPS = frames / timeAccumulator;
+            frames = 0;
+            timeAccumulator = 0;
+        }
+
+
     }
 
     public void AddKill()
@@ -103,6 +127,14 @@ public class Game : MonoBehaviour
         if (PlayerShip) return;
         if (!PlayerShip)
         {
+            //first see if there is a Player somewhere
+            Cockpit cockpit = FindFirstObjectByType<Cockpit>();
+            if (cockpit)        //found one
+            {
+                PlayerShip = cockpit.GetComponentInParent<Ship> ();
+                return;
+            }
+
             if (respawnCount == 0)                      //no countdown has started yet
             {
                 //respawnCount = RespawnCountdown;

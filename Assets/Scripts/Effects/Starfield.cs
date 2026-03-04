@@ -161,7 +161,7 @@ public class Starfield : MonoBehaviour
             });
         }
 
-        Debug.Log($"Loaded {Stars.Count} stars.");
+        //Debug.Log($"Loaded {Stars.Count} stars.");
     }
 
 
