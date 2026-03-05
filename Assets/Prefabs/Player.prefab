@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 8508862270921960221}
   - component: {fileID: 2191292373568440623}
   - component: {fileID: 4885994613553760103}
+  - component: {fileID: 8916821864293589268}
   - component: {fileID: 1558615600047209355}
   - component: {fileID: 7573529833716241466}
   - component: {fileID: 8449233989803189964}
@@ -496,7 +497,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotControl
-  ActivationCountdown: 0
   TargetObject: {fileID: 0}
   distanceToTarget: 0
   angleToTarget: 0
@@ -538,13 +538,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ship
   team: {fileID: 0}
   Velocity: {x: 0, y: 0, z: 0}
-  Health: 1000
-  MaxHealth: 1000
   Mass: 100
   DistanceFromPlayer: 0
   RumbleIntensity: 0
   RumbleFade: 1.5
   RumbleMax: 5
+  FreshSpawnCountdown: 0
   soundGotHit: {fileID: 8449233989803189964}
   clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
   collider: {fileID: 0}
@@ -576,7 +575,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7534400422700832365}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71394f64921273741817f7eb81d76db6, type: 3}
   m_Name: 
@@ -598,7 +597,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7534400422700832365}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e547290e71487ef48b84948a46e943ae, type: 3}
   m_Name: 
@@ -610,6 +609,24 @@ MonoBehaviour:
   MaxThrust: 1
   MaxRumble: 1.5
   MinThrust: 0.01
+--- !u!114 &8916821864293589268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7534400422700832365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 116f13f5e71e276489a671b55a79d104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Destructable
+  RootObject: {fileID: 0}
+  Health: 0
+  MaxHealth: 100
+  clipExplosion: {fileID: 0}
+  soundGotHit: {fileID: 8449233989803189964}
+  lastHitBy: {fileID: 0}
 --- !u!65 &1558615600047209355
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1371,7 +1388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrottleBox
   InputPosition: 0
-  NeutralPosition: 0.5
+  NeutralPosition: 0
   NeutralDriftRate: 1
   ThrowCenter: {x: 0, y: 0, z: 0}
   ThrowAxis: {x: 0, y: 1, z: 0}

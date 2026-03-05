@@ -37,9 +37,9 @@ public class Moon : Body
 
         if (Application.isPlaying && OrbitPeriod>0)
         {
-            if (sim)
+            if (Simulation.I)
             {
-                OrbitPhase += sim.TimeDelta / OrbitPeriod;
+                OrbitPhase += Simulation.I.TimeDelta / OrbitPeriod;
             }
         }
         if (OrbitPhase > 1) OrbitPhase = 0;

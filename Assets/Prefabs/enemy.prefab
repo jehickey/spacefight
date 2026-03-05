@@ -386,6 +386,9 @@ PrefabInstance:
       addedObject: {fileID: 9043391831691439790}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 6854493484556910921}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3241921424684419130}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91c1fbce5789eea47bfbc80a7b5ff20d, type: 3}
       insertIndex: -1
@@ -416,7 +419,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotControl
-  ActivationCountdown: 0
   TargetObject: {fileID: 0}
   distanceToTarget: 0
   angleToTarget: 0
@@ -458,13 +460,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ship
   team: {fileID: 0}
   Velocity: {x: 0, y: 0, z: 0}
-  Health: 10
-  MaxHealth: 2
   Mass: 100
   DistanceFromPlayer: 0
   RumbleIntensity: 0
   RumbleFade: 1
   RumbleMax: 5
+  FreshSpawnCountdown: 0
   soundGotHit: {fileID: 3241921424684419130}
   clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
   collider: {fileID: 0}
@@ -520,7 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71394f64921273741817f7eb81d76db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteeringSystem
-  TurnRate: 200
+  TurnRate: 100
   RollRate: 50
   StickZeroRate: 0.5
   StickResponse: 2
@@ -530,6 +531,24 @@ MonoBehaviour:
   Stick: {x: 0, y: 0, z: 0}
   realStick: {x: 0, y: 0, z: 0}
   Result: {x: 0, y: 0, z: 0}
+--- !u!114 &6854493484556910921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022959836189550384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 116f13f5e71e276489a671b55a79d104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Destructable
+  RootObject: {fileID: 0}
+  Health: 0
+  MaxHealth: 10
+  clipExplosion: {fileID: 0}
+  soundGotHit: {fileID: 3241921424684419130}
+  lastHitBy: {fileID: 0}
 --- !u!114 &3241921424684419130
 MonoBehaviour:
   m_ObjectHideFlags: 0

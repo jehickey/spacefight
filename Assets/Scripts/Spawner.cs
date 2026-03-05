@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
     public int Inventory = 0;
     public Vector3 LaunchDirection = Vector3.zero;
     private Vector3 worldDir = Vector3.zero;
-    public float ActivationCountdown = 0;
+
 
     private List<GameObject> index = new List<GameObject>();
     public Team team;
@@ -62,17 +62,12 @@ public class Spawner : MonoBehaviour
         GameObject obj = Instantiate(Prototype, position, orientation);
         index.Add(obj);
         Ship ship = obj.GetComponent<Ship>();
+        ship.FreshSpawnCountdown = Game.I.ActivationCountdown;
         if (ship && team)
         {
             ship.team = team;
             team.Ships.Add(ship);
         }
-        BotControl pilot = obj.GetComponent<BotControl>();
-        if (pilot)
-        {
-            pilot.ActivationCountdown = ActivationCountdown;
-        }
-
         lastSpawnTime = Time.time;
         Inventory--;
     }

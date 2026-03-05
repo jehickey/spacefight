@@ -20,11 +20,10 @@ public class Flare : MonoBehaviour
     public Mesh mesh;
     private Material material;
     private SoundMachine sound;
-    private Simulation sim;
+
     private void OnEnable()
     {
         mesh = Icosphere.Generate(3);
-        sim = FindFirstObjectByType<Simulation>();
 
         if (!material) material = new Material(Shader.Find("Unlit/Color"));
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -64,7 +63,7 @@ public class Flare : MonoBehaviour
             if (sound)
             {
                 sound.Sound = clipSound;
-                sound.Volume = sim.AudioLevelExplosions;
+                sound.Volume = Game.I.AudioLevelExplosions;
                 sound.PlayOnStart = true;
                 //sound.Play();
                 //Debug.Log("BOOM");

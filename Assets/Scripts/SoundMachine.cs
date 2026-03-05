@@ -15,22 +15,17 @@ public class SoundMachine : MonoBehaviour
 
     private new AudioSource audio;
     private AudioListener listener;
-    private Simulation sim;
-    private Game game;
     private float distanceFromPlayer;
 
     private void OnEnable()
     {
-        sim = FindFirstObjectByType<Simulation>();
-        if (!sim) return;
-        game = FindFirstObjectByType<Game>();
         //create audio source
         audio = gameObject.AddComponent<AudioSource>();
         audio.playOnAwake= false;
 
         //judge if audio source is player or not
         Ship ship = GetComponentInParent<Ship>();
-        IsPlayer = (ship && ship == game.PlayerShip);
+        IsPlayer = (ship && ship == Game.I.PlayerShip);
     }
 
     void Update()
@@ -62,9 +57,9 @@ public class SoundMachine : MonoBehaviour
             {
                 audio.spatialize = true;
                 audio.spatialBlend = 1;
-                audio.maxDistance = sim.AudioCutoffRange;
+                audio.maxDistance = Game.I.AudioCutoffRange;
                 audio.panStereo = 0;
-                audio.volume = Volume * sim.AudioExternalSuppression;
+                audio.volume = Volume * Game.I.AudioExternalSuppression;
             }
 
             //maintain looping audio
@@ -105,7 +100,7 @@ public class SoundMachine : MonoBehaviour
         //have they entered audio range?
         if (!audio.isActiveAndEnabled)
         {
-            if (distanceFromPlayer <= sim.AudioCutoffRange)
+            if (distanceFromPlayer <= Game.I.AudioCutoffRange)
             {
                 audio.enabled = true;
             }
@@ -113,7 +108,7 @@ public class SoundMachine : MonoBehaviour
         //have they left audio range? (always a larger value)
         if (audio.isActiveAndEnabled)
         {
-            if (distanceFromPlayer > sim.AudioCutoffRange + sim.AudioCutoffPadding)
+            if (distanceFromPlayer > Game.I.AudioCutoffRange + Game.I.AudioCutoffPadding)
             {
                 audio.enabled = false;
             }

@@ -13,8 +13,6 @@ public class KeyboardControl : MonoBehaviour
     private Ship ship;
     private FlightControls flightControls;
 
-    private Simulation sim;
-    private Game game;
     private float screenSize;
 
     public ThrottleBox throttleBox;
@@ -31,8 +29,6 @@ public class KeyboardControl : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!sim) sim = FindFirstObjectByType<Simulation>();
-        if (!game) game = FindFirstObjectByType<Game>();
         if (!ship) ship = GetComponent<Ship>();
         if (flightControls == null) flightControls = new FlightControls();
         flightControls.Enable();
@@ -58,10 +54,10 @@ public class KeyboardControl : MonoBehaviour
 
     void Update()
     {
-        if (game)
+        if (Game.I)
         {
-            if (game.Paused) flightControls.Flight.Disable();
-            if (!game.Paused) flightControls.Flight.Enable();
+            if (Game.I.Paused) flightControls.Flight.Disable();
+            if (!Game.I.Paused) flightControls.Flight.Enable();
         }
         screenSize = Mathf.Min(Screen.width, Screen.height);
         if (ship)
@@ -97,8 +93,8 @@ public class KeyboardControl : MonoBehaviour
         mousePos = mousePos - new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 
         // Compute radius in pixels
-        float deadzoneRadius = screenSize * sim.StickControlDeadzone;
-        float limitRadius = screenSize * sim.StickControlLimit;
+        float deadzoneRadius = screenSize * Game.I.StickControlDeadzone;
+        float limitRadius = screenSize * Game.I.StickControlLimit;
 
         // Distance from center
         float dist = mousePos.magnitude;

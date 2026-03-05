@@ -21,7 +21,6 @@ public class HUD : MonoBehaviour
 
     private Canvas canvas;
     private RectTransform canvasRect;
-    private Simulation sim;
 
     private float screenSize;
     private float reticleSize;
@@ -31,7 +30,6 @@ public class HUD : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!sim) sim = FindFirstObjectByType<Simulation>();
         if (!canvas) canvas = GetComponent<Canvas>();
         if (!canvasRect) canvasRect = canvas.GetComponent<RectTransform>();
         if (!steering) steering = GetComponentInParent<SteeringSystem>();
@@ -51,7 +49,7 @@ public class HUD : MonoBehaviour
     private void UpdateReticule()
     {
         if (!Reticule || !ship) return;
-        reticleSize = sim.StickControlDeadzone * screenSize;
+        reticleSize = Game.I.StickControlDeadzone * screenSize;
         Reticule.rectTransform.sizeDelta = Vector2.one * reticleSize;
         if (ReticuleMask) ReticuleMask.rectTransform.sizeDelta = Reticule.rectTransform.sizeDelta;
         UpdateHorizonIndicator();
@@ -61,7 +59,7 @@ public class HUD : MonoBehaviour
     {
         //work out radius for maximum stick position (so it's not square)
         if (!StickPosition) return;
-        float StickMax = screenSize * sim.StickControlLimit * .5f;
+        float StickMax = screenSize * Game.I.StickControlLimit * .5f;
         Vector2 pos = Vector2.zero;
         if (ship)
         {

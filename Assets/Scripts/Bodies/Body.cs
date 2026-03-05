@@ -8,14 +8,14 @@ public class Body : MonoBehaviour
     public float RotationPeriod = 10; //degrees per second
 
     public int SphereDetail;
+    public float TerrainMagnitudeScale = .01f;       //a factor of radius
+    public float actualTerrainMagnitude;
 
     public Material material;
     public Mesh mesh;
 
     protected MeshFilter filter;
     protected MeshRenderer render;
-    protected Simulation sim;
-    protected Game game;
 
     protected virtual void Start()
     {
@@ -24,16 +24,14 @@ public class Body : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        if (!sim) sim = FindFirstObjectByType<Simulation>();
-        if (!game) game = FindFirstObjectByType<Game>();
         filter = GetComponent<MeshFilter>();
         if (!filter) filter = gameObject.AddComponent<MeshFilter>();
-        mesh = Icosphere.Generate(2);
-        filter.sharedMesh = mesh;
 
         render = GetComponent<MeshRenderer>();
         if (!render) render = gameObject.AddComponent<MeshRenderer>();
-        filter.sharedMesh = Icosphere.Generate(SphereDetail);
+        
+        //mesh = Icosphere.Generate(SphereDetail);
+        //filter.sharedMesh = mesh;
 
         if (!material) material = new Material(Shader.Find("Unlit/Color"));
         render.sharedMaterial = material;
@@ -55,7 +53,9 @@ public class Body : MonoBehaviour
         if (detail != SphereDetail)
         {
             SphereDetail = detail;
-            filter.sharedMesh = Icosphere.Generate(SphereDetail);
+            mesh = Icosphere.Generate(SphereDetail);
+            if (filter) filter.sharedMesh = mesh;
+            ModifyMesh();
             render.sharedMaterial = material;
         }
     }
@@ -82,11 +82,14 @@ public class Body : MonoBehaviour
 
     private int GetDistanceDetail()
     {
-        if (!sim) return 3;
-        if (!game.PlayerShip) return 3;
-        DistanceFromPlayer = Vector3.Distance(transform.position, game.PlayerShip.transform.position);
-        if (DistanceFromPlayer < Radius * 3) return 4;
-        if (DistanceFromPlayer < Radius * 10) return 3;
+        if (Camera.main)
+        {
+            DistanceFromPlayer = Vector3.Distance(transform.position, Camera.main.transform.position);
+            if (DistanceFromPlayer < Radius * 1.5f) return 6;
+            if (DistanceFromPlayer < Radius * 2) return 5;
+            if (DistanceFromPlayer < Radius * 3) return 4;
+            if (DistanceFromPlayer < Radius * 10) return 3;
+        }
         return 2;
     }
 
@@ -105,9 +108,29 @@ public class Body : MonoBehaviour
 
 
     void DoRotation() {
-        if (!sim || sim.TimeScale==0) return;
+        if (!Simulation.I || Simulation.I.TimeScale==0) return;
         float degreesPerSimSecond = 360f / RotationPeriod;
-        transform.Rotate(Vector3.up, degreesPerSimSecond * sim.TimeDelta, Space.Self);
+        transform.Rotate(Vector3.up, degreesPerSimSecond * Simulation.I.TimeDelta, Space.Self);
+    }
+
+
+    void ModifyMesh()
+    {
+        if (!mesh) return;
+        actualTerrainMagnitude = TerrainMagnitudeScale * Radius;
+
+        Vector3[] verts = mesh.vertices;
+
+        for (int i = 0; i < verts.Length; i++)
+        {
+            Vector3 dir = verts[i].normalized;
+            float offset = Random.Range(-actualTerrainMagnitude, actualTerrainMagnitude);
+            verts[i] = dir * (verts[i].magnitude + offset);
+        }
+
+        mesh.vertices = verts;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
     }
 
 }

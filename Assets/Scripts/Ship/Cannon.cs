@@ -7,7 +7,6 @@ public class Cannon : MonoBehaviour
 
     //public Weapon weapon;
 
-    private Game game;
     public float angleToTarget = 0;
     public Vector3 localTargetDir;
     public float FiringRange = 3;
@@ -26,7 +25,6 @@ public class Cannon : MonoBehaviour
     void Start()
     {
         ship = GetComponentInParent<Ship>();
-        game = FindFirstObjectByType<Game>();
         steering = GetComponent<SteeringSystem>();
         weapons = GetComponent<WeaponsSystem>();
         if (ship) shipWeapons = ship.GetComponent<WeaponsSystem>();
@@ -35,11 +33,11 @@ public class Cannon : MonoBehaviour
 
     void Update()
     {
-        if (!game) return;
-        if (!shipWeapons) return;
+        if (!Game.I) return;
+        if (!shipWeapons || !shipWeapons.enabled) return;
 
         //target the player, if present
-        if (!Target) Target = game.PlayerShip?.gameObject;
+        if (!Target) Target = Game.I.PlayerShip?.gameObject;
 
         if (Target)
         {

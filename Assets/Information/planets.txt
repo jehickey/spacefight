@@ -1,0 +1,25 @@
+Detailed Planets:
+
+* this will involve a test where a planet is spawned, with a camera that allows rotation on two axes and zooming.
+* it's meant to test LOD at different distances, especially as higher LOD becomes an option
+
+
+Development Sequence:
+	* increasing and decreasing sphere mesh detail
+	* swapping between low and high res textures on approach
+	* switching to divided spheres with multiple enhanced textures (and balancing memory load)
+	* vertex deformation of the spheres to show terrain
+	* generation of sections of higher detail terrain (w/ generation)
+	* successively higher detail as camera approaches closely
+	
+	
+Tools to work on:
+	* sphere deformation
+		* modifying vertices on a sphere to represent terrain
+	* patch generation
+		* variable size and vertex detail
+		* variable curvature, ranging from highly curved to completely flat
+	* subdividing a patch
+		* increase detail level of an existing patch
+	
+	

@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[DisallowMultipleComponent]
 public class Game : MonoBehaviour
 {
+    public static Game I { get; private set; }
+
     public Ship PlayerShip;
     public GameObject PlayerShipPrefab;
     public Team PlayerTeam;
@@ -30,16 +33,50 @@ public class Game : MonoBehaviour
     private float timeAccumulator = 0;
     public float FPS = 0;
 
+    public float ActivationCountdown = 3;
+
+    [Header("Control Settings")]
+    public float StickControlLimit = 0.5f;       //this is a percentage of the screen
+    public float StickControlDeadzone = 0.25f;   //this is a percentage of the screen
+
+
+    [Header("Audio Settings")]
+    public float AudioCutoffRange = 3;         //how close before audio is activated
+    public float AudioCutoffPadding = 1;        //how far out of range before audio is deactivated
+    public float AudioExternalSuppression = .5f;    //How much to suppress audio from outside ship
+    public float AudioLevelWeapons = 1;
+    public float AudioLevelEngines = 1;
+    public float AudioLevelExplosions = 1;
+    public AudioClip defaultSoundHit;
+    public AudioClip defaultSoundExplosion;
+
+    private void Awake()
+    {
+        if (I && I!=this)
+        {
+            Debug.Log("An instance of Game already exists!");
+            //Destroy(gameObject);
+            return;
+        }
+        I = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (I == this) I = null;
+    }
+
 
     void OnEnable()
     {
+        if (!I) I = this;       //so it runs on domain reload
         if (controls==null) controls = new FlightControls();
         controls.Enable();
         overlay = GetComponentInChildren<OverlayManager>();
         //controls.Flight.Enable();
 
-        if (!PlayerShipPrefab) Debug.Log("No player ship prefab set in Game!");
-        if (!PlayerTeam) Debug.Log("No player team assigned in Game!");
+        //if (!PlayerShipPrefab) Debug.Log("No player ship prefab set in Game!");
+        //if (!PlayerTeam) Debug.Log("No player team assigned in Game!");
     }
 
     private void OnDisable()
@@ -54,6 +91,17 @@ public class Game : MonoBehaviour
         if (controls.Game.Restart.WasPressedThisFrame()) SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         if (controls.Game.Pause.WasPressedThisFrame()) Paused = !Paused;
         if (controls.Game.ShowFPS.WasPressedThisFrame()) overlay.ShowFPS = !overlay.ShowFPS;
+
+        if (Paused)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
         if (overlay)
         {
@@ -123,7 +171,7 @@ public class Game : MonoBehaviour
         //player respawn
         //lastPlayerShip = PlayerShip;
         if (Paused) return;
-        overlay.Countdown = Mathf.CeilToInt(respawnCount);
+        if (overlay) overlay.Countdown = Mathf.CeilToInt(respawnCount);
         if (PlayerShip) return;
         if (!PlayerShip)
         {

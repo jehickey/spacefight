@@ -15,13 +15,9 @@ public class StellarBackground : MonoBehaviour
 
     private MeshFilter filter;
     private MeshRenderer render;
-    private Simulation sim;
-    private Game game;
 
     private void OnEnable()
     {
-        if (!sim) sim = FindFirstObjectByType<Simulation>();
-        if (!game) game = FindFirstObjectByType<Game>();
         filter = GetComponent<MeshFilter>();
         if (!filter) filter = gameObject.AddComponent<MeshFilter>();
         //mesh = Icosphere.Generate(2);

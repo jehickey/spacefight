@@ -1,0 +1,201 @@
+{
+    "version": 1,
+    "name": "PlanetTestControls",
+    "maps": [
+        {
+            "name": "Controls",
+            "id": "dab057dd-574c-4522-9dcd-0dda49b6628b",
+            "actions": [
+                {
+                    "name": "Zoom",
+                    "type": "Button",
+                    "id": "571c4b6d-415c-4788-a080-6cd3b5013391",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateX",
+                    "type": "Button",
+                    "id": "4b217249-0320-4573-96cc-2420dd753934",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateY",
+                    "type": "Button",
+                    "id": "d68445c3-7740-4114-8c11-981ccf4a11a1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Show Poles",
+                    "type": "Button",
+                    "id": "494efd71-213e-4b04-ae55-f5f7113b8367",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveLightMode",
+                    "type": "Value",
+                    "id": "bb0da40a-326e-4090-8013-f1477a70a288",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "AngleCameraMode",
+                    "type": "Value",
+                    "id": "864e96c5-0ec6-439a-b674-e6c00eb3b918",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "1D Axis",
+                    "id": "6e9ec416-e983-4fa1-9617-8492a4d851d3",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Negative",
+                    "id": "02922277-beb6-4643-ae6b-29dc10e06f6d",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Positive",
+                    "id": "71095866-23f4-49af-bd26-d306d6e87f22",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "3c6f5366-09a2-4f32-b44b-77b3aff6446e",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateX",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "9e8fcebc-2bba-4621-9ae8-6d3437e5c0fb",
+                    "path": "<Mouse>/delta/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateX",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "0d24d6a3-c1e0-4e4f-9984-bb48912e4fb5",
+                    "path": "<Mouse>/delta/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateX",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "3c18fca0-fb67-4152-ac66-4ebb2dceaeda",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "a86d5349-6cf1-4fc2-b6f2-e4ce9c8f5ffb",
+                    "path": "<Mouse>/delta/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "6cc3feef-26bd-4435-8c71-e0b8a05572c2",
+                    "path": "<Mouse>/delta/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "2f1041e9-c390-4782-8269-8c3f87cc1b93",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Show Poles",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00cffbfa-629b-4020-aa2b-48c8ba0e3988",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveLightMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61ec7080-2536-42a6-84e7-67128fa18d57",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AngleCameraMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

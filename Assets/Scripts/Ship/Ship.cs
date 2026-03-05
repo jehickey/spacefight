@@ -6,8 +6,8 @@ public class Ship : MonoBehaviour
     //flight controls
     public Team team;
     public Vector3 Velocity;    //current velocity vector, meters per second
-    public float Health = 10f;
-    public float MaxHealth = 10f;
+    //public float Health = 10f;
+    //public float MaxHealth = 10f;
     public float Mass = 100;
 
     public float DistanceFromPlayer;
@@ -22,6 +22,8 @@ public class Ship : MonoBehaviour
     private     Vector3 baseCamLocalPos;
     private Quaternion baseCamLocalRot;
 
+    public float FreshSpawnCountdown = 0;
+
     [Header("Ship Audio")]
     public SoundMachine soundGotHit;
     public AudioClip clipExplosion;
@@ -31,11 +33,11 @@ public class Ship : MonoBehaviour
 
     private Transform lastHitBy;
 
-    private Simulation sim;
-    private Game game;
     private ThrottleSystem Throttle;
     private SteeringSystem Steering;
     private Camera cam;
+    private BotControl pilot;
+    private Destructable destructable;
 
     public new Collider collider;
 
@@ -54,12 +56,11 @@ public class Ship : MonoBehaviour
     {
         collider = GetComponent<Collider>();
 
-        if (!sim) sim = FindFirstObjectByType<Simulation>();
-        if (!game) game = FindFirstObjectByType<Game>();
         if (!Throttle) Throttle = GetComponent<ThrottleSystem>();
         if (!Steering) Steering = GetComponent<SteeringSystem>();
         if (!Weapons) Weapons = GetComponent<WeaponsSystem>();
-
+        if (!pilot) pilot = GetComponent<BotControl>();
+        if (!destructable) destructable = GetComponent<Destructable>();
 
         if (!cam) cam = GetComponentInChildren<Camera>();
         if (cam)
@@ -77,6 +78,18 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
+        
+        //disable pilot until spawn countdown is complete
+        if (pilot) pilot.enabled = (FreshSpawnCountdown == 0);
+        if (!pilot.enabled && Throttle) Throttle.Input = 1;
+        if (!pilot.enabled && Steering) Steering.Stick = Vector3.zero;
+        if (FreshSpawnCountdown != 0)
+        {
+            FreshSpawnCountdown -= Time.deltaTime;
+            if (FreshSpawnCountdown < 0) FreshSpawnCountdown = 0;
+            return;
+        }
+
         //add ship to its team if not already present
         if (team && !team.Ships.Contains(this)) team.Ships.Add(this);
 
@@ -85,13 +98,13 @@ public class Ship : MonoBehaviour
         if (listener) DistanceFromPlayer = Vector3.Distance(transform.position, listener.transform.position);
 
         CollisionChecks();
-        UpdateHealth();
         DoRumble();
     }
 
     private void LateUpdate()
     {
-        Vector3 posDelta = forcedDisplacement;
+        if (Mass <= 0) Mass = .001f;
+        Vector3 posDelta = forcedDisplacement / Mass; 
         Vector3 rotDelta = Vector3.zero;
 
         //apply steering
@@ -99,11 +112,10 @@ public class Ship : MonoBehaviour
 
         //throttle and propulsion
         //Velocity = Vector3.zero;
-        if (Throttle) Velocity = transform.forward * Throttle.Thrust * sim.SpeedUnit;
+        if (Throttle) Velocity = transform.forward * Throttle.Thrust * Simulation.I.SpeedUnit;
         posDelta += Velocity * Time.deltaTime;
 
         //apply external forces
-        if (Mass <= 0) Mass = .001f;
         posDelta += (externalForce / Mass) * Time.deltaTime;
         rotDelta += (externalAngularForce / Mass) * Time.deltaTime;
 
@@ -111,17 +123,19 @@ public class Ship : MonoBehaviour
         transform.position += posDelta;
         transform.Rotate(rotDelta, Space.Self);
 
+        //update forces and displacement
         forcedDisplacement = Vector3.zero;
-        externalForce *= Mathf.Exp( -sim.ForceDecayRate * Time.deltaTime);
-        externalAngularForce *= Mathf.Exp(-sim.ForceDecayRate * Time.deltaTime);
+        externalForce *= Mathf.Exp( -Simulation.I.ForceDecayRate * Time.deltaTime);
+        externalAngularForce *= Mathf.Exp(-Simulation.I.ForceDecayRate * Time.deltaTime);
     }
 
     private void CollisionChecks()
     {
+        if (FreshSpawnCountdown > 0) return;
         //compare against every other ship
         foreach (Ship ship in FindObjectsByType<Ship>(FindObjectsSortMode.None))
         {
-            if (ship && ship != this)
+            if (ship && ship != this && ship.FreshSpawnCountdown==0)
             {
                 if (Physics.ComputePenetration(
                     collider, transform.position, transform.rotation,
@@ -133,9 +147,9 @@ public class Ship : MonoBehaviour
                     float flareSize = .03f * impact;
                     Flare.Spawn(point, Color.white, .15f, .25f, flareSize*.1f, flareSize);
                     //Debug.Log($"ship {name} struck ship {ship.name}");
-                    forcedDisplacement += (direction * (distance*.5f+.0001f));
-                    externalForce += direction.normalized * impact * sim.ImpactForceMultiplier;
-                    TakeDamage(sim.ImpactDamageMultiplier * impact);
+                    forcedDisplacement += (direction * (distance * .5f + .0001f)) * Simulation.I.ImpactDisplacementMultiplier * impact;
+                    externalForce += direction.normalized * impact * Simulation.I.ImpactForceMultiplier;
+                    destructable?.TakeDamage(Simulation.I.ImpactDamageMultiplier * impact, ship.transform);
                     //Debug.Log($"Impact: {impact}");
                 }
             }
@@ -176,29 +190,8 @@ public class Ship : MonoBehaviour
        
     public void TakeDamage(float damage, Transform origin = null)
     {
-        if (damage <= 0) return;
-        Health -= damage;
         AddRumble(10);
-        if (soundGotHit) soundGotHit.Play();
-        if (origin) lastHitBy = origin;
-    }
-
-    private void UpdateHealth()
-    {
-        Health = Mathf.Clamp(Health, 0, MaxHealth);
-        if (Health <= 0)
-        {
-            Flare flare = Flare.Spawn(transform.position, Color.white, 2f, 0.15f, 0.025f, 0.25f, clipExplosion);
-            if (this == game.PlayerShip)
-            {
-                game.AddDeath();
-            }
-            else
-            {
-                if (game.PlayerShip && lastHitBy == game.PlayerShip.transform) game.AddKill();
-            }
-            Destroy(gameObject);
-        }
+        //need to make impact and rumble directional
     }
 
 }

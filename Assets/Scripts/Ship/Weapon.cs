@@ -17,12 +17,9 @@ public class Weapon : MonoBehaviour
 
     //private new AudioSource audio;
     public SoundMachine sound;
-    private Simulation sim;
 
     void Start()
     {
-        sim = FindFirstObjectByType<Simulation>();
-
         emitter = GetComponentInChildren<Emitter>();
         if (!emitter) Debug.LogError("Weapon is missing an emitter");
         recoil = GetComponentInChildren<Recoil>();
@@ -79,7 +76,7 @@ public class Weapon : MonoBehaviour
         float pitch = FirePitch * (1 + Random.value * FireRandomization);
         float volume = FireVolume * (1 + Random.value * FireRandomization);
         sound.Pitch = pitch;
-        sound.Volume = volume * sim.AudioLevelWeapons;
+        sound.Volume = volume * Game.I.AudioLevelWeapons;
         sound.Looping = false;
         //if (transform.position.x > 0) audio.panStereo = 1;
         //if (transform.position.x < 0) audio.panStereo = -1;

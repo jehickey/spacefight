@@ -40,17 +40,12 @@ public class Starfield : MonoBehaviour
     const int batchSize = 1023; // Max instances per batch for DrawMeshInstanced
 
 
-    private Simulation sim;
-    private Game game;
-    //private Transform focalPoint;
 
 
     private void OnEnable()
     {
         LoadStarData();
         quadMesh = CreateQuad();
-        sim = FindFirstObjectByType<Simulation>();
-        game = FindFirstObjectByType<Game>();
         orientation = Quaternion.identity;
 
         background = GetComponentInChildren<StellarBackground>();

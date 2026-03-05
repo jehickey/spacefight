@@ -2,14 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class BotControl : MonoBehaviour
 {
     private Ship ship;
-    public float ActivationCountdown = 0;
 
     //public Vector3 TargetLocation = Vector3.zero;
     [Header("Target Information")]
@@ -120,13 +116,6 @@ public class BotControl : MonoBehaviour
     {
         ship ??= GetComponent<Ship>();
         if (!ship) return;
-
-        //Don't start behavior until the timer expires
-        if (ActivationCountdown > 0)
-        {
-            ActivationCountdown -= Time.deltaTime;
-            return;
-        }
 
         if (steering) steering.Stick = Vector3.zero;
 

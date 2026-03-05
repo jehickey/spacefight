@@ -9,12 +9,10 @@ public class Projectile : MonoBehaviour
     private float startTime;
 
     public Transform parentOrigin;
-    private Simulation sim;
 
     void Start()
     {
         startTime = Time.time;
-        sim = FindFirstObjectByType<Simulation>();
     }
 
 
@@ -25,35 +23,32 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
 
-        transform.position += transform.forward * Speed * sim.SpeedUnit * Time.deltaTime;
+        transform.position += transform.forward * Speed * Simulation.I.SpeedUnit * Time.deltaTime;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 0.25f);
-        Gizmos.DrawSphere(transform.position, .05f);
+        Gizmos.DrawWireSphere(transform.position, 0.05f);
 
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Ship target = other.GetComponent<Ship>();
+        Destructable target = other.GetComponent<Destructable>();
         Vector3 pos = other.ClosestPoint(transform.position);
         if (other.transform == parentOrigin) return;
-        //Debug.Log($"Collision: {other.name}");
         Detonate(target, pos);
     }
 
 
-    void Detonate(Ship target, Vector3 position)
+    void Detonate(Destructable target, Vector3 position)
     {
-        if (target)
-        {
-            target.TakeDamage(Damage, parentOrigin);
-        }
+        if (target) target.TakeDamage(Damage, parentOrigin);
+        //Display an explosion
         Vector3 pos = position;
         Flare.Spawn(pos, Color.yellow, 0.25f, 0.25f, 0.0025f, 0.025f);
+        //Destroy this projectile
         Destroy(gameObject);
     }
 

@@ -8,13 +8,11 @@ public class EngineSounds : MonoBehaviour
     public float VolumeHigh = 1.0f;
 
     private ThrottleSystem throttle;
-    private Simulation sim;
 
     public SoundMachine sound;
 
     private void OnEnable()
     {
-        sim = FindFirstObjectByType<Simulation>();
         throttle = GetComponentInParent<ThrottleSystem>();
 
         if (!sound) sound = GetComponent<SoundMachine>();
@@ -27,7 +25,7 @@ public class EngineSounds : MonoBehaviour
         float pitch = Mathf.Lerp(PitchLow, PitchHigh, throttle.Actual);
         float volume = Mathf.Lerp(VolumeLow, VolumeHigh, throttle.Actual);
         sound.Pitch = pitch;
-        sound.Volume = volume * sim.AudioLevelEngines;
+        sound.Volume = volume * Game.I.AudioLevelEngines;
         sound.Looping = true;
         sound.IsPlaying = true;
     }
