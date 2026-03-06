@@ -4,6 +4,7 @@ Detailed Planets:
 * it's meant to test LOD at different distances, especially as higher LOD becomes an option
 
 
+
 Development Sequence:
 	* increasing and decreasing sphere mesh detail
 	* swapping between low and high res textures on approach
@@ -22,4 +23,98 @@ Tools to work on:
 	* subdividing a patch
 		* increase detail level of an existing patch
 	
+
+Test Interface:
+	* controls for adjusting detail, deformation scale, and turning terrain generation on/off
+	
+Planet Generation Optimization:
+	* main goals:
+		* push detail levels up and get a clean transition between them
+		* look for ways to work with partial spheres when things get complex (since they're close)
+		* get it ready to integrate with generated landscaping
+		* get planet deformation ready to integrate into the main game (and move combat closer to a planet)
+		
+
+	* Tool improvements:
+		* make orbitmode not the default (so clickable UI becomes an option)
+			* mouse only locks when in one of these modes
+		* keep planet more centered when adjusting camera angle
+		* set Body values at startup (so it appears deformed from the start?)
+		* add a selectable list of available planets (from an array of prefabs)
+		* have Simulation start getting settings from a config file
+			* let the tool update that config file (or update Sim and let it do the file update)
+			* intent is to be able to define settings within the tool
+			* critical non-config-editable values will remain in the component (like guardrail limits)
+
+	* planet bugs
+		* deformation shrinks planet
+			* heightmap needs better normalization (so size remains the same as terrain increases)
+	
+	* using Unity Jobs and Burst for pre-caching generation
+		* Unity components:
+			* Job System
+			* Burst compiler optimizes math-heavy code
+			* Unity.Mathematics - possibly useful for making it more job-friendly
+		* Limitations:
+			* no Vector2 or Vector3
+			* any direct Mesh operations, or anything using UnityEngine.Object
+			* burst-native data structures cannot be stored long term
+		* Questions:
+			* when and how to schedule and track status
+				* scheduled from GenerateData() ?
+			* types of problems to watch out for and control
+		* organization
+			* Icosphere.PreCache(maxLevel) - schedules jobs to generate MeshDataNative and fill cacheData[] for each level (up to maxLevel)
+				? at what point does it write the data to cacheData?  it would have to wait.
+				? is this a fire-and-forget call?  It shouldn't be blocking.
+			* Caller (a monobehavior object, like Game)
+				* calls Icosphere.PreCache to start the caching process
+				* polls Icosphere's progress on caching (in caller's Update)
+				* whenever it shows a level has MeshData cached, it calls Generate for that level (which caches the mesh)
+					* This is a blocking call, but brief
+			* Generate() - does not require precaching and will end up caching it, but it's a blocking call until the job is done
+				* runs on the main thread (blocking)
+				* needs to be smart enough to not call for generation of something in-progress
+				* maybe it can return null if caching is in progress
+				* if it gets null/empty from GenerateData it returns a Null mesh
+			* GenerateData() - does the work of starting a job
+				* if MeshData is cached, it simply returns it
+					* returns null or empty data if generation job is in progress - no wait
+				* stores JobHandles in an array used for checking status
+				* checks JobHandles[] and either starts a job or returns if job is in progress
+					* if job is complete it takes from nativeData[] and caches the converted MeshData
+			* PreCacheStatus() checks caching progress, returning the next ready job, or that all are complete, or a problem
+			* Job (SubdivideJob?) - returns a JobHandle (received by GenerateData())
+
+	* work with precaching (including as background task)
+		* enable this with a bool in Cursor
+		* track if it's been completed (so it doesn't re-cache if turned on and off, but can do the cache at any time if it started as off)
+		* generator needs a way to report cache status without exposing it
+	* put in limiters to keep one call to Generate or GenerateData from generating while there may be another one generating in another thread
+		* static bool value, if a call sees its true it won't generate, it just keeps polling until false before proceeding
+		* give it a time limit to avoid infinite loops
+
+	* store heightmap as an array of floats (to avoid pulling it from uv mapping each frame)
+		* done at deformation generation time
+	* store deformed verts in an array and work from that (instead of pulling it from mesh each time)
+	* mesh.RecalculateNormals might be a bit slow - limit to when the deformation is generated, but not when it's being rescaled
+
+Deformation of the sphere:
+	* hysteresis - so it doesn't flicker at the boundary (such as 3 radii)
+		* should always be a factor of boundary radius, which itself is a factor of distance (even if hardcoded for now)
+	* deterministic base map to guide deformation
+		* use one or more 2d maps, terrain or otherwise, to guide randomization for terrain deformation
+		* "deterministifc macrostructure"
+	* increasing scale height with proximity
+		* in between deformation (each time complexity increases)
+		* landscapes slowly rise from the sphere instead of popping into place
+		* updated at rapid intervals, not every frame (maybe 20-30 frames per second vs full framerate)
+
+
+Basing vertex heights off of UV Mapping of a grayscale heightmap
+	newVertex = normalizedDirection * (radius + heightValue * heightScale)
+
+Progressive blend between one set of heights and another	
+	verts[i] = Vector3.Lerp(baseVerts[i], displacedVerts[i], t);
+
 	

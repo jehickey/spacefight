@@ -59,6 +59,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "TerrainMode",
+                    "type": "Button",
+                    "id": "bec6d891-c566-4c0e-827e-6e216d863f6e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Regenerate",
+                    "type": "Button",
+                    "id": "dd4d34ca-cc5c-48ab-9bcc-52072d5b40cb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Toggle Deformation",
+                    "type": "Button",
+                    "id": "e66c1487-fd6a-4183-812b-735c6fd8e227",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -191,6 +218,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "AngleCameraMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b9cf1bf8-0da9-4b35-8039-5301cff89a57",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Regenerate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a9520ed5-df6e-4d3a-a47b-7b99cf54a316",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Deformation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b062b5a-b90a-48a0-abc3-f8fca138e4e2",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TerrainMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,39 +1,48 @@
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraCursor : MonoBehaviour
 {
+    [Header("State Info")]
     public float Distance = 1.0f;
     public float Radii = 1.0f;
 
+    [Header("Main Settings")]
+    public int MaxDetail = 8;
+    public bool AllowDeformation;
+    public float StartingRadii;
+    public bool ShowPoles = true;
+
+
+    [Header("Limits and Sensitivity")]
     public float MinRadii = 1.01f;
     public float MaxRadii = 3f;
-    public float StartingRadii;
-
     public float ZoomFactor = .1f;
+    public float ZoomFactorTerrain = .1f;
     public float RotationFactor = 1.0f;
-
     public float MinDistance;
     public float MaxDistance;
 
-    public float RotateX;
-    public float RotateY;
+    [Header("Gizmo Values")]
+    public Transform tPoles;
+    public Transform tEquator;
+    public float PoleThickness = .01f;
+    public float PoleBuffer = .1f;
 
-    public float lightRotateX;
-    public float lightRotateY;
-
-    public float camRotateX;
-    public float camRotateY;
-
+    [Header("UI Modes")]
     public bool OrbitMode;
     public bool LightMode;
     public bool AngleMode;
+    public bool TerrainMode;
 
-    public bool ShowPoles = true;
-    public float PoleThickness = .01f;
-    public float PoleBuffer = .1f;
-    public Transform tPoles;
-    public Transform tEquator;
+    [Header("UI Values")]
+    public float RotateX;
+    public float RotateY;
+    public float lightRotateX;
+    public float lightRotateY;
+    public float camRotateX;
+    public float camRotateY;
 
 
     Body body;
@@ -52,6 +61,8 @@ public class CameraCursor : MonoBehaviour
         {
             Distance = body.Radius * StartingRadii;
         }
+
+        if (!camera || !body || !light) Debug.Log("Cursor is missing critical components");
     }
 
     private void OnDisable()
@@ -59,24 +70,37 @@ public class CameraCursor : MonoBehaviour
         controls?.Disable();
     }
 
+    private void Start()
+    {
+        Regenerate();
+    }
+
     void Update()
     {
-        if (!camera || !body || !light)
+
+        //don't go beyond hard limit set by Icosphere generator
+        MaxDetail = Mathf.Clamp(MaxDetail, 0, Shapes.Icosphere.MaxSubdivisions);
+        //Override Body's maximums (within limits of what Icosphere allows)
+        if (MaxDetail > Body.MaxDetailGlobal) {Body.MaxDetailGlobal = MaxDetail;}
+        //Apply detail maximum to this body
+        body.MaxDetail = MaxDetail;
+
+        if (body) body.TerrainDeformation = AllowDeformation;
+
+        //regenerate planet
+        if (body && controls.Controls.Regenerate.WasPressedThisFrame()) Regenerate();
+        if (body && controls.Controls.ToggleDeformation.WasPressedThisFrame())
         {
-            Debug.Log("Missing critical components");
-            return;
+            AllowDeformation = !AllowDeformation;
+            Regenerate();
         }
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
 
         //mouse inputs
         float mouseX = controls.Controls.RotateX.ReadValue<float>();
         float mouseY = controls.Controls.RotateY.ReadValue<float>();
         float zoom = controls.Controls.Zoom.ReadValue<float>();
-        //modes
-        LightMode = controls.Controls.MoveLightMode.IsPressed();
-        AngleMode = controls.Controls.AngleCameraMode.IsPressed();
-        OrbitMode = (!LightMode && !AngleMode);
+
+        ModeSelect();
 
         //establish distance limits and current radii
         MinDistance = body.Radius * MinRadii;
@@ -85,33 +109,20 @@ public class CameraCursor : MonoBehaviour
         float slowdown = t * t * (3f - 2f * t);     //or Mathf.Pow(t, 2.5f);
         Radii = Distance / body.Radius;
         //set camera distance
-        Distance += zoom * ZoomFactor * slowdown;
-        Distance = Mathf.Clamp(Distance, MinDistance, MaxDistance);
-
-        //mouse rotates around the planet
-        if (!LightMode && !AngleMode)
+        if (!TerrainMode)
         {
-            RotateX -= mouseX * RotationFactor * slowdown;
-            RotateY += mouseY * RotationFactor * slowdown;
-            RotateY = Mathf.Clamp(RotateY, -.24f, .24f);
-        }
-        if (LightMode)
-        {
-            lightRotateX -= mouseX;// * RotationFactor;
-            lightRotateY += mouseY;// * RotationFactor;
-            lightRotateX = Mathf.Clamp(lightRotateX, -45f, 45f);
-            lightRotateY = Mathf.Clamp(lightRotateY, -45f, 45f);
-        }
-        if (AngleMode)
-        {
-            camRotateX -= mouseX;// * RotationFactor;
-            camRotateY += mouseY;// * RotationFactor;
-            camRotateX = Mathf.Clamp(camRotateX, -45f, 45f);
-            camRotateY = Mathf.Clamp(camRotateY, -45f, 45f);
+            Distance += zoom * ZoomFactor * slowdown;
+            Distance = Mathf.Clamp(Distance, MinDistance, MaxDistance);
         }
 
+        //apply mouse rotation (in applicable modes)
+        MouseRotation(mouseX, mouseY, slowdown);
 
-
+        if (TerrainMode)
+        {
+            Simulation.I.TerrainMagnitudeScale -= zoom * ZoomFactorTerrain;
+            Regenerate();
+        }
 
         //get current position from rotation settings
         float yaw = RotateX * 2f * Mathf.PI;
@@ -131,10 +142,73 @@ public class CameraCursor : MonoBehaviour
         //light.transform.localEulerAngles = new Vector3(lightRotateX, 0, lightRotateY);
         light.transform.Rotate(new Vector3(lightRotateY, lightRotateX, 0));
 
-        UpdatePoles();
+        TogglePoles();
     }
 
-    private void UpdatePoles()
+    private void OnValidate()
+    {
+        if (Application.isPlaying)
+        {
+            //force regeneration if AllowDeformation changes
+            if (body && body.TerrainDeformation != AllowDeformation) Regenerate();
+        }
+    }
+
+    private void Regenerate()
+    {
+        body.TerrainDeformation = AllowDeformation;
+        body.Regenerate = true;
+    }
+
+    void ModeSelect()
+    {
+        //modes selection
+        LightMode = controls.Controls.MoveLightMode.IsPressed();
+        AngleMode = controls.Controls.AngleCameraMode.IsPressed();
+        TerrainMode = controls.Controls.TerrainMode.IsPressed() && AllowDeformation;
+        OrbitMode = (!LightMode && !AngleMode && !TerrainMode);
+
+        //Lock cursor in appropriate modes
+        if (LightMode || AngleMode || TerrainMode || OrbitMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+    }
+
+
+    void MouseRotation(float mouseX, float mouseY, float slowdown)
+    {
+        //mouse-based rotation
+        if (OrbitMode)
+        {
+            RotateX -= mouseX * RotationFactor * slowdown;
+            RotateY += mouseY * RotationFactor * slowdown;
+            RotateY = Mathf.Clamp(RotateY, -.24f, .24f);
+        }
+        if (LightMode)
+        {
+            lightRotateX -= mouseX;// * RotationFactor;
+            lightRotateY += mouseY;// * RotationFactor;
+            lightRotateX = Mathf.Clamp(lightRotateX, -45f, 45f);
+            lightRotateY = Mathf.Clamp(lightRotateY, -45f, 45f);
+        }
+        if (AngleMode)
+        {
+            camRotateX -= mouseX;// * RotationFactor;
+            camRotateY += mouseY;// * RotationFactor;
+            camRotateX = Mathf.Clamp(camRotateX, -45f, 45f);
+            camRotateY = Mathf.Clamp(camRotateY, -45f, 45f);
+        }
+    }
+
+    private void TogglePoles()
     {
         if (!body) return;
         if (controls.Controls.ShowPoles.WasPressedThisFrame()) ShowPoles = !ShowPoles;

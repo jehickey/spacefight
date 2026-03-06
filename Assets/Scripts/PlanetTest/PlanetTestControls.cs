@@ -145,6 +145,33 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""TerrainMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""bec6d891-c566-4c0e-827e-6e216d863f6e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Regenerate"",
+                    ""type"": ""Button"",
+                    ""id"": ""dd4d34ca-cc5c-48ab-9bcc-52072d5b40cb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Toggle Deformation"",
+                    ""type"": ""Button"",
+                    ""id"": ""e66c1487-fd6a-4183-812b-735c6fd8e227"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -279,6 +306,39 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
                     ""action"": ""AngleCameraMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b9cf1bf8-0da9-4b35-8039-5301cff89a57"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Regenerate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9520ed5-df6e-4d3a-a47b-7b99cf54a316"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle Deformation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b062b5a-b90a-48a0-abc3-f8fca138e4e2"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TerrainMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -293,6 +353,9 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
         m_Controls_ShowPoles = m_Controls.FindAction("Show Poles", throwIfNotFound: true);
         m_Controls_MoveLightMode = m_Controls.FindAction("MoveLightMode", throwIfNotFound: true);
         m_Controls_AngleCameraMode = m_Controls.FindAction("AngleCameraMode", throwIfNotFound: true);
+        m_Controls_TerrainMode = m_Controls.FindAction("TerrainMode", throwIfNotFound: true);
+        m_Controls_Regenerate = m_Controls.FindAction("Regenerate", throwIfNotFound: true);
+        m_Controls_ToggleDeformation = m_Controls.FindAction("Toggle Deformation", throwIfNotFound: true);
     }
 
     ~@PlanetTestControls()
@@ -379,6 +442,9 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controls_ShowPoles;
     private readonly InputAction m_Controls_MoveLightMode;
     private readonly InputAction m_Controls_AngleCameraMode;
+    private readonly InputAction m_Controls_TerrainMode;
+    private readonly InputAction m_Controls_Regenerate;
+    private readonly InputAction m_Controls_ToggleDeformation;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controls".
     /// </summary>
@@ -414,6 +480,18 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controls/AngleCameraMode".
         /// </summary>
         public InputAction @AngleCameraMode => m_Wrapper.m_Controls_AngleCameraMode;
+        /// <summary>
+        /// Provides access to the underlying input action "Controls/TerrainMode".
+        /// </summary>
+        public InputAction @TerrainMode => m_Wrapper.m_Controls_TerrainMode;
+        /// <summary>
+        /// Provides access to the underlying input action "Controls/Regenerate".
+        /// </summary>
+        public InputAction @Regenerate => m_Wrapper.m_Controls_Regenerate;
+        /// <summary>
+        /// Provides access to the underlying input action "Controls/ToggleDeformation".
+        /// </summary>
+        public InputAction @ToggleDeformation => m_Wrapper.m_Controls_ToggleDeformation;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -458,6 +536,15 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
             @AngleCameraMode.started += instance.OnAngleCameraMode;
             @AngleCameraMode.performed += instance.OnAngleCameraMode;
             @AngleCameraMode.canceled += instance.OnAngleCameraMode;
+            @TerrainMode.started += instance.OnTerrainMode;
+            @TerrainMode.performed += instance.OnTerrainMode;
+            @TerrainMode.canceled += instance.OnTerrainMode;
+            @Regenerate.started += instance.OnRegenerate;
+            @Regenerate.performed += instance.OnRegenerate;
+            @Regenerate.canceled += instance.OnRegenerate;
+            @ToggleDeformation.started += instance.OnToggleDeformation;
+            @ToggleDeformation.performed += instance.OnToggleDeformation;
+            @ToggleDeformation.canceled += instance.OnToggleDeformation;
         }
 
         /// <summary>
@@ -487,6 +574,15 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
             @AngleCameraMode.started -= instance.OnAngleCameraMode;
             @AngleCameraMode.performed -= instance.OnAngleCameraMode;
             @AngleCameraMode.canceled -= instance.OnAngleCameraMode;
+            @TerrainMode.started -= instance.OnTerrainMode;
+            @TerrainMode.performed -= instance.OnTerrainMode;
+            @TerrainMode.canceled -= instance.OnTerrainMode;
+            @Regenerate.started -= instance.OnRegenerate;
+            @Regenerate.performed -= instance.OnRegenerate;
+            @Regenerate.canceled -= instance.OnRegenerate;
+            @ToggleDeformation.started -= instance.OnToggleDeformation;
+            @ToggleDeformation.performed -= instance.OnToggleDeformation;
+            @ToggleDeformation.canceled -= instance.OnToggleDeformation;
         }
 
         /// <summary>
@@ -569,5 +665,26 @@ public partial class @PlanetTestControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAngleCameraMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TerrainMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTerrainMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Regenerate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRegenerate(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Toggle Deformation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleDeformation(InputAction.CallbackContext context);
     }
 }

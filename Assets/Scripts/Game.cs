@@ -1,3 +1,4 @@
+using Shapes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -84,8 +85,14 @@ public class Game : MonoBehaviour
         controls?.Disable();
     }
 
+    private void Start()
+    {
+        Icosphere.PreCache(8);
+    }
+
     void Update()
     {
+        float status = Icosphere.GetStatus();
 
         if (controls.Game.Exit.WasPressedThisFrame()) Application.Quit();
         if (controls.Game.Restart.WasPressedThisFrame()) SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);

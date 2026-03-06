@@ -2,20 +2,29 @@ using UnityEngine;
 
 public class Body : MonoBehaviour
 {
+    public static int MinDetailGlobal = 1;
+    public static int MaxDetailGlobal = 7;
+
     [Header("Body Settings")]
+    public bool TerrainDeformation = false;
     public float Radius = 50;
     public float DistanceFromPlayer;
     public float RotationPeriod = 10; //degrees per second
 
     public int SphereDetail;
-    public float TerrainMagnitudeScale = .01f;       //a factor of radius
+    public int MaxDetail = 0;
     public float actualTerrainMagnitude;
+    public float TerrainSmoothness = 1;
+
+    public Texture2D heightmap;
+
+    public bool Regenerate = false;
 
     public Material material;
     public Mesh mesh;
-
     protected MeshFilter filter;
     protected MeshRenderer render;
+
 
     protected virtual void Start()
     {
@@ -47,22 +56,42 @@ public class Body : MonoBehaviour
 
     protected virtual void Update()
     {
+        //forced regeneration
+        if (Regenerate)
+        {
+            SphereDetail = 0;
+            Regenerate = false;
+        }
+
+        //Set a hard minimum on MinGlobalDetail (to prevent regeneration every frame)
+        if (MinDetailGlobal == 0) MinDetailGlobal = 1;
+
+        //no detail setting defaults to class maximum
+        if (MaxDetail == 0) MaxDetail = MaxDetailGlobal;
+        //don't let this object's settings go beyond class minimum and maximum
+        MaxDetail = Mathf.Clamp(MaxDetail, MinDetailGlobal, MaxDetailGlobal);
+        //apply instance limits for this specific body
+        SphereDetail = Mathf.Clamp(SphereDetail, MinDetailGlobal, MaxDetail);
+
         SetScale();
         DoRotation();
-        int detail = GetDistanceDetail();
-        if (detail != SphereDetail)
+        int detail = Mathf.Clamp(GetDistanceDetail(), MinDetailGlobal, MaxDetail);
+        if (detail != SphereDetail || !mesh)
         {
             SphereDetail = detail;
-            mesh = Icosphere.Generate(SphereDetail);
-            if (filter) filter.sharedMesh = mesh;
-            ModifyMesh();
-            render.sharedMaterial = material;
+            mesh = Shapes.Icosphere.Generate(SphereDetail);
+            if (mesh)
+            {
+                if (filter) filter.sharedMesh = mesh;
+                DeformMesh();
+                if (render) render.sharedMaterial = material;
+            }
         }
     }
 
     protected virtual void OnValidate()
     {
-        SetScale();
+        //SetScale();
     }
 
     protected virtual void OnDrawGizmos()
@@ -85,18 +114,18 @@ public class Body : MonoBehaviour
         if (Camera.main)
         {
             DistanceFromPlayer = Vector3.Distance(transform.position, Camera.main.transform.position);
-            if (DistanceFromPlayer < Radius * 1.5f) return 6;
-            if (DistanceFromPlayer < Radius * 2) return 5;
-            if (DistanceFromPlayer < Radius * 3) return 4;
-            if (DistanceFromPlayer < Radius * 10) return 3;
+            if (DistanceFromPlayer < Radius * 1.5f) return 8;
+            if (DistanceFromPlayer < Radius * 2) return 7;
+            if (DistanceFromPlayer < Radius * 3) return 6;
+            if (DistanceFromPlayer < Radius * 10) return 5;
         }
-        return 2;
+        return 3;
     }
 
     private void SetScale()
     {
         if (Radius <= 0) Radius = .01f;
-        Vector3 scale = Vector3.one * Radius * 2;
+        Vector3 scale = Vector3.one * Radius;
         if (transform.parent)
         {
             scale.x /= transform.parent.lossyScale.x;
@@ -114,18 +143,33 @@ public class Body : MonoBehaviour
     }
 
 
-    void ModifyMesh()
+    void DeformMesh()
     {
+        if (!TerrainDeformation) return;
         if (!mesh) return;
-        actualTerrainMagnitude = TerrainMagnitudeScale * Radius;
+        actualTerrainMagnitude = Simulation.I.TerrainMagnitudeScale * TerrainSmoothness * Radius;
+
+        //may have this re-grab a virgin sphere if needed
 
         Vector3[] verts = mesh.vertices;
+        Vector2[] uvs = mesh.uv;
+
+        if (!heightmap) heightmap = (Texture2D)material.mainTexture;
 
         for (int i = 0; i < verts.Length; i++)
         {
             Vector3 dir = verts[i].normalized;
-            float offset = Random.Range(-actualTerrainMagnitude, actualTerrainMagnitude);
-            verts[i] = dir * (verts[i].magnitude + offset);
+
+            //get sample from grayscale
+            Color c = heightmap.GetPixelBilinear(uvs[i].x, uvs[i].y);
+            float h = c.grayscale - .5f;
+
+            //apply displacement
+            //float offset = Random.Range(-actualTerrainMagnitude, actualTerrainMagnitude);
+            //float noiseAmount = 0;
+            //float noise = Random.Range(-noiseAmount, noiseAmount);
+            float displacedRadius = 1 + h * actualTerrainMagnitude;
+            verts[i] = dir * displacedRadius;   //(verts[i].magnitude + offset);
         }
 
         mesh.vertices = verts;

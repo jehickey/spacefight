@@ -57,8 +57,8 @@ public class StellarBackground : MonoBehaviour
         }
         else
         {
-            mesh = Icosphere.Generate(SphereDetail);
-            Icosphere.FlipMesh(mesh);
+            mesh = Shapes.Icosphere.Generate(SphereDetail);
+            Shapes.Icosphere.FlipMesh(mesh);
             filter.sharedMesh = mesh;
         }
         if (!material)
