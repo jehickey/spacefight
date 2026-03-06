@@ -45,46 +45,24 @@ Planet Generation Optimization:
 			* let the tool update that config file (or update Sim and let it do the file update)
 			* intent is to be able to define settings within the tool
 			* critical non-config-editable values will remain in the component (like guardrail limits)
+		* deformation changes are very slow at high detail
+			* need changes to deformation (so it doesn't completely regenerate the heightmap/etc each time)
+			* also can get rid of normalization since it's default on spheres now
+
 
 	* planet bugs
 		* deformation shrinks planet
 			* heightmap needs better normalization (so size remains the same as terrain increases)
+
+
+	* job system
+		* jobs are starting and seem to be completing, but they're not all finishing
+			Internal: JobTempAlloc has allocations that are more than the maximum lifespan of 4 frames old - this is not allowed and likely a leak
+
+		* need to be able to turn it off (both on Icosphere and globally)
+		
+		
 	
-	* using Unity Jobs and Burst for pre-caching generation
-		* Unity components:
-			* Job System
-			* Burst compiler optimizes math-heavy code
-			* Unity.Mathematics - possibly useful for making it more job-friendly
-		* Limitations:
-			* no Vector2 or Vector3
-			* any direct Mesh operations, or anything using UnityEngine.Object
-			* burst-native data structures cannot be stored long term
-		* Questions:
-			* when and how to schedule and track status
-				* scheduled from GenerateData() ?
-			* types of problems to watch out for and control
-		* organization
-			* Icosphere.PreCache(maxLevel) - schedules jobs to generate MeshDataNative and fill cacheData[] for each level (up to maxLevel)
-				? at what point does it write the data to cacheData?  it would have to wait.
-				? is this a fire-and-forget call?  It shouldn't be blocking.
-			* Caller (a monobehavior object, like Game)
-				* calls Icosphere.PreCache to start the caching process
-				* polls Icosphere's progress on caching (in caller's Update)
-				* whenever it shows a level has MeshData cached, it calls Generate for that level (which caches the mesh)
-					* This is a blocking call, but brief
-			* Generate() - does not require precaching and will end up caching it, but it's a blocking call until the job is done
-				* runs on the main thread (blocking)
-				* needs to be smart enough to not call for generation of something in-progress
-				* maybe it can return null if caching is in progress
-				* if it gets null/empty from GenerateData it returns a Null mesh
-			* GenerateData() - does the work of starting a job
-				* if MeshData is cached, it simply returns it
-					* returns null or empty data if generation job is in progress - no wait
-				* stores JobHandles in an array used for checking status
-				* checks JobHandles[] and either starts a job or returns if job is in progress
-					* if job is complete it takes from nativeData[] and caches the converted MeshData
-			* PreCacheStatus() checks caching progress, returning the next ready job, or that all are complete, or a problem
-			* Job (SubdivideJob?) - returns a JobHandle (received by GenerateData())
 
 	* work with precaching (including as background task)
 		* enable this with a bool in Cursor

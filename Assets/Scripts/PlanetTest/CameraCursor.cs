@@ -92,6 +92,7 @@ public class CameraCursor : MonoBehaviour
         if (body && controls.Controls.ToggleDeformation.WasPressedThisFrame())
         {
             AllowDeformation = !AllowDeformation;
+            body.TerrainDeformation = AllowDeformation;
             Regenerate();
         }
 
@@ -121,7 +122,7 @@ public class CameraCursor : MonoBehaviour
         if (TerrainMode)
         {
             Simulation.I.TerrainMagnitudeScale -= zoom * ZoomFactorTerrain;
-            Regenerate();
+            body.DoDeform = true;
         }
 
         //get current position from rotation settings

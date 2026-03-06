@@ -17,14 +17,18 @@ public class Body : MonoBehaviour
     public float TerrainSmoothness = 1;
 
     public Texture2D heightmap;
+    public float[] heightData;
 
-    public bool Regenerate = false;
+    public bool Regenerate = false;     //do a full regeneration of mesh
+    public bool DoDeform = false;       //just do basic deformation
 
     public Material material;
     public Mesh mesh;
     protected MeshFilter filter;
     protected MeshRenderer render;
 
+    //backup copy of original sphere mesh (for easier editing)
+    private Mesh baseSphereMesh;
 
     protected virtual void Start()
     {
@@ -76,16 +80,24 @@ public class Body : MonoBehaviour
         SetScale();
         DoRotation();
         int detail = Mathf.Clamp(GetDistanceDetail(), MinDetailGlobal, MaxDetail);
-        if (detail != SphereDetail || !mesh)
+        if (detail != SphereDetail || !mesh)            //did detail level change (or no mesh?)
         {
             SphereDetail = detail;
             mesh = Shapes.Icosphere.Generate(SphereDetail);
             if (mesh)
             {
+                baseSphereMesh = Shapes.Icosphere.CloneMesh(mesh);  //keep backup
+                GetHeightmapData();
                 if (filter) filter.sharedMesh = mesh;
-                DeformMesh();
+                DoDeform = true;
                 if (render) render.sharedMaterial = material;
             }
+        }
+
+        if (DoDeform)
+        {
+            DeformMesh();
+            DoDeform = false;
         }
     }
 
@@ -143,33 +155,68 @@ public class Body : MonoBehaviour
     }
 
 
-    void DeformMesh()
+    /// <summary>
+    /// Builts height data from a given Heightmap image (or from maintexture if none given)
+    /// </summary>
+    void GetHeightmapData()
+    {
+        if (!mesh) return;
+        int count = mesh.vertexCount;       //total number of vertices to track
+        heightData = new float[count];      //height data for each vertex
+        Vector2[] uvs = mesh.uv;            //UV mapping for each vertex
+
+        //Use the main texture if no heightmap availablen
+        if (!heightmap) heightmap = (Texture2D)material.mainTexture;
+
+        //Get texture info for each vertex and store height data
+        for (int i = 0; i < count; i++)
+        {
+            //get sample from grayscale
+            Color c = heightmap.GetPixelBilinear(uvs[i].x, uvs[i].y);
+            heightData[i] = c.grayscale - .5f;
+        }
+    }
+
+        void DeformMesh()
     {
         if (!TerrainDeformation) return;
         if (!mesh) return;
+        if (!baseSphereMesh) return;
+
+        if (heightData == null)
+        {
+            GetHeightmapData();
+            if (heightData == null)
+            {
+                Debug.Log("Failed to get heightmap data for deformation!");
+                return;
+            }
+        }
+
+        //calculate deformation scale for this specific body at this distance
         actualTerrainMagnitude = Simulation.I.TerrainMagnitudeScale * TerrainSmoothness * Radius;
 
-        //may have this re-grab a virgin sphere if needed
-
-        Vector3[] verts = mesh.vertices;
+        Vector3[] baseVerts = baseSphereMesh.vertices;      //vertices on original sphere
+        Vector3[] verts = mesh.vertices;                    //vertices on this sphere
         Vector2[] uvs = mesh.uv;
+        float[] heights = new float[verts.Length];
 
-        if (!heightmap) heightmap = (Texture2D)material.mainTexture;
+        //if (!heightmap) heightmap = (Texture2D)material.mainTexture;
 
         for (int i = 0; i < verts.Length; i++)
         {
-            Vector3 dir = verts[i].normalized;
+            Vector3 original = baseVerts[i];
 
             //get sample from grayscale
-            Color c = heightmap.GetPixelBilinear(uvs[i].x, uvs[i].y);
-            float h = c.grayscale - .5f;
+            //Color c = heightmap.GetPixelBilinear(uvs[i].x, uvs[i].y);
+            //float h = c.grayscale - .5f;
 
             //apply displacement
             //float offset = Random.Range(-actualTerrainMagnitude, actualTerrainMagnitude);
             //float noiseAmount = 0;
             //float noise = Random.Range(-noiseAmount, noiseAmount);
-            float displacedRadius = 1 + h * actualTerrainMagnitude;
-            verts[i] = dir * displacedRadius;   //(verts[i].magnitude + offset);
+            float displacedRadius = 1 + heightData[i] * actualTerrainMagnitude;
+            verts[i] = original * displacedRadius;   //(verts[i].magnitude + offset);
         }
 
         mesh.vertices = verts;
