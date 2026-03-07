@@ -45,9 +45,15 @@ Planet Generation Optimization:
 			* let the tool update that config file (or update Sim and let it do the file update)
 			* intent is to be able to define settings within the tool
 			* critical non-config-editable values will remain in the component (like guardrail limits)
-		* deformation changes are very slow at high detail
-			* need changes to deformation (so it doesn't completely regenerate the heightmap/etc each time)
-			* also can get rid of normalization since it's default on spheres now
+
+
+	* detail transition improvements:
+		* deformation speed:
+			* may be able to turn mesh deformation into a background job
+				* allows it to be run before needed
+
+
+
 
 
 	* planet bugs
@@ -56,26 +62,39 @@ Planet Generation Optimization:
 
 
 	* job system
-		* jobs are starting and seem to be completing, but they're not all finishing
-			Internal: JobTempAlloc has allocations that are more than the maximum lifespan of 4 frames old - this is not allowed and likely a leak
-
+		* fire a warmup job before starting pre-caching
+			* supposedly helps on jobs
+			IEnumerator Start() P
+			    yield return StartCoroutine(WarmupJobSystem());		//call the warmup
+				Icosphere.PreCache();								//now schedule heavy precache jobs
+			}
+		* needs more thorough checking and diagnostics
+			* create time logs to track job times
+		* in a built application jobs seem to run much worse, and the interface locks up during preloading
+			* on another run it came up quickly - as soon as the requested sphere was ready
+			* became visible right as 7 was loaded (so maybe took its time?)
 		* need to be able to turn it off (both on Icosphere and globally)
-		
-		
+		* needs some cleanup - first attempt was a bit messy
+			* a lot of this should go into a caching/preload system of its own (for other shapes)
 	
-
-	* work with precaching (including as background task)
-		* enable this with a bool in Cursor
-		* track if it's been completed (so it doesn't re-cache if turned on and off, but can do the cache at any time if it started as off)
-		* generator needs a way to report cache status without exposing it
-	* put in limiters to keep one call to Generate or GenerateData from generating while there may be another one generating in another thread
-		* static bool value, if a call sees its true it won't generate, it just keeps polling until false before proceeding
-		* give it a time limit to avoid infinite loops
-
-	* store heightmap as an array of floats (to avoid pulling it from uv mapping each frame)
-		* done at deformation generation time
-	* store deformed verts in an array and work from that (instead of pulling it from mesh each time)
+	* config files for Simulation and Game (manually editable)
+		* allows different builds to share the same configs
+		* allows tools (like planet tool) to save settings that will be applied to the game
+	
 	* mesh.RecalculateNormals might be a bit slow - limit to when the deformation is generated, but not when it's being rescaled
+
+	* jobbed pilots
+		* ai behavior can be put into a job (doesn't have to be burst compatible)
+		* all input to the pilot has to be transferred with preallocated native arrays
+			* cannot read GameObjects or other "managed" objects - only 
+			* these structures can remain in place while the pilot exists and don't have to be reallocated, just updated before job starts
+		* all pilot output (control changes, etc) have to come back through native arrays
+			* with cautious use, the input arrays can double as output arrays (write values, start job, read values the job wrote to them)
+		* pilot jobs would be launched each frame or update - they're not continuous
+		* since they can't access Sim or Game, config information can be encapsulated or loaded into native structures
+			* if the struct only uses valid types they struct can be passed as a single value (float3 instead of vectors, etc)
+			* any changes would have to be updated in their native representation before the job starts
+
 
 Deformation of the sphere:
 	* hysteresis - so it doesn't flicker at the boundary (such as 3 radii)

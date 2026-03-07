@@ -8,6 +8,18 @@ Terrain Generation:
 * texturing it (based on height and steepness)
 
 
+Writing for Jobbing:
+	* start by writing the portion meant for jobbing into a struct in its own file
+		* meant to be as burst-friendly as possible, but without all the limitations being mandatory
+	* the struct would be instantiated in the monobehavior object and used much like a job
+	* once it's time to job it, most of the labor is already done, it would just need a scheduler and some cleanup
+
+Caching:
+	* this will be handled by the controller, not landscape mesh creation
+	* caching is temporary, made to be dropped if the player moves far away
+	* memory management is an issue as well - the more memory is being used, the quicker it is to decache
+
+
 General Tools:
 	* noise - different types
 		* vertical noise, like static

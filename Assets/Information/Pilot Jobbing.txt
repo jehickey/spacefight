@@ -1,0 +1,37 @@
+Jobbing Pilots:
+
+  * not an issue right now, but it will be later
+  * having an architecture in mind for later will help guide design now
+
+
+Jobbed Architecture: (still being refined)
+	* The Scheduler - central Monobehavior that manages the pilot job and orchestates input/output
+		* owns and allocates "the native index" - a local array containing persisent native data for each pilot
+			* the index isn't directly exposed to outside, scheduler will call SendInput(arrayref) and ReceiveOutput(arrayref) on Controller
+			* these functions only send references to data for that given pilot
+		* starts the job (calling SendInput() on individual pilot controllers to fill array)
+		* monitors for job completion and calls ReceiveOutput() on individual pilot controllers
+	* The Job - the brain of the pilot, governing behavior based on data given to it
+		* standalone struct stored in its own file (helps enforce safeguards on data access - no UnityEngine or other libraries)
+		* helper functions that only process internal behavior go here (no world access)
+		* job iterates through all pilots, either together or time-staggered to limit load
+	* The Controller - monobehavior that governs the existence of an individual pilot
+		* manages their existence and connections to the outside world, contains no behavior logic or input/output storage
+		* registers with Scheduler on creation, deregisters on Destroy
+		* orchestrates with Scheduler by providing two methods, insulating the Scheduler's internal index
+			* SendInput(arrayref) - triggers the Controller to update the native data array passed to it as a reference
+			* ReceiveOutput(arrayref) - triggers the Controller to read from a native data array and act on its values
+		* helper methods that process managed objects or information from outside go here
+
+Limitations:
+		* jobbed code does not have to be burst compatible - though it will be faster if it is
+		* job code cannot reference or use managed objects (Monobehavior, GameObject, Transform)
+		* all information must be passed in via native data structures, and all output goes out in native structures
+			* all structures must have memory pre-allocated before use - instantiated or with arrays defined
+			* these structures can be Allocator.Persistent, allocated at pilot startup and Disposed at pilot shutdown
+		* complex data can be passed as a struct - if the struct is limited to job-friendly datatypes (float3 instead of vector, etc)
+			* config data stored in a job-friendly struct can be passed for use by job
+		* jobs are meant to be short bursts - no single job will run continuously
+			* exchange of input and output can only occur before the job starts and after it completes
+
+
