@@ -7,7 +7,7 @@ public class Sun : Body
     public float EmissionBrightness = 20;
     public float LightIntensity = 1;
 
-    private new Light light;
+    public new Light light;
 
     protected override void Start()
     {

@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Shapes
 {
@@ -169,6 +170,7 @@ namespace Shapes
         /// <returns></returns>
         public static Mesh Generate(int subdivisions)
         {
+            if (!Application.isPlaying) return null;
             subdivisions = Mathf.Clamp(subdivisions, 0, MaxSubdivisions);
             //check cache and return a clone from it if present
             if (cacheMesh.TryGetValue(subdivisions, out Mesh cached) && cached) return CloneMesh(cached);

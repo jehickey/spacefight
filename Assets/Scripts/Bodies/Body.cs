@@ -36,6 +36,10 @@ public class Body : MonoBehaviour
     [ReadOnly(true)]
     public Mesh baseSphereMesh;
 
+    [Header("Atmosphere")]
+    public Atmosphere atmosphere;
+
+
     protected virtual void Start()
     {
 
@@ -160,6 +164,9 @@ public class Body : MonoBehaviour
         float degreesPerSimSecond = 360f / RotationPeriod;
         transform.Rotate(Vector3.up, degreesPerSimSecond * Simulation.I.TimeDelta, Space.Self);
     }
+
+
+
 
 
     /// <summary>
