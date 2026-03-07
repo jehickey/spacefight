@@ -1,34 +1,40 @@
+using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public class Body : MonoBehaviour
 {
     public static int MinDetailGlobal = 1;
-    public static int MaxDetailGlobal = 7;
+    public static int MaxDetailGlobal = 8;
 
     [Header("Body Settings")]
     public bool TerrainDeformation = false;
+    public bool Regenerate = false;     //do a full regeneration of mesh
+    public bool DoDeform = false;       //just do basic deformation
     public float Radius = 50;
     public float DistanceFromPlayer;
     public float RotationPeriod = 10; //degrees per second
 
+    [ReadOnly(true)]
     public int SphereDetail;
     public int MaxDetail = 0;
-    public float actualTerrainMagnitude;
     public float TerrainSmoothness = 1;
+    public float actualTerrainMagnitude;
 
     public Texture2D heightmap;
-    public float[] heightData;
+    private float[] heightData;
+    public int heightDataCount;
 
-    public bool Regenerate = false;     //do a full regeneration of mesh
-    public bool DoDeform = false;       //just do basic deformation
 
     public Material material;
+    [ReadOnly(true)]
     public Mesh mesh;
     protected MeshFilter filter;
     protected MeshRenderer render;
 
     //backup copy of original sphere mesh (for easier editing)
-    private Mesh baseSphereMesh;
+    [ReadOnly(true)]
+    public Mesh baseSphereMesh;
 
     protected virtual void Start()
     {
@@ -99,6 +105,7 @@ public class Body : MonoBehaviour
             DeformMesh();
             DoDeform = false;
         }
+        heightDataCount = heightData!=null ? heightData.Count() : 0;
     }
 
     protected virtual void OnValidate()
@@ -162,12 +169,14 @@ public class Body : MonoBehaviour
     {
         if (!mesh) return;
         int count = mesh.vertexCount;       //total number of vertices to track
-        heightData = new float[count];      //height data for each vertex
         Vector2[] uvs = mesh.uv;            //UV mapping for each vertex
+        heightData = null;
 
         //Use the main texture if no heightmap availablen
         if (!heightmap) heightmap = (Texture2D)material.mainTexture;
+        if (!heightmap) return;
 
+        heightData = new float[count];      //height data for each vertex
         //Get texture info for each vertex and store height data
         for (int i = 0; i < count; i++)
         {
@@ -188,7 +197,7 @@ public class Body : MonoBehaviour
             GetHeightmapData();
             if (heightData == null)
             {
-                Debug.Log("Failed to get heightmap data for deformation!");
+                //Debug.Log("Failed to get heightmap data for deformation!");
                 return;
             }
         }

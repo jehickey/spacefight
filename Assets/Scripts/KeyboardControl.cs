@@ -5,7 +5,6 @@ public class KeyboardControl : MonoBehaviour
 {
 
     public bool MouseSteering = true;
-    public bool InvertPitch = false;
 
     [Tooltip("Defines how rapidly a keypress influences the throttle")]
     public float ThrottlePush = 1;
@@ -67,13 +66,16 @@ public class KeyboardControl : MonoBehaviour
             steering.SetRoll(-controls.Flight.Roll.ReadValue<float>());
 
             //throttle control
-            if (throttleBox && controls.Flight.Throttle.IsPressed())
+            if (throttleBox)
             {
-                float input = controls.Flight.Throttle.ReadValue<float>();
-                input *= ThrottlePush * Time.deltaTime;
-                throttleBox.InputPosition += input;
+                if (controls.Flight.Throttle.IsPressed())
+                {
+                    float input = controls.Flight.Throttle.ReadValue<float>();
+                    input *= ThrottlePush * Time.deltaTime;
+                    throttleBox.InputPosition += input;
+                }
+                throttleBox.Boost = controls.Flight.Boost.IsPressed();
             }
-
             if (controls.Flight.Fire.IsPressed() && weapons) weapons.Fire();
 
             MouseToStickVector();
@@ -114,7 +116,7 @@ public class KeyboardControl : MonoBehaviour
         //Vector3 result = new Vector3(dir.x * t, 0f, dir.y * t);
         steering.StickPosition.x = dir.x * t;
         steering.StickPosition.z = -dir.y * t;
-        if (InvertPitch) steering.StickPosition.z *= -1;
+        if (Game.I.InvertPitchAxis) steering.StickPosition.z *= -1;
     }
 
 

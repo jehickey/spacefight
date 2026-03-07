@@ -20,6 +20,8 @@ public class OverlayManager : MonoBehaviour
     public Text txtKeys;
     public Text txtCountdown;
     public Text txtFPS;
+    public Text txtPlanet;
+    public Text txtAltitude;
     public Image background;
 
     public Color backgroundColor = Color.black;
@@ -28,8 +30,7 @@ public class OverlayManager : MonoBehaviour
     public AudioClip SpawnBeep;
     private new AudioSource audio;
     private int lastCountdown;
-
-
+    
     private void OnEnable()
     {
         audio = GetComponent<AudioSource>();
@@ -37,7 +38,6 @@ public class OverlayManager : MonoBehaviour
 
     void Update()
     {
-
         txtPause.enabled = Paused;
         txtKeys.enabled = Paused;
         background.enabled = Paused;
@@ -78,6 +78,18 @@ public class OverlayManager : MonoBehaviour
             {
                 txtFPS.text = "";
             }
+        }
+
+        //Display body in proximity
+        if (Game.I?.PlayerShip?.bodyProximity)
+        {
+            txtPlanet.text = Game.I.PlayerShip.bodyProximity?.name;
+            txtAltitude.text = $"{Game.I.PlayerShip.bodyAltitude:0}m";
+        }
+        else
+        {
+            txtPlanet.text = "";
+            txtAltitude.text = "";
         }
 
     }

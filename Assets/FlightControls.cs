@@ -145,6 +145,15 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Button"",
+                    ""id"": ""a7888984-7b14-4f7f-b418-04f93f882ba2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -312,6 +321,17 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""PitchYaw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf744779-94d0-4430-9ceb-48f7d5a95059"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -392,17 +412,6 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d2f9d787-81bb-4b0f-92f3-9843cf9c06a1"",
-                    ""path"": ""<Keyboard>/p"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3b99788e-2640-42af-848d-467a016b4dfd"",
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
@@ -425,6 +434,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_Flight_Throttle = m_Flight.FindAction("Throttle", throwIfNotFound: true);
         m_Flight_Fire = m_Flight.FindAction("Fire", throwIfNotFound: true);
         m_Flight_PitchYaw = m_Flight.FindAction("PitchYaw", throwIfNotFound: true);
+        m_Flight_Boost = m_Flight.FindAction("Boost", throwIfNotFound: true);
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Exit = m_Game.FindAction("Exit", throwIfNotFound: true);
@@ -518,6 +528,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Flight_Throttle;
     private readonly InputAction m_Flight_Fire;
     private readonly InputAction m_Flight_PitchYaw;
+    private readonly InputAction m_Flight_Boost;
     /// <summary>
     /// Provides access to input actions defined in input action map "Flight".
     /// </summary>
@@ -553,6 +564,10 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Flight/PitchYaw".
         /// </summary>
         public InputAction @PitchYaw => m_Wrapper.m_Flight_PitchYaw;
+        /// <summary>
+        /// Provides access to the underlying input action "Flight/Boost".
+        /// </summary>
+        public InputAction @Boost => m_Wrapper.m_Flight_Boost;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -597,6 +612,9 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @PitchYaw.started += instance.OnPitchYaw;
             @PitchYaw.performed += instance.OnPitchYaw;
             @PitchYaw.canceled += instance.OnPitchYaw;
+            @Boost.started += instance.OnBoost;
+            @Boost.performed += instance.OnBoost;
+            @Boost.canceled += instance.OnBoost;
         }
 
         /// <summary>
@@ -626,6 +644,9 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @PitchYaw.started -= instance.OnPitchYaw;
             @PitchYaw.performed -= instance.OnPitchYaw;
             @PitchYaw.canceled -= instance.OnPitchYaw;
+            @Boost.started -= instance.OnBoost;
+            @Boost.performed -= instance.OnBoost;
+            @Boost.canceled -= instance.OnBoost;
         }
 
         /// <summary>
@@ -837,6 +858,13 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPitchYaw(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Boost" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBoost(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Game" which allows adding and removing callbacks.

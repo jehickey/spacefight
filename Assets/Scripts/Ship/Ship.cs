@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class Ship : MonoBehaviour
@@ -19,7 +21,7 @@ public class Ship : MonoBehaviour
     private float RumbleFade = 1;
     [SerializeField]
     private float RumbleMax = 5;
-    private     Vector3 baseCamLocalPos;
+    private Vector3 baseCamLocalPos;
     private Quaternion baseCamLocalRot;
 
     public float FreshSpawnCountdown = 0;
@@ -28,11 +30,8 @@ public class Ship : MonoBehaviour
     public SoundMachine soundGotHit;
     public AudioClip clipExplosion;
 
-    [Header("Weapons System")]
-    WeaponsSystem Weapons;
-
     private Transform lastHitBy;
-
+    private WeaponsSystem Weapons;
     private ThrottleSystem Throttle;
     private SteeringSystem Steering;
     private Camera cam;
@@ -41,6 +40,29 @@ public class Ship : MonoBehaviour
 
     public new Collider collider;
 
+    [Header("Body Proximity")]
+    public Body bodyProximity;
+    [SerializeField]
+    [ReadOnly(true)]
+    public float bodyAltitude;
+    [SerializeField]
+    [ReadOnly(true)]
+    public Vector3 bodyTo;
+    [SerializeField]
+    [ReadOnly(true)]
+    public Vector3 bodyFrom;
+    [SerializeField]
+    [ReadOnly(true)]
+    private float bodyDistance;
+    [SerializeField]
+    [ReadOnly(true)]
+    private float bodyMinDistance;
+    [SerializeField]
+    [ReadOnly(true)]
+    private float bodyProximityFactor;
+
+
+    [Header("Forces")]
     [SerializeField]
     private Vector3 forcedDisplacement = Vector3.zero;
     [SerializeField]
@@ -78,7 +100,7 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
-        
+
         //disable pilot until spawn countdown is complete
         if (pilot) pilot.enabled = (FreshSpawnCountdown == 0);
         if (!pilot.enabled && Throttle) Throttle.Input = 1;
@@ -104,15 +126,17 @@ public class Ship : MonoBehaviour
     private void LateUpdate()
     {
         if (Mass <= 0) Mass = .001f;
-        Vector3 posDelta = forcedDisplacement / Mass; 
+        Vector3 posDelta = forcedDisplacement / Mass;
         Vector3 rotDelta = Vector3.zero;
 
         //apply steering
-        if (Steering) rotDelta += Steering.Result;
+        if (Steering) rotDelta += InfluenceControlsNearPlanet(Steering.Result);
+
 
         //throttle and propulsion
         //Velocity = Vector3.zero;
         if (Throttle) Velocity = transform.forward * Throttle.Thrust * Simulation.I.SpeedUnit;
+        Velocity = LimitThrustNearPlanet(Velocity);
         posDelta += Velocity * Time.deltaTime;
 
         //apply external forces
@@ -125,17 +149,97 @@ public class Ship : MonoBehaviour
 
         //update forces and displacement
         forcedDisplacement = Vector3.zero;
-        externalForce *= Mathf.Exp( -Simulation.I.ForceDecayRate * Time.deltaTime);
+        externalForce *= Mathf.Exp(-Simulation.I.ForceDecayRate * Time.deltaTime);
         externalAngularForce *= Mathf.Exp(-Simulation.I.ForceDecayRate * Time.deltaTime);
+    }
+
+    private Vector3 LimitThrustNearPlanet(Vector3 thrust)
+    {
+        if (bodyProximity) thrust *= Mathf.Lerp(1, Simulation.I.BodyProximityThrustFactor, bodyProximityFactor);
+        return thrust;
+    }
+
+    private Vector3 InfluenceControlsNearPlanet(Vector3 steering)
+    {
+        if (!bodyProximity) return steering;
+
+        //dampen altitude change steering
+        Vector3 pitchAxis = transform.right;
+        float altitudeInfluence = Vector3.Dot(transform.forward, bodyFrom);  //+1 away, -1 towards
+        float suppression = Mathf.Abs(altitudeInfluence) * bodyProximityFactor;
+        steering.x *= (1 - suppression);
+
+        //add roll impulse to stay oriented upwards
+        float maxRollAssist = .5f + 1f * (steering.magnitude + Throttle.Actual);
+        Vector3 rollCorrectionAxis = Vector3.Cross(transform.up, bodyFrom); //roll quantity
+        float rollSign = Vector3.Dot(rollCorrectionAxis, transform.forward);    //roll direction
+        float alignmentError = Vector3.Angle(transform.up, bodyFrom) / 180f;
+        float rollAssistStrength = bodyProximityFactor * alignmentError;
+        float rollBias = rollSign * rollAssistStrength * maxRollAssist;
+        steering.z += rollBias;
+
+        //reimpose steering limits
+        steering.x = Mathf.Clamp(steering.x, -1, 1);
+        steering.y = Mathf.Clamp(steering.y, -1, 1);
+        steering.z = Mathf.Clamp(steering.z, -1, 1);
+
+        return steering;
     }
 
     private void CollisionChecks()
     {
+        CheckPlanetProximity();
         if (FreshSpawnCountdown > 0) return;
+        CollisionCheck_Ships();
+    }
+
+    private void CheckPlanetProximity()
+    {
+        bodyProximity = null;
+        float closest = 0;
+        foreach (Body body in FindObjectsByType<Body>(FindObjectsSortMode.None))
+        {
+            float distance = Vector3.Distance(transform.position, body.transform.position);
+            float radii = distance / body.Radius;
+            if (closest == 0) closest = distance;           //provide a starting value for comparison
+            if (radii <= Simulation.I.BodyProximityRadii)
+            {
+                if (bodyDistance <= closest)                    //is this the closest so far?
+                {
+                    closest = distance;
+                    bodyProximity = body;
+                }
+            }
+        }
+        if (bodyProximity)                                  //update metrics used elsewhere
+        {
+            float distanceLimit = Simulation.I.BodyProximityRadii * bodyProximity.Radius;
+            bodyDistance = Vector3.Distance(transform.position, bodyProximity.transform.position);
+            bodyMinDistance = bodyProximity.Radius * Simulation.I.BodyClosestApproachRadii;
+            bodyTo = (bodyProximity.transform.position - transform.position).normalized;
+            bodyFrom = -bodyTo;
+            bodyAltitude = bodyDistance - bodyProximity.Radius;
+            bodyProximityFactor = Mathf.InverseLerp(distanceLimit, bodyMinDistance, bodyDistance);
+            bodyProximityFactor = MathF.Pow(bodyProximityFactor, Simulation.I.BodyProximityFactorCurve);
+        }
+        AvoidPlanetImpact();
+    }
+
+    private void AvoidPlanetImpact()
+    {
+        if (!bodyProximity) return;
+        if (bodyDistance < bodyMinDistance)
+        {
+            transform.position = bodyProximity.transform.position - bodyTo.normalized * bodyMinDistance;
+        }
+    }
+
+    private void CollisionCheck_Ships()
+    {
         //compare against every other ship
         foreach (Ship ship in FindObjectsByType<Ship>(FindObjectsSortMode.None))
         {
-            if (ship && ship != this && ship.FreshSpawnCountdown==0)
+            if (ship && ship != this && ship.FreshSpawnCountdown == 0)
             {
                 if (Physics.ComputePenetration(
                     collider, transform.position, transform.rotation,
@@ -145,7 +249,7 @@ public class Ship : MonoBehaviour
                     Vector3 point = (transform.position + ship.transform.position) * .5f;
                     float impact = (Velocity + ship.Velocity).magnitude;
                     float flareSize = .03f * impact;
-                    Flare.Spawn(point, Color.white, .15f, .25f, flareSize*.1f, flareSize);
+                    Flare.Spawn(point, Color.white, .15f, .25f, flareSize * .1f, flareSize);
                     //Debug.Log($"ship {name} struck ship {ship.name}");
                     forcedDisplacement += (direction * (distance * .5f + .0001f)) * Simulation.I.ImpactDisplacementMultiplier * impact;
                     externalForce += direction.normalized * impact * Simulation.I.ImpactForceMultiplier;
@@ -157,7 +261,6 @@ public class Ship : MonoBehaviour
     }
 
 
-
     public void AddRumble(float value)
     {
         RumbleIntensity += value * Time.deltaTime;
@@ -166,7 +269,7 @@ public class Ship : MonoBehaviour
 
     private void DoRumble()
     {
-        RumbleIntensity -= RumbleFade* Time.deltaTime;
+        RumbleIntensity -= RumbleFade * Time.deltaTime;
         RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
         if (cam)
         {
@@ -187,7 +290,7 @@ public class Ship : MonoBehaviour
         }
     }
 
-       
+
     public void TakeDamage(float damage, Transform origin = null)
     {
         AddRumble(10);

@@ -7,6 +7,8 @@ public class Moon : Body
     public bool TidalLock = false;
     public float OrbitRadius = 100;
     public float OrbitPeriod = 10;
+
+    [Range(0f, 1f)]
     public float OrbitPhase = 0; //0-1, current orbital period position
 
     private Body parentBody;
@@ -24,7 +26,7 @@ public class Moon : Body
             parentBody = transform.parent.GetComponent<Body>();
             if (!parentBody) Debug.LogWarning("Moon has a parent but it's not a Body!");
         }
-        OrbitPhase = Random.Range(0f, 1f);
+        if (OrbitPhase==0) OrbitPhase = Random.Range(0f, 1f);
     }
 
     protected override void Update()
@@ -42,7 +44,6 @@ public class Moon : Body
                 OrbitPhase += Simulation.I.TimeDelta / OrbitPeriod;
             }
         }
-        if (OrbitPhase > 1) OrbitPhase = 0;
         SetOrbitalPosition();
     }
 
@@ -50,7 +51,7 @@ public class Moon : Body
     {
         base.OnValidate();
         SetOrbitalPosition();
-        Update();
+        //Update();
     }
 
     protected override void OnDrawGizmos()
@@ -79,6 +80,7 @@ public class Moon : Body
 
     private void SetOrbitalPosition()
     {
+        if (OrbitPhase > 1) OrbitPhase = 0;
         if (!transform.parent) return;
         float angle = -OrbitPhase * 2f * Mathf.PI;
         transform.position = transform.parent.position + new Vector3(

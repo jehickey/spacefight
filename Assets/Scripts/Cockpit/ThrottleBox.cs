@@ -6,6 +6,7 @@ public class ThrottleBox : MonoBehaviour
 
     public float NeutralPosition = .5f;
     public float NeutralDriftRate = .5f;
+    public bool Boost = false;
 
     [SerializeField]
     private Vector3 ThrowCenter = Vector3.zero;
@@ -38,7 +39,13 @@ public class ThrottleBox : MonoBehaviour
         InputPosition = Mathf.Lerp(InputPosition, NeutralPosition, Time.deltaTime * NeutralDriftRate);
 
         UpdateThrowbar();
-        if (throttleSystem) throttleSystem.Input = InputPosition;
+        if (throttleSystem)
+        {
+            throttleSystem.Input = InputPosition;
+            throttleSystem.Boost = Boost;
+        }
+
+
 
     }
 

@@ -52,7 +52,7 @@ public class Starfield : MonoBehaviour
         
         if (background)
         {
-            background.Radius = FieldRadius + BackgroundBuffer;
+            background.Radius = FieldRadius*.5f + BackgroundBuffer;
         }
         else
         {
@@ -63,9 +63,6 @@ public class Starfield : MonoBehaviour
         {
             Debug.Log("Multiple Starfield objects!");
         }
-
-
-
     }
 
     private void OnDrawGizmosSelected()

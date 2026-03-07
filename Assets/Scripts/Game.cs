@@ -17,6 +17,8 @@ public class Game : MonoBehaviour
     private float respawnCountdownStart;
     private Ship lastPlayerShip;
 
+    public bool InvertPitchAxis = false;
+
     public bool Paused = false;
     public int KillCount = 0;
     public int DeathCount = 0;

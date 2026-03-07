@@ -19,6 +19,12 @@ public class Simulation : MonoBehaviour
     public float ImpactForceMultiplier = 2f;
     public float ImpactDisplacementMultiplier = 2f;
 
+    [Header("Body Proximity Settings")]
+    public float BodyProximityRadii = 2f;
+    public float BodyClosestApproachRadii = 1.025f;
+    public float BodyProximityFactorCurve = 3;
+    public float BodyProximityThrustFactor = .5f;
+
     [Header("Terrain Settings")]
     public float TerrainMagnitudeScale = .01f;
     public float TerrainDistanceScale = 1f;

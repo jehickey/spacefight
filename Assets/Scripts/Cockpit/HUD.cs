@@ -43,34 +43,41 @@ public class HUD : MonoBehaviour
     {
         screenSize = Mathf.Min(canvasRect.rect.width, canvasRect.rect.height);
         UpdateReticule();
-        UpdateStickPosition();
+        UpdateStickPositionReticule();
     }
 
     private void UpdateReticule()
     {
         if (!Reticule || !ship) return;
-        reticleSize = Game.I.StickControlDeadzone * screenSize;
+        reticleSize = Game.I.StickControlDeadzone * screenSize * 2f;
         Reticule.rectTransform.sizeDelta = Vector2.one * reticleSize;
         if (ReticuleMask) ReticuleMask.rectTransform.sizeDelta = Reticule.rectTransform.sizeDelta;
         UpdateHorizonIndicator();
     }
 
-    private void UpdateStickPosition()
+    private void UpdateStickPositionReticule()
     {
-        //work out radius for maximum stick position (so it's not square)
-        if (!StickPosition) return;
+        if (!StickPosition || !ship) return;
+        float StickMin = screenSize * Game.I.StickControlDeadzone * .5f;
         float StickMax = screenSize * Game.I.StickControlLimit * .5f;
-        Vector2 pos = Vector2.zero;
-        if (ship)
+        Vector2 pos = new Vector2(steering.realStick.x, steering.realStick.z);
+        if (!Game.I.InvertPitchAxis) pos.y *= -1;
+        if (pos.magnitude >= 0)
         {
-            pos.x = steering.realStick.x * StickMax;
-            pos.y = steering.realStick.z * StickMax;
+            float t = Mathf.InverseLerp(Game.I.StickControlDeadzone, Game.I.StickControlLimit, pos.magnitude);
+            t += Game.I.StickControlDeadzone*2f;
+            pos = pos.normalized * t * screenSize * .5f;
+        }
+        else
+        {
+            pos = Vector2.zero;
         }
         StickPosition.rectTransform.anchoredPosition = pos;
     }
 
     private void UpdateHorizonIndicator()
     {
+        if (!ship) return;
         //Create the HorizonLine and components if they don't exist yet
         if (!HorizonLine)
         {
@@ -88,10 +95,13 @@ public class HUD : MonoBehaviour
         Quaternion orient = ship.transform.rotation;
         float reticleScale = reticleSize / 180f;
 
+        Vector3 upDir = Vector3.up;
+        if (ship.bodyProximity) upDir = ship.bodyFrom;
+
         //Roll
         // Project ecliptic up into ship space
-        float ux = Vector3.Dot(Vector3.up, ship.transform.right);
-        float uy = Vector3.Dot(Vector3.up, ship.transform.up);
+        float ux = Vector3.Dot(upDir, ship.transform.right);
+        float uy = Vector3.Dot(upDir, ship.transform.up);
         // 2D direction of “up” in the HUD
         Vector2 up2D = new Vector2(ux, uy);
         // Horizon line is perpendicular to this

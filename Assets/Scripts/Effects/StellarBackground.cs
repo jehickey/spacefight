@@ -41,6 +41,12 @@ public class StellarBackground : MonoBehaviour
         {
             material.SetColor("_EmissionColor", Color.white * Brightness);
         }
+        if (!mesh)      //keep retrying until mesh is available
+        {
+            mesh = Shapes.Icosphere.Generate(SphereDetail);
+            Shapes.Icosphere.FlipMesh(mesh);
+            filter.sharedMesh = mesh;
+        }
     }
 
     private void OnValidate()
@@ -55,12 +61,7 @@ public class StellarBackground : MonoBehaviour
             Debug.Log("StellarBackground needs a renderer and a meshfilter");
             return;
         }
-        else
-        {
-            mesh = Shapes.Icosphere.Generate(SphereDetail);
-            Shapes.Icosphere.FlipMesh(mesh);
-            filter.sharedMesh = mesh;
-        }
+        
         if (!material)
         {
             Debug.Log("StellarBackground has no material!");
