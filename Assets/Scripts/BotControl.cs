@@ -378,6 +378,7 @@ public class BotControl : MonoBehaviour
         if (!ship) return;
         if (!TargetObject) return;
         if (!FireOnTarget) return;
+        if (!Game.I.SpawnEnemies) return;
         //if (distanceToTarget > rangeFiring) return;
         if (factorFiring <= 0) return;
         if (angleToTarget > FiringAngle) return;

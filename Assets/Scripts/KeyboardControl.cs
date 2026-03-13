@@ -90,8 +90,6 @@ public class KeyboardControl : MonoBehaviour
         Vector2 mousePos = controls.Flight.PitchYaw.ReadValue<Vector2>();
 
         // Convert mouse position into a centered coordinate system
-        // mousePos is already relative to screen center (e.g., -0.5..0.5 if normalized)
-        // But if it's in pixels, convert to centered pixels:
         mousePos = mousePos - new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 
         // Compute radius in pixels

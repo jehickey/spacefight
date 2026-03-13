@@ -25,6 +25,7 @@ public class Flare : MonoBehaviour
     {
         mesh = Shapes.Icosphere.Generate(3);
 
+        material = new Material(Simulation.I?.FlareMaterial);
         if (!material) material = new Material(Shader.Find("Unlit/Color"));
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);

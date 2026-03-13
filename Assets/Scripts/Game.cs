@@ -23,6 +23,8 @@ public class Game : MonoBehaviour
     public int KillCount = 0;
     public int DeathCount = 0;
 
+    public bool SpawnEnemies;
+
     private FlightControls controls;
     private OverlayManager overlay;
 
@@ -100,6 +102,7 @@ public class Game : MonoBehaviour
         if (controls.Game.Restart.WasPressedThisFrame()) SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         if (controls.Game.Pause.WasPressedThisFrame()) Paused = !Paused;
         if (controls.Game.ShowFPS.WasPressedThisFrame()) overlay.ShowFPS = !overlay.ShowFPS;
+        if (controls.Game.ToggleEnemies.WasPressedThisFrame()) SpawnEnemies = !SpawnEnemies;
 
         if (Paused)
         {

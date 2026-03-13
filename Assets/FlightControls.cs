@@ -374,6 +374,15 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleEnemies"",
+                    ""type"": ""Button"",
+                    ""id"": ""4ce04026-abd7-4d80-a38e-70e1e3d45a7b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -420,6 +429,17 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""ShowFPS"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f8e9686-58b1-43d9-af5a-321f70192103"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleEnemies"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -441,6 +461,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_Game_Restart = m_Game.FindAction("Restart", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
         m_Game_ShowFPS = m_Game.FindAction("ShowFPS", throwIfNotFound: true);
+        m_Game_ToggleEnemies = m_Game.FindAction("ToggleEnemies", throwIfNotFound: true);
     }
 
     ~@FlightControls()
@@ -688,6 +709,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Restart;
     private readonly InputAction m_Game_Pause;
     private readonly InputAction m_Game_ShowFPS;
+    private readonly InputAction m_Game_ToggleEnemies;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -715,6 +737,10 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/ShowFPS".
         /// </summary>
         public InputAction @ShowFPS => m_Wrapper.m_Game_ShowFPS;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/ToggleEnemies".
+        /// </summary>
+        public InputAction @ToggleEnemies => m_Wrapper.m_Game_ToggleEnemies;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -753,6 +779,9 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @ShowFPS.started += instance.OnShowFPS;
             @ShowFPS.performed += instance.OnShowFPS;
             @ShowFPS.canceled += instance.OnShowFPS;
+            @ToggleEnemies.started += instance.OnToggleEnemies;
+            @ToggleEnemies.performed += instance.OnToggleEnemies;
+            @ToggleEnemies.canceled += instance.OnToggleEnemies;
         }
 
         /// <summary>
@@ -776,6 +805,9 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @ShowFPS.started -= instance.OnShowFPS;
             @ShowFPS.performed -= instance.OnShowFPS;
             @ShowFPS.canceled -= instance.OnShowFPS;
+            @ToggleEnemies.started -= instance.OnToggleEnemies;
+            @ToggleEnemies.performed -= instance.OnToggleEnemies;
+            @ToggleEnemies.canceled -= instance.OnToggleEnemies;
         }
 
         /// <summary>
@@ -901,5 +933,12 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnShowFPS(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleEnemies" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleEnemies(InputAction.CallbackContext context);
     }
 }

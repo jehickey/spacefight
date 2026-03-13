@@ -108,10 +108,10 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
-  m_Dithering: 0
+  m_Dithering: 1
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -428,7 +428,6 @@ GameObject:
   m_Component:
   - component: {fileID: 613086341755791816}
   - component: {fileID: 319464331351644227}
-  - component: {fileID: 8967535683130982750}
   - component: {fileID: 7209219195275270955}
   - component: {fileID: 8508862270921960221}
   - component: {fileID: 2191292373568440623}
@@ -480,50 +479,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyboardControl
   MouseSteering: 1
-  InvertPitch: 0
   ThrottlePush: 1.25
   throttleBox: {fileID: 0}
   steering: {fileID: 0}
   weapons: {fileID: 0}
---- !u!114 &8967535683130982750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7534400422700832365}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 841ad039d85a9e94ba70aea311b2522f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BotControl
-  TargetObject: {fileID: 0}
-  distanceToTarget: 0
-  angleToTarget: 0
-  vectorToTarget: {x: 0, y: 0, z: 0}
-  localTargetDir: {x: 0, y: 0, z: 0}
-  relativeVelocityVector: {x: 0, y: 0, z: 0}
-  closingSpeed: 0
-  ReselectBaseTimer: 3
-  ReselectRandomization: 0.25
-  reselectTimerActual: 0
-  FireOnTarget: 1
-  FiringAngle: 10
-  Waypoints: []
-  ThrottleUpMaxAngle: 90
-  ThrottleDefault: 0.5
-  ThrottleAimBias: 0.5
-  precisionAngle: 5
-  baselineRangeBreakoff: 0.1
-  baselineRangeFiring: 2
-  baselineRangeIdeal: 0.5
-  rangeBreakoff: 0.1
-  rangeFiring: 2
-  rangeIdeal: 0.5
-  factorBreakoff: 0
-  factorFiring: 0
-  factorNearIdeal: 0
-  factorInsideIdeal: 0
 --- !u!114 &7209219195275270955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,6 +506,13 @@ MonoBehaviour:
   soundGotHit: {fileID: 8449233989803189964}
   clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
   collider: {fileID: 0}
+  bodyProximity: {fileID: 0}
+  bodyAltitude: 0
+  bodyTo: {x: 0, y: 0, z: 0}
+  bodyFrom: {x: 0, y: 0, z: 0}
+  bodyDistance: 0
+  bodyMinDistance: 0
+  bodyProximityFactor: 0
   forcedDisplacement: {x: 0, y: 0, z: 0}
   externalForce: {x: 0, y: 0, z: 0}
   externalAngularForce: {x: 0, y: 0, z: 0}
@@ -607,6 +573,8 @@ MonoBehaviour:
   Rate: 1
   Thrust: 0
   MaxThrust: 1
+  Boost: 0
+  BoostMultiplier: 3
   MaxRumble: 1.5
   MinThrust: 0.01
 --- !u!114 &8916821864293589268
@@ -1390,6 +1358,7 @@ MonoBehaviour:
   InputPosition: 0
   NeutralPosition: 0
   NeutralDriftRate: 1
+  Boost: 0
   ThrowCenter: {x: 0, y: 0, z: 0}
   ThrowAxis: {x: 0, y: 1, z: 0}
   ThrowMin: 0.01

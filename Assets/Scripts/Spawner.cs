@@ -42,6 +42,7 @@ public class Spawner : MonoBehaviour
     void MaintainCount()
     {
         if (!Prototype) return;
+        if (!Game.I.SpawnEnemies) return;
         if (index.Count < Count && SpawnRate > 0)
         {
             if (Time.time - lastSpawnTime >= 1f / SpawnRate) SpawnPrototype();
