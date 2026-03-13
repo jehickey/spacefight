@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Flare : MonoBehaviour
@@ -7,9 +8,14 @@ public class Flare : MonoBehaviour
     public float MinRadius = .01f;
     public float MaxRadius = .1f;
     public Color color = Color.white;
+    public float EmissionLevel;
     //public float MinAlpha = .5f;
     private float startTime;
     private float peakTime;
+
+    public bool useLight = true;
+    public float LightRadiusMultiplier = 10f;
+
 
     public bool useShockwave;
     public Shockwave shockwave;
@@ -25,6 +31,8 @@ public class Flare : MonoBehaviour
     public Mesh mesh;
     private Material material;
     private SoundMachine sound;
+
+    private new Light light;
 
     private void OnEnable()
     {
@@ -53,6 +61,16 @@ public class Flare : MonoBehaviour
         render.sharedMaterial = material;
 
 
+        if (useLight)
+        {
+            light = GetComponent<Light>();
+            if (!light) light = gameObject.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.shadows = LightShadows.None;
+            light.color = Color.white;
+            light.intensity = 3;
+        }
+
         Init();
     }
 
@@ -61,8 +79,14 @@ public class Flare : MonoBehaviour
         if (useShockwave)
         {
             shockwave = Shockwave.Spawn(transform.position, Color.white, TTL*.5f, MaxRadius * shockwaveRadiusMultiplier);
-
         }
+
+        if (useLight)
+        {
+            light.color = Color.white;
+            light.range = MaxRadius * LightRadiusMultiplier;
+        }
+
     }
 
     private void Init()
@@ -91,12 +115,13 @@ public class Flare : MonoBehaviour
         float multiplier = FlareCurve(age);
         float radius = Mathf.Lerp(MinRadius, MaxRadius, multiplier);
         transform.localScale = Vector3.one * radius * 2f;
+        if (light) light.intensity = (1-multiplier) * 2f;
         if (material)
         {
             color.a = multiplier;
             material.SetColor("_Color", color*multiplier);
             material.color = color*multiplier;
-            material.SetColor("_EmissionColor", color*multiplier);
+            material.SetColor("_EmissionColor", color*multiplier*5f);
         }
 
         if (age >= TTL) Destroy(gameObject);

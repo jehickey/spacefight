@@ -91,7 +91,7 @@ public class Game : MonoBehaviour
 
     private void Start()
     {
-        Icosphere.PreCache(8);
+        Icosphere.PreCache(Body.MaxDetailGlobal);
     }
 
     void Update()

@@ -273,6 +273,9 @@ MonoBehaviour:
   mesh: {fileID: 946681034}
   baseSphereMesh: {fileID: 0}
   atmosphere: {fileID: 0}
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
   TidalLock: 1
   OrbitRadius: 130
   OrbitPeriod: 120
@@ -597,6 +600,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220579235}
   m_CullTransparentMesh: 1
+--- !u!1 &240173682 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2538619335314730895, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+  m_PrefabInstance: {fileID: 1176210390}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &240173686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240173682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc34b78aa1ced2347a4bced2241504ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadarBox
+  TextureRes: 256
+  RadarMaterialIndex: 0
+  MaxRange: 10
+  useLight: 1
+  lightColor: {r: 0, g: 0.3160377, b: 0.06868598, a: 0}
+  lightRange: 0.1
+  lightIntensity: 0.001
+  lightHeight: 0.002
+  texture: {fileID: 0}
+  render: {fileID: 0}
+  screenMaterial: {fileID: 0}
+  screenTex: {fileID: 0}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  EdgeSizeBuffer: 10
+  guideColor: {r: 0.5990566, g: 0.551323, b: 0, a: 1}
+  GuideAlpha: 0.5
+  myShip: {fileID: 0}
+  ships: []
 --- !u!1 &305087148
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,39 +949,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.12959142
+      value: -6.734
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 37.010117
+      value: 0.673
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.09637597
+      value: 519.301
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.5627818
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.023332719
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.82556695
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.034227733
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 4.748
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -111.436
       objectReference: {fileID: 0}
     - target: {fileID: 5020418390819298091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1434,14 +1472,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840fb055b0c5f1248a52a9fdc68a5dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Moon
-  TerrainDeformation: 0
+  TerrainDeformation: 1
   Regenerate: 0
   DoDeform: 0
   Radius: 5
   DistanceFromPlayer: 269.8143
   RotationPeriod: 10
   SphereDetail: 3
-  MaxDetail: 7
+  MaxDetail: 8
   TerrainSmoothness: 1
   actualTerrainMagnitude: 0
   heightmap: {fileID: 0}
@@ -1450,6 +1488,9 @@ MonoBehaviour:
   mesh: {fileID: 946681034}
   baseSphereMesh: {fileID: 0}
   atmosphere: {fileID: 0}
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
   TidalLock: 1
   OrbitRadius: 190
   OrbitPeriod: 160
@@ -1786,32 +1827,76 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.931162
+      value: 0.9800983
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.22809668
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.2762774
+      value: 0.19851261
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.067676686
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 27.528
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 33.051
+      value: 22.9
       objectReference: {fileID: 0}
     - target: {fileID: 613086341755791816, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3592192404658746571, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: GuideAlpha
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3592192404658746571, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: EdgeSizeBuffer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00129
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.03363
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.01968
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.96080095
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.27723914
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049495818591359801, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -32.191
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733334707648646899, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d12899d2db7180f49843716d38ffe173, type: 2}
     - target: {fileID: 7209219195275270955, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
       propertyPath: team
       value: 
@@ -1827,7 +1912,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2538619335314730895, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 240173686}
   m_SourcePrefab: {fileID: 100100000, guid: 3d1028ecf64d91243b6788240160bc12, type: 3}
 --- !u!1001 &1270405081
 PrefabInstance:
@@ -2117,15 +2205,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840fb055b0c5f1248a52a9fdc68a5dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Moon
-  TerrainDeformation: 0
+  TerrainDeformation: 1
   Regenerate: 0
   DoDeform: 0
   Radius: 5
   DistanceFromPlayer: 152.55379
   RotationPeriod: 10
   SphereDetail: 3
-  MaxDetail: 7
-  TerrainSmoothness: 1
+  MaxDetail: 9
+  TerrainSmoothness: 0.15
   actualTerrainMagnitude: 0
   heightmap: {fileID: 0}
   heightDataCount: 0
@@ -2133,6 +2221,9 @@ MonoBehaviour:
   mesh: {fileID: 787203252}
   baseSphereMesh: {fileID: 0}
   atmosphere: {fileID: 0}
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
   TidalLock: 1
   OrbitRadius: 100
   OrbitPeriod: 100
@@ -2875,15 +2966,18 @@ MonoBehaviour:
   DistanceFromPlayer: 24.55905
   RotationPeriod: 10
   SphereDetail: 5
-  MaxDetail: 8
-  TerrainSmoothness: 0.1
+  MaxDetail: 9
+  TerrainSmoothness: 0.05
   actualTerrainMagnitude: 0
-  heightmap: {fileID: 2800000, guid: f253c9aa7e0d7454daacf2ebe59e771f, type: 3}
+  heightmap: {fileID: 2800000, guid: 126a4b1b04af75043a68883397aeedde, type: 3}
   heightDataCount: 0
   material: {fileID: 2100000, guid: 08cd3e5abf14c2f45b4779299a09a72c, type: 2}
   mesh: {fileID: 2000123714}
   baseSphereMesh: {fileID: 0}
   atmosphere: {fileID: 0}
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
   TidalLock: 1
   OrbitRadius: 160
   OrbitPeriod: 140
@@ -3145,6 +3239,133 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2075625006}
   m_CullTransparentMesh: 1
+--- !u!1 &2111547644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2111547647}
+  - component: {fileID: 2111547646}
+  - component: {fileID: 2111547645}
+  m_Layer: 0
+  m_Name: Point Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2111547645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111547644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
+--- !u!108 &2111547646
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111547644}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
+--- !u!4 &2111547647
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111547644}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.57128, y: -0, z: 519.3461}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2119462448
 GameObject:
   m_ObjectHideFlags: 0
@@ -3190,6 +3411,9 @@ MonoBehaviour:
   mesh: {fileID: 0}
   baseSphereMesh: {fileID: 0}
   atmosphere: {fileID: 0}
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
 --- !u!4 &2119462450
 Transform:
   m_ObjectHideFlags: 0
@@ -3465,3 +3689,4 @@ SceneRoots:
   - {fileID: 1176210390}
   - {fileID: 1270405081}
   - {fileID: 731395926}
+  - {fileID: 2111547647}

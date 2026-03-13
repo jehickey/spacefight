@@ -207,10 +207,11 @@ public class Ship : MonoBehaviour
             if (closest == 0) closest = distance;           //provide a starting value for comparison
             if (radii <= Simulation.I.BodyProximityRadii)
             {
-                if (bodyDistance <= closest)                    //is this the closest so far?
+                if (distance <= closest)                    //is this the closest so far?
                 {
                     closest = distance;
                     bodyProximity = body;
+                    bodyDistance = distance;
                 }
             }
         }

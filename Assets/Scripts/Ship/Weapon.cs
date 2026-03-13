@@ -64,6 +64,7 @@ public class Weapon : MonoBehaviour
             //emitter flare
             Flare flare = Flare.Spawn(emitter.transform.position, Color.white, 0.25f, 0.25f, 0.001f, 0.01f);
             flare.transform.parent = emitter.transform;
+            if (ship == Game.I.PlayerShip) flare.LightRadiusMultiplier = 2f;
             playFireSound();
         }
         lastFireTime = Time.time;

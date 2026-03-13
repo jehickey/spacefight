@@ -1,16 +1,30 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class RadarBox : MonoBehaviour
 {
-    public RenderTexture texture;
     public int TextureRes = 256;
     public int RadarMaterialIndex = 0;
     public float MaxRange = 10f;
 
+    public bool useLight;
+    public Color lightColor = Color.white;
+    public float lightRange = .1f;
+    public float lightIntensity = .001f;
+    public float lightHeight = .002f;
+    private new Light light;
+
+    public RenderTexture texture;
     public Renderer render;
     public Material screenMaterial;
     public Texture2D screenTex;
+
+    public Color backgroundColor = Color.black;
+    public int EdgeSizeBuffer = 1;
+    public Color guideColor = Color.yellow;
+    public float GuideAlpha = .5f;
 
     private int oldRes;
     private int oldIndex;
@@ -18,9 +32,12 @@ public class RadarBox : MonoBehaviour
     public Ship myShip;
     public List<Ship> ships;
 
+    private int centerX;
+    private int centerY;
+
     private void OnEnable()
     {
-        oldRes = TextureRes;
+        oldRes = 0;
         oldIndex = RadarMaterialIndex;
 
         myShip = FindFirstObjectByType<KeyboardControl>().GetComponent<Ship>();
@@ -40,7 +57,10 @@ public class RadarBox : MonoBehaviour
         InitMaterial();
         InitTexture();
         InitScreenTexture();
+        centerX = (int)(TextureRes * .5f);
+        centerY = (int)(TextureRes * .5f);
         UpdateTexture();
+        ManageLight ();
 
     }
 
@@ -50,6 +70,7 @@ public class RadarBox : MonoBehaviour
     {
         if (!texture || !screenTex) return;
         ClearScreen();
+        DrawVisualGuides();
         //screenTex.SetPixel(0, 0, Color.white);
         //screenTex.SetPixel(10, 10, Color.red);
         //screenTex.SetPixel(TextureRes / 2, TextureRes / 2, Color.yellow);
@@ -66,6 +87,48 @@ public class RadarBox : MonoBehaviour
         Graphics.Blit(screenTex, texture);
     }
 
+    private void DrawVisualGuides()
+    {
+        int half = TextureRes / 2;
+        int edge = TextureRes/2  - EdgeSizeBuffer;
+        
+        //guideColor.a = GuideAlpha;
+        //center point
+        DrawCircle(centerX, centerY, 2, guideColor);
+        //side zone
+        DrawCircle(centerX, centerY, edge /2, guideColor);
+        //back
+        DrawCircle(centerX, centerY, edge, guideColor);
+        DrawCircle(centerX, centerY, edge+1, guideColor);
+    }
+
+
+    private void ManageLight()
+    {
+        if (!useLight)
+        {
+            if (light) Destroy(light.gameObject);
+            return;
+        }
+
+        if (!light)
+        {
+            GameObject obj = new GameObject("Radar Light");
+            obj.transform.parent = transform;
+            light = obj.AddComponent<Light>();
+        }
+
+        if (light)
+        {
+            light.transform.localPosition = Vector3.zero + Vector3.up * lightHeight;
+            light.range = lightRange;
+            light.color = lightColor;
+            light.intensity = lightIntensity;
+            light.shadows = LightShadows.None;
+        }
+
+    }
+
     private void PlotShips()
     {
 
@@ -73,8 +136,8 @@ public class RadarBox : MonoBehaviour
         {
             if (ship && ship != myShip)
             {
-                Vector2 p = PolarProject2(ship.transform.position);
-                if (ship.team) DrawDot((int)p.x, (int)p.y, ship.team.color);
+                Vector2 p = PolarProject(ship.transform.position);
+                if (ship.team) DrawDot(centerX+(int)p.x, centerY+(int)p.y, ship.team.color);
 
                 /*
                 //transform position to screen coordinate
@@ -94,73 +157,29 @@ public class RadarBox : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// Projects a world-space point onto a forward-centric polar map.
-    /// Forward = center, behind = edge.
-    /// </summary>
-    /// <param name="observer">Transform of the observer</param>
-    /// <param name="worldPos">World position of the target</param>
-    /// <returns>UV coordinate in 0–1 range</returns>
     public Vector2 PolarProject(Vector3 worldPos)
     {
-        // Convert world position into observer-local space
-        Vector3 local = transform.InverseTransformPoint(worldPos);
-
-        // Normalize for angular calculations
-        Vector3 dir = local.normalized;
-
-        // Bearing around the observer (left/right)
-        float bearing = Mathf.Atan2(dir.x, dir.z); // radians
-
-        // Angular distance from forward (0 = forward, 180 = behind)
-        float angleFromForward = Vector3.Angle(-transform.forward, dir); // degrees
-
-        // Convert angle to radius: 0 = forward, 1 = behind
-        float radius = angleFromForward / 180f;
-
-        // Convert polar - UV (0–1 range)
-        float u = 0.5f + Mathf.Cos(bearing) * radius * 0.5f;
-        float v = 0.5f + Mathf.Sin(bearing) * radius * 0.5f;
-
-        int px = Mathf.RoundToInt(u * TextureRes);
-        int py = Mathf.RoundToInt(v * TextureRes);
-        return new Vector2(px, py);
-    }
-
-
-    public Vector2 PolarProject2(Vector3 worldPos)
-    {
-        // 1. World - local (ship/cockpit space)
+        //Oh how I hate this function
+        //Debug.DrawRay(ansform.position, playerViewTransform.forward * 50f, Color.cyan);
         Vector3 local = myShip.transform.InverseTransformPoint(worldPos);
-
-        // 2. Direction in local space
         Vector3 dir = local.normalized;
+        float dist = local.magnitude;
 
-        // 3. Bearing: ignore vertical so pitch doesn't skew left/right
-        Vector3 flat = new Vector3(dir.x, 0f, dir.z);
-        if (flat.sqrMagnitude < 1e-6f)
-            flat = Vector3.forward; // avoid NaN when target is exactly above/below
+        Vector2 offs = new Vector2(dir.x, dir.y);
+        if (dir.z < 0)
+        {
+            offs.x = Mathf.Sign(dir.x) + (Mathf.Sign(dir.x) - dir.x);
+            //offs.y = Mathf.Sign(dir.y) + (/*Mathf.Sign(dir.y) -*/ dir.y);
+        }
+        offs.y = -offs.y;
 
-        float bearing = Mathf.Atan2(flat.x, flat.z); // radians
-
-        // 4. Radius: angular distance from *local* forward (0 = forward, 1 = behind)
-        // In local space, forward is (0,0,1), so just use dir.z
-        float angleFromForward = Mathf.Acos(Mathf.Clamp(dir.z, -1f, 1f)); // radians
-        float radius = angleFromForward / Mathf.PI;                       // 0–1
-
-        // 5. Polar - UV
-        float u = 0.5f + Mathf.Cos(bearing) * radius * 0.5f;
-        float v = 0.5f + Mathf.Sin(bearing) * radius * 0.5f;
-
-        // 6. UV - pixels (with your vertical flip)
-        int px = Mathf.RoundToInt(u * TextureRes);
-        int py = Mathf.RoundToInt((1f - v) * TextureRes); // if 0 = top, max = bottom
-
-        return new Vector2(px, py);
+        float halfway = (TextureRes - EdgeSizeBuffer * 2) * .25f;
+        //Debug.Log($"{offs.y}   z={dir.z}");
+        offs *= halfway;
+        //offs.y = 0;
+        //Debug.Log($"X={offs.x} {offs.y}   z={dir.z}");
+        return offs;
     }
-
-
 
     private void DrawDot(int x, int y, Color color)
     {
@@ -172,15 +191,45 @@ public class RadarBox : MonoBehaviour
         screenTex.SetPixel(x, y+1, color);
     }
 
+    private void DrawCircle(int cx, int cy, int radius, Color color)
+    {
+        cy = TextureRes - cy;       //flip vertical
+        int x = radius;
+        int y = 0;
+        int err = 1 - x;
+
+        while (x >= y)
+        {
+            //plot 8 octants
+            screenTex.SetPixel(cx + x, cy + y, color);
+            screenTex.SetPixel(cx + y, cy + x, color);
+            screenTex.SetPixel(cx - y, cy + x, color);
+            screenTex.SetPixel(cx - x, cy + y, color);
+            screenTex.SetPixel(cx - x, cy - y, color);
+            screenTex.SetPixel(cx - y, cy - x, color);
+            screenTex.SetPixel(cx + y, cy - x, color);
+            screenTex.SetPixel(cx + x, cy - y, color);
+            y++;
+            if (err < 0)
+            {
+                err += 2 * y + 1;
+            }
+            else
+            {
+                x--;
+                err += 2 * (y - x + 1);
+            }
+        }
+    }
+
     private void ClearScreen()
     {
         if (!screenTex) return;
-        Color32 clear = new Color32(0, 0, 50, 255);
         var pixels = screenTex.GetPixels32();
         for (int i = 0; i < pixels.Length; i++)
         {
             //pixels[i].a = (byte)(pixels[i].a * fadeFactor);  //fade
-            pixels[i] = clear;
+            pixels[i] = backgroundColor;
         }
         screenTex.SetPixels32(pixels);
     }
@@ -205,14 +254,14 @@ public class RadarBox : MonoBehaviour
         if (texture) return;
         TextureRes = Mathf.Clamp(TextureRes, 1, 2048);
         texture = new RenderTexture(TextureRes, TextureRes, 0, RenderTextureFormat.ARGB32);
-        texture.filterMode = FilterMode.Point;
+        texture.filterMode = FilterMode.Trilinear;
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.Create();
         if (screenMaterial)
         {
             screenMaterial.EnableKeyword("_EMISSION");
             screenMaterial.SetTexture("_EmissionMap", texture);
-            screenMaterial.SetColor("_EmissionColor", Color.white);
+            screenMaterial.SetColor("_EmissionColor", Color.white*5);
         }
     }
 

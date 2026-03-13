@@ -1,11 +1,12 @@
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Body : MonoBehaviour
 {
     public static int MinDetailGlobal = 1;
-    public static int MaxDetailGlobal = 8;
+    public static int MaxDetailGlobal = 9;
 
     [Header("Body Settings")]
     public bool TerrainDeformation = false;
@@ -27,6 +28,7 @@ public class Body : MonoBehaviour
 
 
     public Material material;
+    private MaterialPropertyBlock materialBlock;
     [ReadOnly(true)]
     public Mesh mesh;
     protected MeshFilter filter;
@@ -38,6 +40,12 @@ public class Body : MonoBehaviour
 
     [Header("Atmosphere")]
     public Atmosphere atmosphere;
+
+
+    public float TextureDetailMinRadius = 2;
+    public float TextureDetailMaxRadius = 3;
+    [ReadOnly(true)]
+    public float TextureDetail;
 
 
     protected virtual void Start()
@@ -66,6 +74,7 @@ public class Body : MonoBehaviour
         else { material = render.sharedMaterial; }
         */
 
+        materialBlock = new MaterialPropertyBlock();
     }
 
     protected virtual void Update()
@@ -110,6 +119,7 @@ public class Body : MonoBehaviour
             DoDeform = false;
         }
         heightDataCount = heightData!=null ? heightData.Count() : 0;
+        AdjustTextureDetails();
     }
 
     protected virtual void OnValidate()
@@ -131,18 +141,28 @@ public class Body : MonoBehaviour
         }
     }
 
+    private void AdjustTextureDetails()
+    {
+        TextureDetail = Mathf.InverseLerp(TextureDetailMaxRadius*Radius, TextureDetailMinRadius*Radius, DistanceFromPlayer);
+        TextureDetail = Mathf.Clamp01(TextureDetail);
+        render.GetPropertyBlock(materialBlock);
+        materialBlock.SetFloat("_DetailAlbedoMapScale", TextureDetail);
+        materialBlock.SetFloat("_DetailNormalMapScale", TextureDetail);
+        render.SetPropertyBlock(materialBlock);
+    }
+
 
     private int GetDistanceDetail()
     {
         if (Camera.main)
         {
             DistanceFromPlayer = Vector3.Distance(transform.position, Camera.main.transform.position);
-            if (DistanceFromPlayer < Radius * 1.5f) return 8;
-            if (DistanceFromPlayer < Radius * 2) return 7;
-            if (DistanceFromPlayer < Radius * 3) return 6;
-            if (DistanceFromPlayer < Radius * 10) return 5;
+            if (DistanceFromPlayer < Radius * 1.5f) return 9;
+            if (DistanceFromPlayer < Radius * 2) return 8;
+            if (DistanceFromPlayer < Radius * 3) return 7;
+            if (DistanceFromPlayer < Radius * 10) return 6;
         }
-        return 3;
+        return 4;
     }
 
     private void SetScale()
