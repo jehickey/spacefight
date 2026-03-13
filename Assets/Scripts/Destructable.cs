@@ -66,6 +66,7 @@ public class Destructable : MonoBehaviour
     private void Die()
     {
         Flare flare = Flare.Spawn(transform.position, Color.white, 2f, 0.15f, 0.005f, 0.05f, clipExplosion);
+        flare.useShockwave = true;
         if (RootObject)
         {
             Destroy(RootObject);

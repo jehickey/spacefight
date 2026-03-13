@@ -10,6 +10,7 @@ public class Simulation : MonoBehaviour
     public float TimeDelta => Time.deltaTime * TimeScale;
 
     public Material FlareMaterial;
+    public Material FlareShockwaveMaterial;
 
     [Header("Standard Units")]
     public float SpeedUnit = 1f;

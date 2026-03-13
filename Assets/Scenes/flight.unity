@@ -627,6 +627,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Simulation
   TimeScale: 0
+  FlareMaterial: {fileID: 2100000, guid: 17b079dbde301f741928f240fcd6b231, type: 2}
+  FlareShockwaveMaterial: {fileID: 2100000, guid: 63283f6be4feb424490025547644df18, type: 2}
   SpeedUnit: 1
   ForceDecayRate: 1
   ImpactDamageMultiplier: 0.05
@@ -957,7 +959,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6739729150939075091, guid: feca9038201dc994c99348c9c0289a95, type: 3}
       propertyPath: SeparationTTL
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
