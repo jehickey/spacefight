@@ -43,6 +43,10 @@ public class Spawner : MonoBehaviour
     {
         if (!Prototype) return;
         if (!Game.I.SpawnEnemies) return;
+
+        //clear destroyed ships from index
+        index.RemoveAll(item => item == null);
+
         if (index.Count < Count && SpawnRate > 0)
         {
             if (Time.time - lastSpawnTime >= 1f / SpawnRate) SpawnPrototype();
