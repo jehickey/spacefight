@@ -131,14 +131,22 @@ public class Body : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
+            //show a sphere to represent full radius
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(transform.position, Radius);
         }
         else
         {
+            //show gizmo sphere (just in case the rendered one is not working)
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, Radius / 2f);
+            //show planet AOI radius
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, Radius * Simulation.I.BodyProximityRadii);
         }
+
+
+
     }
 
     private void AdjustTextureDetails()

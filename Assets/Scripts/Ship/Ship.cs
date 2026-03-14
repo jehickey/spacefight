@@ -240,10 +240,11 @@ public class Ship : MonoBehaviour
 
     private void CollisionCheck_Ships()
     {
+        if (!collider) return;
         //compare against every other ship
         foreach (Ship ship in FindObjectsByType<Ship>(FindObjectsSortMode.None))
         {
-            if (ship && ship != this && ship.FreshSpawnCountdown == 0)
+            if (ship && ship != this && ship.collider && ship.FreshSpawnCountdown == 0)
             {
                 if (Physics.ComputePenetration(
                     collider, transform.position, transform.rotation,
