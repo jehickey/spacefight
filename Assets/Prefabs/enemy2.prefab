@@ -72,43 +72,43 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 46.377514
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -12.669119
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 73.639595
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9966717
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.017811202
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.07021132
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.037399404
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -2.336
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 7.975
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 4.135
       objectReference: {fileID: 0}
     - target: {fileID: -1497763916297590277, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
@@ -159,7 +159,37 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1598365725308866682}
+    - targetCorrespondingSourceObject: {fileID: 521274363717440804, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 3194382910355076174}
+    - targetCorrespondingSourceObject: {fileID: -5641617143179548385, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 994749995302598441}
   m_SourcePrefab: {fileID: 100100000, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+--- !u!1 &4980227840840002020 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 521274363717440804, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+  m_PrefabInstance: {fileID: 4766675995617017024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3194382910355076174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4980227840840002020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd0d3ca3de498df43bf91876987522f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Trail
+  MaxParticles: 30
+  depositionRate: 4
+  ParticleSize: 0.01
+  ParticleShrinkRate: 0.005
+  ParticleDetail: 0
+  material: {fileID: 0}
+  mesh: {fileID: 0}
 --- !u!4 &5020418390819298091 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
@@ -324,6 +354,8 @@ MonoBehaviour:
   PartSeparation: 1
   SeparationForce: 0.1
   SeparationSpin: 3
+  SeparationTTL: 3
+  TTL: 0
   doDestroy: 0
 --- !u!114 &1998266204135949515
 MonoBehaviour:
@@ -393,6 +425,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 3
+--- !u!1 &8327808311561115103 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5641617143179548385, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+  m_PrefabInstance: {fileID: 4766675995617017024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &994749995302598441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8327808311561115103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd0d3ca3de498df43bf91876987522f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Trail
+  MaxParticles: 30
+  depositionRate: 4
+  ParticleSize: 0.01
+  ParticleShrinkRate: 0.005
+  ParticleDetail: 0
+  material: {fileID: 0}
+  mesh: {fileID: 0}
 --- !u!1001 &5049901763329997531
 PrefabInstance:
   m_ObjectHideFlags: 0

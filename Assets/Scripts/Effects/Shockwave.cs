@@ -21,7 +21,7 @@ public class Shockwave : MonoBehaviour
     {
         mesh = Shapes.Icosphere.Generate(SphereDetail);
 
-        material = new Material(Simulation.I?.FlareShockwaveMaterial);
+        material = new Material(Simulation.I?.ShockwaveMaterial);
         if (!material) material = new Material(Shader.Find("Unlit/Color"));
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
