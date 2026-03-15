@@ -512,17 +512,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Moon
   TerrainDeformation: 0
+  Regenerate: 0
+  DoDeform: 0
   Radius: 50
   DistanceFromPlayer: 152.40327
   RotationPeriod: 10
   SphereDetail: 5
   MaxDetail: 7
-  actualTerrainMagnitude: 5
   TerrainSmoothness: 1
-  heightmap: {fileID: 2800000, guid: 6bba14092792c7f46809886b4d0dcaac, type: 3}
-  Regenerate: 0
-  material: {fileID: 2100000, guid: 0e2695a50e9c7884e8c23032c96ff82c, type: 2}
+  actualTerrainMagnitude: 5
+  heightmap: {fileID: 2800000, guid: bbcf9a01fb92930498bbba63805d451d, type: 3}
+  heightDataCount: 0
+  material: {fileID: 2100000, guid: 08cd3e5abf14c2f45b4779299a09a72c, type: 2}
   mesh: {fileID: 1063948327}
+  baseSphereMesh: {fileID: 0}
+  atmosphere: {fileID: 0}
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
   TidalLock: 0
   OrbitRadius: 100
   OrbitPeriod: 10
@@ -870,9 +877,11 @@ MonoBehaviour:
   RespawnTarget: {fileID: 0}
   RespawnDistance: 10
   RespawnCountdown: 3
+  InvertPitchAxis: 0
   Paused: 0
   KillCount: 0
   DeathCount: 0
+  SpawnEnemies: 0
   FPS: 0
   ActivationCountdown: 3
   StickControlLimit: 0.5
@@ -1009,11 +1018,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Simulation
   TimeScale: 0
+  FlareMaterial: {fileID: 0}
+  ShockwaveMaterial: {fileID: 0}
+  TrailMaterial: {fileID: 0}
   SpeedUnit: 1
   ForceDecayRate: 1
   ImpactDamageMultiplier: 0.25
   ImpactForceMultiplier: 2
   ImpactDisplacementMultiplier: 2
+  BodyProximityRadii: 2
+  BodyClosestApproachRadii: 1.025
+  BodyProximityFactorCurve: 3
+  BodyProximityThrustFactor: 0.5
   TerrainMagnitudeScale: 0.01
   TerrainDistanceScale: 1
 --- !u!4 &765853463
