@@ -92,6 +92,7 @@ public class Game : MonoBehaviour
     private void Start()
     {
         Icosphere.PreCache(Body.MaxDetailGlobal);
+        StaticGenerator.Generate(20,256,.05f);
     }
 
     void Update()
@@ -188,10 +189,10 @@ public class Game : MonoBehaviour
         if (!PlayerShip)
         {
             //first see if there is a Player somewhere
-            Cockpit cockpit = FindFirstObjectByType<Cockpit>();
-            if (cockpit)        //found one
+            KeyboardControl playerInput = FindFirstObjectByType<KeyboardControl>();
+            if (playerInput)        //found one
             {
-                PlayerShip = cockpit.GetComponentInParent<Ship> ();
+                PlayerShip = playerInput.GetComponentInParent<Ship> ();
                 return;
             }
 

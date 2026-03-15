@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class RadarBox : MonoBehaviour
@@ -35,6 +33,10 @@ public class RadarBox : MonoBehaviour
     private int centerX;
     private int centerY;
 
+    public float RefreshRate = 10;   //refreshes per second avg
+    private float lastUpdate;
+
+
     private void OnEnable()
     {
         oldRes = 0;
@@ -53,6 +55,10 @@ public class RadarBox : MonoBehaviour
         //force regeneration if key values change
         if (RadarMaterialIndex != oldIndex) { screenMaterial = null; }
         if (TextureRes != oldRes) { texture = null;  screenTex = null; }
+
+        //manage refresh rate
+        if (RefreshRate <= 0 || Time.time - lastUpdate < 1 / RefreshRate) return;
+        lastUpdate = Time.time;
 
         InitMaterial();
         InitTexture();
@@ -253,6 +259,7 @@ public class RadarBox : MonoBehaviour
     {
         if (texture) return;
         TextureRes = Mathf.Clamp(TextureRes, 1, 2048);
+        oldRes = TextureRes;
         texture = new RenderTexture(TextureRes, TextureRes, 0, RenderTextureFormat.ARGB32);
         texture.filterMode = FilterMode.Trilinear;
         texture.wrapMode = TextureWrapMode.Clamp;
