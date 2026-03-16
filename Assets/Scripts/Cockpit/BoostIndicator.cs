@@ -1,0 +1,41 @@
+using UnityEngine;
+
+public class BoostIndicator : SequentialLightPanel
+{
+    [Header("Boost Indicator Settings")]
+    public Color ReadyColor = Color.blue;
+    public Color NotReadyColor = Color.red;
+    public Color BoostingColor = Color.white;
+
+
+    private ThrottleSystem throttleSystem;
+
+    // Update is called once per frame
+    protected override void Update()
+    {
+        base.Update();
+        if (!throttleSystem) throttleSystem = GetComponentInParent<ThrottleSystem>();
+        if (throttleSystem)
+        {
+            Value = throttleSystem.BoostCharge;
+            if (Value >= throttleSystem.BoostMinCharge)
+            {
+                LoColor = ReadyColor;
+                HiColor = ReadyColor;
+                Brightness = 1;
+            }
+            else
+            {
+                LoColor = NotReadyColor;
+                HiColor = NotReadyColor;
+                Brightness = 1;
+            }
+            if (throttleSystem.Boosting)
+            {
+                LoColor = BoostingColor;
+                HiColor = BoostingColor;
+                Brightness = 5;
+            }
+        }
+    }
+}

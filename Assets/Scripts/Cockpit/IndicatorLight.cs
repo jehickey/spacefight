@@ -4,8 +4,8 @@ using static UnityEngine.GraphicsBuffer;
 public class IndicatorLight : MonoBehaviour
 {
     public bool On = false;
-    public float SetLevel = 1;
-    public float Level = 0;
+    public float Level = 1;
+    private float actualLevel = 0;
     public float LevelRate = 2; //level delta per second
     [ColorUsage(true,true)]
     public Color color = Color.white;
@@ -25,10 +25,10 @@ public class IndicatorLight : MonoBehaviour
 
     void Update()
     {
-        float targetLevel = On ? SetLevel : 0f;
-        if (LevelRate > 0) Level = Mathf.Lerp(Level, targetLevel, Time.deltaTime * LevelRate);
+        float targetLevel = On ? Level : 0f;
+        if (LevelRate > 0) actualLevel = Mathf.Lerp(actualLevel, targetLevel, Time.deltaTime * LevelRate);
         render.GetPropertyBlock(mpb);
-        mpb.SetColor("_EmissionColor", color * Level);
+        mpb.SetColor("_EmissionColor", color * actualLevel);
         render.SetPropertyBlock(mpb);
 
     }

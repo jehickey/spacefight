@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Cockpit : MonoBehaviour
 {
-    public JoystickBox Joystick;
     private Ship ship;
 
     public SequentialLightPanel ThrottleLightPanel;
@@ -20,11 +19,7 @@ public class Cockpit : MonoBehaviour
 
     void Update()
     {
-        if (ThrottleLightPanel) ThrottleLightPanel.Value = throttle.Actual;
-        if (Joystick)
-        {
-            //Joystick.StickPosition = ship.realStick;
-        }
+        //if (ThrottleLightPanel) ThrottleLightPanel.Value = throttle.Actual;
     }
 
 
@@ -36,15 +31,6 @@ public class Cockpit : MonoBehaviour
             Debug.Log("Cockpit can't find ship!");
             return;
         }
-
-        if (!Joystick) Joystick = GetComponentInChildren<JoystickBox>();
-
-        if (!Joystick)
-        {
-            Debug.Log("Cockpit can't find joystick box!");
-            return;
-        }
-
 
     }
 }

@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8953001399111801767, guid: d9de3c241b8dd9349aa4cc3946d8e252, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.018
+      value: -0.007999999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9de3c241b8dd9349aa4cc3946d8e252, type: 3}
       propertyPath: m_LocalPosition.x
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b71b79518711fbc4c9301c9e490cfd8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrottleBox
-  InputPosition: 0
+  InputPosition: 0.5
   NeutralPosition: 0
   NeutralDriftRate: 1
   Boost: 0

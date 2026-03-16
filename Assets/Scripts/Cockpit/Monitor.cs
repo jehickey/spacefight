@@ -41,6 +41,7 @@ public class Monitor : MonoBehaviour
 
     void Update()
     {
+        if (!Game.I.useMonitorScreens) return;
         //force regeneration if key values change
         if (TextureRes != oldRes) { texture = null; screenTex = null; }
 

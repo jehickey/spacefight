@@ -23,8 +23,15 @@ public class Game : MonoBehaviour
     public int KillCount = 0;
     public int DeathCount = 0;
 
-    public bool SpawnEnemies;
-    public bool SpawnPlayer;
+    public bool useGodMode;
+    public bool useInfiniteBoost;
+    public bool useSpawnEnemies;
+    public bool useSpawnPlayer;
+    public bool useMonitorScreens;
+
+    public bool usePrecache;
+    public float precacheStatus;
+
 
     private FlightControls controls;
     private OverlayManager overlay;
@@ -94,20 +101,20 @@ public class Game : MonoBehaviour
 
     private void Start()
     {
-        Icosphere.PreCache(Body.MaxDetailGlobal);
+        if (usePrecache) Icosphere.PreCache(Body.MaxDetailGlobal);
         StaticGenerator.Generate(20,256,.05f);
     }
 
     void Update()
     {
         //run this to keep the job system moving
-        float status = Shapes.Icosphere.GetStatus();
+        if (usePrecache) precacheStatus = Shapes.Icosphere.GetStatus();
 
         if (controls.Game.Exit.WasPressedThisFrame()) Application.Quit();
         if (controls.Game.Restart.WasPressedThisFrame()) SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         if (controls.Game.Pause.WasPressedThisFrame()) Paused = !Paused;
         if (controls.Game.ShowFPS.WasPressedThisFrame()) overlay.ShowFPS = !overlay.ShowFPS;
-        if (controls.Game.ToggleEnemies.WasPressedThisFrame()) SpawnEnemies = !SpawnEnemies;
+        if (controls.Game.ToggleEnemies.WasPressedThisFrame()) useSpawnEnemies = !useSpawnEnemies;
 
         if (Paused)
         {
@@ -187,7 +194,7 @@ public class Game : MonoBehaviour
     private void UpdateRespawn() {
         //player respawn
         //lastPlayerShip = PlayerShip;
-        if (!SpawnPlayer) return;
+        if (!useSpawnPlayer) return;
         if (Paused) return;
         if (overlay) overlay.Countdown = Mathf.CeilToInt(respawnCount);
         if (PlayerShip) return;

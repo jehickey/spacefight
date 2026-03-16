@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
     void MaintainCount()
     {
         if (!Prototype) return;
-        if (!Game.I.SpawnEnemies) return;
+        if (!Game.I.useSpawnEnemies) return;
 
         //clear destroyed ships from index
         index.RemoveAll(item => item == null);
