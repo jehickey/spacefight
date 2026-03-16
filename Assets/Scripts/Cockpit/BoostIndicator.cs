@@ -18,7 +18,7 @@ public class BoostIndicator : SequentialLightPanel
         if (throttleSystem)
         {
             Value = throttleSystem.BoostCharge;
-            if (Value >= throttleSystem.BoostMinCharge)
+            if (throttleSystem.BoostReady)
             {
                 LoColor = ReadyColor;
                 HiColor = ReadyColor;

@@ -23,7 +23,7 @@ public class Game : MonoBehaviour
     public int KillCount = 0;
     public int DeathCount = 0;
 
-    public bool useGodMode;
+    public bool useInvulnerability;
     public bool useInfiniteBoost;
     public bool useSpawnEnemies;
     public bool useSpawnPlayer;

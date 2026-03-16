@@ -70,6 +70,9 @@ public class Ship : MonoBehaviour
     [SerializeField]
     private Vector3 externalAngularForce = Vector3.zero;
 
+    private Shake shake;
+
+
     void Start()
     {
     }
@@ -100,6 +103,7 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
+        if (!shake) shake = GetComponentInChildren<Shake>();
 
         //disable pilot until spawn countdown is complete
         if (pilot)
@@ -123,7 +127,7 @@ public class Ship : MonoBehaviour
         if (listener) DistanceFromPlayer = Vector3.Distance(transform.position, listener.transform.position);
 
         CollisionChecks();
-        DoRumble();
+        //DoRumble();
     }
 
     private void LateUpdate()
@@ -266,10 +270,11 @@ public class Ship : MonoBehaviour
     }
 
 
-    public void AddRumble(float value)
+    public void AddShake(float value)
     {
-        RumbleIntensity += value * Time.deltaTime;
-        RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
+        if (shake) shake.Add(value);
+        //RumbleIntensity += value * Time.deltaTime;
+        //RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
     }
 
     private void DoRumble()
@@ -298,7 +303,7 @@ public class Ship : MonoBehaviour
 
     public void TakeDamage(float damage, Transform origin = null)
     {
-        AddRumble(10);
+        AddShake(1);
         //need to make impact and rumble directional
     }
 

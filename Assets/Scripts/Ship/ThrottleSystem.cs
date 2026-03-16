@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class ThrottleSystem: MonoBehaviour
@@ -17,8 +18,12 @@ public class ThrottleSystem: MonoBehaviour
     public float BoostConsumeRate = .25f;
     public float BoostChargeRate = .1f;
     public float BoostMinCharge = .25f;
+    public bool BoostFail;                  //tells the sound system that a boost attempt failed
+    public bool BoostReady;                 //tells the sound system that boost is ready
+    private bool BoostPress;
 
-    public float MaxRumble = 1;
+    public float MaxRumble = .25f;
+    public float BoostShake = .5f;
 
     public float MinActual = 0.01f;         //cutoff avoids being unable to reach zero
 
@@ -50,8 +55,8 @@ public class ThrottleSystem: MonoBehaviour
         if (ship)
         {
             float rumble = Mathf.Clamp( Actual * MaxRumble, 0, MaxRumble );
-            ship.AddRumble(rumble);
-            //if (Boost) ship.AddRumble(.1f);
+            ship.AddShake( rumble );
+            if (Boosting) ship.AddShake(BoostShake);
         }
     }
 
@@ -59,6 +64,12 @@ public class ThrottleSystem: MonoBehaviour
     {
         //apply Infinite Boost setting
         if (Game.I.useInfiniteBoost && ship == Game.I.PlayerShip) BoostCharge = 1;
+        BoostReady = BoostCharge >= BoostMinCharge;
+
+        if (!Boost) BoostPress = false;
+        if (Boost && !BoostPress) DoBoost();
+        if (BoostReady || Boost) BoostFail = false;
+
 
         //only allow boost to start if they're at a minimum charge
         if (Boost && !Boosting && BoostCharge < BoostMinCharge) Boost = false;
@@ -82,5 +93,19 @@ public class ThrottleSystem: MonoBehaviour
         BoostCharge = Mathf.Clamp01(BoostCharge);
     }
 
+
+    public bool DoBoost()
+    {
+        BoostPress = true;
+        if (!BoostReady && !Game.I.useInfiniteBoost)
+        {
+            BoostFail = true;
+            Boost = false;
+            return false;
+        }
+        Boost = true;
+        BoostFail = false;
+        return true;
+    }
 
 }

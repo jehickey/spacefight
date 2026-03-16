@@ -45,7 +45,7 @@ public class Destructable : MonoBehaviour
 
     public void TakeDamage(float damage, Transform origin = null)
     {
-        if (Game.I.useGodMode && ship == Game.I.PlayerShip) return;
+        if (Game.I.useInvulnerability && ship == Game.I.PlayerShip) return;
         if (damage <= 0) return;
         Health -= damage;
         if (soundGotHit) soundGotHit.Play();

@@ -74,7 +74,10 @@ public class KeyboardControl : MonoBehaviour
                     input *= ThrottlePush * Time.deltaTime;
                     throttleBox.InputPosition += input;
                 }
-                throttleBox.Boost = controls.Flight.Boost.IsPressed();
+
+                if (throttleBox) {
+                    throttleBox.Boost = controls.Flight.Boost.IsPressed();
+                }
             }
             if (controls.Flight.Fire.IsPressed() && weapons) weapons.Fire();
 
