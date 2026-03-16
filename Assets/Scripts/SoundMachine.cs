@@ -30,6 +30,8 @@ public class SoundMachine : MonoBehaviour
 
     void Update()
     {
+        if (!Game.I) return;
+
         if (!listener) listener = FindFirstObjectByType<AudioListener>();
         ToggleAudio();
         if (audio && audio.enabled)

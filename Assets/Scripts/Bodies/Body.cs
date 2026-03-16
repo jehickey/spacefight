@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class Body : MonoBehaviour
 {
     public static int MinDetailGlobal = 1;
-    public static int MaxDetailGlobal = 9;
+    public static int MaxDetailGlobal = 8;
 
     [Header("Body Settings")]
     public bool TerrainDeformation = false;
@@ -79,6 +79,7 @@ public class Body : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (!Simulation.I) return;
         //forced regeneration
         if (Regenerate)
         {
@@ -142,7 +143,7 @@ public class Body : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, Radius / 2f);
             //show planet AOI radius
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, Radius * Simulation.I.BodyProximityRadii);
+            if (Simulation.I) Gizmos.DrawWireSphere(transform.position, Radius * Simulation.I.BodyProximityRadii);
         }
 
 
@@ -165,12 +166,13 @@ public class Body : MonoBehaviour
         if (Camera.main)
         {
             DistanceFromPlayer = Vector3.Distance(transform.position, Camera.main.transform.position);
-            if (DistanceFromPlayer < Radius * 1.5f) return 9;
-            if (DistanceFromPlayer < Radius * 2) return 8;
-            if (DistanceFromPlayer < Radius * 3) return 7;
+            if (DistanceFromPlayer < Radius * 1.5f) return 10;
+            if (DistanceFromPlayer < Radius * 3f) return 9;
+            if (DistanceFromPlayer < Radius * 4) return 8;
+            if (DistanceFromPlayer < Radius * 6) return 7;
             if (DistanceFromPlayer < Radius * 10) return 6;
         }
-        return 4;
+        return 5;
     }
 
     private void SetScale()

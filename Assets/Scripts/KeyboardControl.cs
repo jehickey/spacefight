@@ -63,7 +63,7 @@ public class KeyboardControl : MonoBehaviour
         {
             //steering.SetPitch(controls.Flight.Pitch.ReadValue<float>());
             //ship.SetYaw(controls.Flight.Yaw.ReadValue<float>());
-            steering.SetRoll(-controls.Flight.Roll.ReadValue<float>());
+            if (steering) steering.SetRoll(-controls.Flight.Roll.ReadValue<float>());
 
             //throttle control
             if (throttleBox)

@@ -38,7 +38,7 @@ public static class StaticGenerator
 
     public static Texture2D Get()
     {
-        if (noiseFrames.Length == 0)
+        if (noiseFrames == null || noiseFrames.Length == 0)
         {
             Debug.Log("no static frames");
             return null;

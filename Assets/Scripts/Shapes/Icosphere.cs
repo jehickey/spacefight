@@ -2,14 +2,16 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace Shapes
 {
     public static class Icosphere
     {
-        public const int MaxSubdivisions = 8;
+        public const int MaxSubdivisions = 9;
 
         //tracks how many entires are being pre-cached
         public static int PreCacheCount = 0;
@@ -25,11 +27,29 @@ namespace Shapes
         private static NativeList<float3>[] workingVerts = new NativeList<float3>[MaxSubdivisions+1];
         private static NativeList<int3>[] workingFaces = new NativeList<int3>[MaxSubdivisions+1];
         private static NativeHashMap<long, int>[] workingCaches = new NativeHashMap<long, int>[MaxSubdivisions+1];
+        public static NativeReference<bool>[] workingHalt = new NativeReference<bool>[MaxSubdivisions + 1];
 
         //constructor
         static Icosphere()
         {
             //init
+        }
+
+        public static void Cleanup()
+        {
+            foreach (int key in jobHandles.Keys)
+            {
+                if (!jobHandles[key].IsCompleted) Debug.Log($"Killing running icosa job {key}");
+                if (workingHalt[key].IsCreated) workingHalt[key].Value = true;
+                jobHandles[key].Complete();
+                nativeData[key].Dispose();
+                if (workingVerts[key].IsCreated) workingVerts[key].Dispose();
+                if (workingFaces[key].IsCreated) workingFaces[key].Dispose();
+                if (workingCaches[key].IsCreated) workingCaches[key].Dispose();
+                if (workingHalt[key].IsCreated) workingHalt[key].Dispose();
+            }
+
+
         }
 
         public static int CachedDataCount()
@@ -80,11 +100,14 @@ namespace Shapes
             NativeList<float3> verts = new NativeList<float3>(Allocator.Persistent);
             NativeList<int3> faces = new NativeList<int3>(Allocator.Persistent);
             NativeHashMap<long, int> midpointCache = new NativeHashMap<long, int>(1024, Allocator.Persistent);
+            NativeReference<bool> halt = new NativeReference<bool>(Allocator.Persistent);
 
             //store references to these to dispose of after the job is done
             workingVerts[subdivisions] = verts;
             workingFaces[subdivisions] = faces;
             workingCaches[subdivisions] = midpointCache;
+            workingHalt[subdivisions] = halt;
+
 
             //job creation
             var job = new IcosaJob
@@ -95,6 +118,7 @@ namespace Shapes
                 vertices = verts,
                 faces = faces,
                 midpointCache = midpointCache,
+                halt = halt,
 
                 //final output
                 outVerts = native.vertices,
@@ -226,6 +250,7 @@ namespace Shapes
                 workingVerts[subdivisions].Dispose();
                 workingFaces[subdivisions].Dispose();
                 workingCaches[subdivisions].Dispose();
+                workingHalt[subdivisions].Dispose();
 
                 cacheData[subdivisions] = meshData;     //cache it
                 return meshData;                        //return it

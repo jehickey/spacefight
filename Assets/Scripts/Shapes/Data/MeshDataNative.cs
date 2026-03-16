@@ -10,6 +10,7 @@ namespace Shapes
         public NativeArray<int> triangles;
         public NativeArray<float2> uvs;
         public NativeArray<float3> normals;
+        //public NativeReference<bool> halt;
 
         public MeshDataNative(int vertexCount, int triCount, Allocator alloc)
         {
@@ -17,6 +18,7 @@ namespace Shapes
             triangles = new NativeArray<int>(triCount, alloc);
             uvs = new NativeArray<float2>(vertexCount, alloc);
             normals = new NativeArray<float3>(vertexCount, alloc);
+            //halt = new NativeReference<bool>(false, alloc);
         }
 
         public void Dispose()
@@ -25,6 +27,7 @@ namespace Shapes
             if (triangles.IsCreated) triangles.Dispose();
             if (uvs.IsCreated) uvs.Dispose();
             if (normals.IsCreated) normals.Dispose();
+            //if (halt.IsCreated) halt.Dispose();
         }
 
 

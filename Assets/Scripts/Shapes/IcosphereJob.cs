@@ -1,5 +1,6 @@
 using Unity.Burst;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
 
@@ -13,6 +14,9 @@ namespace Shapes
         public NativeList<float3> vertices;
         public NativeList<int3> faces;
         public NativeHashMap<long, int> midpointCache;
+        [ReadOnly]
+        [NativeDisableContainerSafetyRestriction]   //be careful with this...
+        public NativeReference<bool> halt;
 
         public NativeArray<float3> outVerts;
         public NativeArray<int> outTris;
@@ -97,6 +101,7 @@ namespace Shapes
                 NativeList<int3> newFaces = new NativeList<int3>(faces.Length * 4, Allocator.Temp);
                 for (int f = 0; f < faces.Length; f++)
                 {
+                    if (halt.Value) return;
                     int3 tri = faces[f];
                     int a = GetMidpoint(tri.x, tri.y);
                     int b = GetMidpoint(tri.y, tri.z);

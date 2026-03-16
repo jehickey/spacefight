@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
     public int DeathCount = 0;
 
     public bool SpawnEnemies;
+    public bool SpawnPlayer;
 
     private FlightControls controls;
     private OverlayManager overlay;
@@ -57,6 +58,7 @@ public class Game : MonoBehaviour
 
     private void Awake()
     {
+        if (!Application.isPlaying) return;
         if (I && I!=this)
         {
             Debug.Log("An instance of Game already exists!");
@@ -69,11 +71,12 @@ public class Game : MonoBehaviour
     private void OnDestroy()
     {
         if (I == this) I = null;
+        Shapes.Icosphere.Cleanup();     //make sure all running jobs are killed
     }
-
 
     void OnEnable()
     {
+        if (!Application.isPlaying) return;
         if (!I) I = this;       //so it runs on domain reload
         if (controls==null) controls = new FlightControls();
         controls.Enable();
@@ -97,7 +100,8 @@ public class Game : MonoBehaviour
 
     void Update()
     {
-        float status = Icosphere.GetStatus();
+        //run this to keep the job system moving
+        float status = Shapes.Icosphere.GetStatus();
 
         if (controls.Game.Exit.WasPressedThisFrame()) Application.Quit();
         if (controls.Game.Restart.WasPressedThisFrame()) SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
@@ -183,6 +187,7 @@ public class Game : MonoBehaviour
     private void UpdateRespawn() {
         //player respawn
         //lastPlayerShip = PlayerShip;
+        if (!SpawnPlayer) return;
         if (Paused) return;
         if (overlay) overlay.Countdown = Mathf.CeilToInt(respawnCount);
         if (PlayerShip) return;
