@@ -15,6 +15,8 @@ public class Destructable : MonoBehaviour
     public float SeparationForce = 1;
     public float SeparationSpin = 1;
     public float SeparationTTL = 3;
+    public float SeparationLinearDampening = .01f;
+    public float SeparationAngularDampening = .01f;
     public float TTL = 0;
 
     public bool doDestroy = false;
@@ -82,14 +84,16 @@ public class Destructable : MonoBehaviour
     {
         //scoring
         if (!Game.I) return;        //sometimes this gets called after Game.I is destroyed
-        if (!ship) return;
-        if (ship == Game.I.PlayerShip)
+        if (ship)
         {
-            Game.I.AddDeath();
-        }
-        else
-        {
-            if (Game.I.PlayerShip && lastHitBy == Game.I.PlayerShip.transform) Game.I.AddKill();
+            if (ship == Game.I.PlayerShip)
+            {
+                Game.I.AddDeath();
+            }
+            else
+            {
+                if (Game.I.PlayerShip && lastHitBy == Game.I.PlayerShip.transform) Game.I.AddKill();
+            }
         }
         SplitParts();
     }
@@ -102,6 +106,7 @@ public class Destructable : MonoBehaviour
 
         foreach (Transform part in transform)
         {
+            //Debug.Log("Creating part");
             part.parent = null;
             Rigidbody body = part.GetComponent<Rigidbody>();
             if (!body) body = part.AddComponent<Rigidbody>();
@@ -110,9 +115,18 @@ public class Destructable : MonoBehaviour
             body.isKinematic = false;
             body.linearVelocity = Random.insideUnitSphere * SeparationForce;
             body.angularVelocity = Random.insideUnitSphere * SeparationSpin;
+            body.linearDamping = SeparationLinearDampening;
+            body.angularDamping = SeparationAngularDampening;
             Destructable destructable = part.GetComponent<Destructable>();
             if (!destructable) destructable = part.AddComponent<Destructable>();
-            destructable.TTL = SeparationTTL * (1+Random.Range(-.5f, .5f));
+            if (SeparationTTL == 0)
+            {
+                destructable.TTL = 0;
+            }
+            else
+            {
+                destructable.TTL = SeparationTTL * (1 + Random.Range(-.5f, .5f));
+            }
             //Debug.Log($"Assigning TTL {destructable.TTL}");
         }
 

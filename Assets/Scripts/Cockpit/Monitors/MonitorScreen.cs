@@ -2,7 +2,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Video;
 
-public class Monitor : MonoBehaviour
+public class MonitorScreen : MonoBehaviour
 {
 
     //works similar to Radar
@@ -19,7 +19,7 @@ public class Monitor : MonoBehaviour
     public Color backgroundColor = Color.black;
     public int EdgeSizeBuffer = 1;
 
-    public bool showNoise;
+    public float staticStrength = 1.0f;
 
     public bool useLight;
     public bool useLightScreenColor;
@@ -72,12 +72,10 @@ public class Monitor : MonoBehaviour
     {
         if (!texture || !screenTex) return;
 
-        if (showNoise)
+        if (staticStrength > 0)
         {
             screenMaterial.SetTexture("_NoiseTex", StaticGenerator.Get());
-            screenMaterial.SetFloat("_Strength", .5f);
-            //Graphics.Blit(StaticGenerator.Get(), texture);
-            //return;
+            screenMaterial.SetFloat("_Strength", staticStrength);
         }
         else
         {
@@ -93,9 +91,9 @@ public class Monitor : MonoBehaviour
 
 
         screenTex.Apply(false);
-        //screenMaterial.SetTexture("_MainTex", screenTex);
+        screenMaterial.SetTexture("_MainTex", screenTex);
         Graphics.Blit(screenTex, texture, screenMaterial);
-        //Graphics.Blit(screenTex, texture);
+        Graphics.Blit(screenTex, texture);
     }
 
 

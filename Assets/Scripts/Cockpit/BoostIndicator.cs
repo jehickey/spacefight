@@ -15,27 +15,28 @@ public class BoostIndicator : SequentialLightPanel
     {
         base.Update();
         if (!throttleSystem) throttleSystem = GetComponentInParent<ThrottleSystem>();
-        if (throttleSystem)
+        if (!throttleSystem) return;
+        Value = throttleSystem.BoostCharge;
+        if (throttleSystem.BoostReady)
         {
-            Value = throttleSystem.BoostCharge;
-            if (throttleSystem.BoostReady)
-            {
-                LoColor = ReadyColor;
-                HiColor = ReadyColor;
-                Brightness = 1;
-            }
-            else
-            {
-                LoColor = NotReadyColor;
-                HiColor = NotReadyColor;
-                Brightness = 1;
-            }
-            if (throttleSystem.Boosting)
-            {
-                LoColor = BoostingColor;
-                HiColor = BoostingColor;
-                Brightness = 5;
-            }
+            LoColor = ReadyColor;
+            HiColor = ReadyColor;
+            Brightness = 1;
         }
+        else
+        {
+            LoColor = NotReadyColor;
+            HiColor = NotReadyColor;
+            Brightness = 1;
+        }
+        if (throttleSystem.Boosting)
+        {
+            LoColor = BoostingColor;
+            HiColor = BoostingColor;
+            Brightness = 5;
+        }
+
+        if (throttleSystem.BoostFail) DoBlink();
+        if (throttleSystem.BoostReady) Blinking = false;
     }
 }

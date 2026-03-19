@@ -36,7 +36,7 @@ public class Cannon : MonoBehaviour
         if (!shipWeapons || !shipWeapons.enabled) return;
 
         //target the player, if present
-        if (!Target) Target = Game.I.PlayerShip?.gameObject;
+        if (!Target && Game.I.PlayerShip) Target = Game.I.PlayerShip.gameObject;
 
         if (Target)
         {

@@ -10,11 +10,8 @@ public class ThrustIndicator : SequentialLightPanel
     {
         base.Update();
         if (!throttleSystem) throttleSystem = GetComponentInParent<ThrottleSystem>();
-        if (throttleSystem)
-        {
-            //set the value
-            Value = throttleSystem.Actual;
-        }
+        if (!throttleSystem) return;
         
+        Value = throttleSystem.Actual;
     }
 }

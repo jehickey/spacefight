@@ -2,16 +2,28 @@ using UnityEngine;
 
 public class HealthIndicator : SequentialLightPanel
 {
+    [Header("Health Indicator")]
+    public float WarningLevel = .25f;
+
     private Destructable destructable;
 
     protected override void Update()
     {
         base.Update();
         if (!destructable) destructable = GetComponentInParent<Destructable>();
-        if (destructable)
+        if (!destructable) return;
+
+        Max = destructable.MaxHealth;
+        Value = destructable.Health;
+
+        if (Value <= WarningLevel)
         {
-            Max = destructable.MaxHealth;
-            Value = destructable.Health;
+            DoBlink();
         }
+        else
+        {
+            Blinking = false;
+        }
+        
     }
 }

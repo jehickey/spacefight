@@ -53,6 +53,8 @@ public class EngineSounds : MonoBehaviour
         if (!BoostSound) return;        //no boost sound set up
         if (!DefaultAV.I) return;       //required
 
+        BoostSound.loop = true;
+
         if (throttle.Boosting && !BoostRunning)
         {
             BoostRunning = true;

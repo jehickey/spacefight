@@ -183,10 +183,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd0d3ca3de498df43bf91876987522f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trail
-  MaxParticles: 30
-  depositionRate: 4
+  MaxParticles: 100
+  depositionRate: 40
   ParticleSize: 0.01
-  ParticleShrinkRate: 0.005
+  ParticleShrinkRate: 0.01
   ParticleDetail: 0
   material: {fileID: 0}
   mesh: {fileID: 0}
@@ -308,9 +308,17 @@ MonoBehaviour:
   Thrust: 0
   MaxThrust: 1
   Boost: 0
+  Boosting: 0
   BoostMultiplier: 3
+  BoostCharge: 0
+  BoostConsumeRate: 0.25
+  BoostChargeRate: 0.1
+  BoostMinCharge: 0.25
+  BoostFail: 0
+  BoostReady: 0
   MaxRumble: 1
-  MinThrust: 0.01
+  BoostShake: 0.5
+  MinActual: 0.01
 --- !u!114 &2101012497724474104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,10 +450,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd0d3ca3de498df43bf91876987522f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trail
-  MaxParticles: 30
-  depositionRate: 4
+  MaxParticles: 100
+  depositionRate: 40
   ParticleSize: 0.01
-  ParticleShrinkRate: 0.005
+  ParticleShrinkRate: 0.01
   ParticleDetail: 0
   material: {fileID: 0}
   mesh: {fileID: 0}
