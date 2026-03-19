@@ -12,6 +12,8 @@ public class Ship : MonoBehaviour
     //public float MaxHealth = 10f;
     public float Mass = 100;
 
+    public HUD hud;
+
     public float DistanceFromPlayer;
     private AudioListener listener;
 
@@ -87,6 +89,7 @@ public class Ship : MonoBehaviour
         if (!pilot) pilot = GetComponent<BotControl>();
         if (!destructable) destructable = GetComponent<Destructable>();
 
+
         if (!cam) cam = GetComponentInChildren<Camera>();
         if (cam)
         {
@@ -104,6 +107,7 @@ public class Ship : MonoBehaviour
     void Update()
     {
         if (!shake) shake = GetComponentInChildren<Shake>();
+        if (!hud) hud = GetComponentInChildren<HUD>();
 
         //disable pilot until spawn countdown is complete
         if (pilot)
@@ -202,6 +206,7 @@ public class Ship : MonoBehaviour
 
     private void CheckPlanetProximity()
     {
+        Body oldProximity = bodyProximity;
         bodyProximity = null;
         float closest = 0;
         foreach (Body body in FindObjectsByType<Body>(FindObjectsSortMode.None))
@@ -226,10 +231,17 @@ public class Ship : MonoBehaviour
             bodyMinDistance = bodyProximity.Radius * Simulation.I.BodyClosestApproachRadii;
             bodyTo = (bodyProximity.transform.position - transform.position).normalized;
             bodyFrom = -bodyTo;
-            bodyAltitude = bodyDistance - bodyProximity.Radius;
+            bodyAltitude = (bodyDistance - bodyProximity.Radius) * 100;
             bodyProximityFactor = Mathf.InverseLerp(distanceLimit, bodyMinDistance, bodyDistance);
             bodyProximityFactor = MathF.Pow(bodyProximityFactor, Simulation.I.BodyProximityFactorCurve);
+
+            if (oldProximity != bodyProximity)
+            {
+                DoMessage($"Approaching {bodyProximity.name}");
+            }
+            oldProximity = bodyProximity;
         }
+        if (!bodyProximity) DoMessage("");
         AvoidPlanetImpact();
     }
 
@@ -269,6 +281,12 @@ public class Ship : MonoBehaviour
         }
     }
 
+
+    private void DoMessage(string text)
+    {
+        if (!hud) return;
+        hud.TextContent= text;
+    }
 
     public void AddShake(float value)
     {

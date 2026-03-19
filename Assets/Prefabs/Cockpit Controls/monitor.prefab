@@ -449,10 +449,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}
       insertIndex: 1
       addedObject: {fileID: 7250336164257311119}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2415027148991200729}
     - targetCorrespondingSourceObject: {fileID: -8256134651489076907, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}
       insertIndex: 1
       addedObject: {fileID: 6340856276611924611}
   m_SourcePrefab: {fileID: 100100000, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}
+--- !u!23 &2179676690375076866 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1526509560930016547, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}
+  m_PrefabInstance: {fileID: 8426089503764385503}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8315266416282134836 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}
@@ -482,6 +490,40 @@ MonoBehaviour:
   StaticStrength: 0.5
   screenDisplay: {fileID: 0}
   textDisplay: {fileID: 0}
+--- !u!328 &2415027148991200729
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8659879007393362830}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 0}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 2179676690375076866}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 3
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
 --- !u!1 &8755888854037510026 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8256134651489076907, guid: b8a5855031fc1064a8e3502df342fb1b, type: 3}

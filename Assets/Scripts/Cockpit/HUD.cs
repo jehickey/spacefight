@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +8,16 @@ public class HUD : MonoBehaviour
     [Header("Reticule")]
     public Image Reticule;
     public Image ReticuleMask;
+    public Color ReticleColor = Color.white;
+    public bool useAltimeter = true;
+    public Text Altimeter;
+    public Color AltimeterColor= Color.white;
+    public float AltimeterHeight = .9f;
+
+    [Header("Stick Position")]
     public Image StickPosition;
     public RectTransform StickPositionLine;
+    public Color StickPositionColor = Color.white;
 
     [Header("Horizon Indicator")]
     public RectTransform HorizonLine;
@@ -16,6 +25,22 @@ public class HUD : MonoBehaviour
     public float HorizonInstabilityMin = .94f;
     public float HorizonInstabilityMax = 0.95f;
     private Image horizonImage;
+
+    [Header("Text Display")]
+    public Text TextDisplay;
+    public string TextContent;
+    public Color TextColor = Color.white;
+    public float TextCPS = 5;           //characters per second
+    public bool TextFade = true;
+    public float TextFadeDelay = .1f;   //time to wait before fading (per character)
+    public float TextFadeSpeed = 2;     //how many seconds it takes to fade (once it starts)
+    private float textFadeAlpha;
+    private float textFinishTime;       //used for tracking fade-out
+    public bool ShowCursor = true;
+    public float CursorBlinkRate = 5;  //how fast the cursor blinks
+    private string actualText;          //text after teletype effect
+    private string oldText;             //used for identifying if text has changed
+    private float lastCharTime;         //used for timing
 
     public Ship ship;
 
@@ -42,8 +67,75 @@ public class HUD : MonoBehaviour
     void Update()
     {
         screenSize = Mathf.Min(canvasRect.rect.width, canvasRect.rect.height);
+        UpdateTextDisplay();
         UpdateReticule();
         UpdateStickPositionReticule();
+    }
+
+
+    public void DoText(string text)
+    {
+        TextContent = text;
+        //needs functionality for fade control, blinking/pulsing, etc
+    }
+
+    private void UpdateTextDisplay()
+    {
+        if (!TextDisplay) return;
+
+        //see if text contents have changed
+        if (TextContent != oldText)
+        {
+            actualText = "";
+            lastCharTime = 0;
+            oldText = TextContent;
+            textFinishTime = 0;
+            textFadeAlpha = 1;
+        }
+
+        if (TextCPS == 0) actualText = TextContent;
+
+        //update text content
+        if (actualText != TextContent)
+        {
+            int index = actualText.Length;
+            if (TextContent.Length > index)
+            {
+                if (Time.time - lastCharTime > 1 / TextCPS)
+                {
+                    actualText += TextContent.Substring(index, 1);
+                    lastCharTime = Time.time;
+                }
+            }
+        }
+
+        //append cursor
+        string cursor = "|";
+        if (TextContent=="" || textFadeAlpha < 1) cursor = "";  //no cursor when nothing to show (or fading)
+        if (actualText == TextContent && TextContent!="" && textFadeAlpha == 1)   //only blink when entire string is printed
+        {
+            if (Mathf.Sin(Time.time * Mathf.PI * 2 * CursorBlinkRate) < 0) cursor = "";
+        }
+
+        //text fading:
+        if (TextFade) {
+            if (actualText == TextContent && TextContent != "")      //no fading till it's done
+            {
+                if (textFinishTime == 0) textFinishTime = Time.time;
+                if (Time.time - textFinishTime >= TextFadeDelay * actualText.Length)    //is it time to fade?
+                {
+                    textFadeAlpha -= (1f / TextFadeSpeed) * Time.deltaTime;
+                    if (textFadeAlpha <= 0) TextContent = "";
+                }
+            }
+        }
+
+        TextDisplay.text = actualText + cursor;
+        Color actualColor = TextColor;
+        actualColor.a = textFadeAlpha;
+        TextDisplay.color = actualColor;
+
+
     }
 
     private void UpdateReticule()
@@ -51,15 +143,32 @@ public class HUD : MonoBehaviour
         if (!Reticule || !ship) return;
         reticleSize = Game.I.StickControlDeadzone * screenSize * 2f;
         Reticule.rectTransform.sizeDelta = Vector2.one * reticleSize;
+        Reticule.color = ReticleColor;
         if (ReticuleMask) ReticuleMask.rectTransform.sizeDelta = Reticule.rectTransform.sizeDelta;
         UpdateHorizonIndicator();
+        UpdateAltimeter();
+    }
+
+    private void UpdateAltimeter()
+    {
+        if (!Altimeter || !ship) return;
+        if (ship.bodyProximity)
+        {
+            Altimeter.text = $"{ship.bodyAltitude:0}m";
+            Altimeter.color = Altimeter.color;
+            Altimeter.rectTransform.anchoredPosition = new Vector2(0, reticleSize*.5f*AltimeterHeight);
+        }
+        else
+        {
+            Altimeter.text = "";
+        }
     }
 
     private void UpdateStickPositionReticule()
     {
         if (!StickPosition || !ship) return;
-        float StickMin = screenSize * Game.I.StickControlDeadzone * .5f;
-        float StickMax = screenSize * Game.I.StickControlLimit * .5f;
+        //float StickMin = screenSize * Game.I.StickControlDeadzone * .5f;
+        //float StickMax = screenSize * Game.I.StickControlLimit * .5f;
         Vector2 pos = new Vector2(steering.realStick.x, steering.realStick.z);
         if (!Game.I.InvertPitchAxis) pos.y *= -1;
         if (pos.magnitude >= 0)
@@ -73,6 +182,7 @@ public class HUD : MonoBehaviour
             pos = Vector2.zero;
         }
         StickPosition.rectTransform.anchoredPosition = pos;
+        StickPosition.color = StickPositionColor;
     }
 
     private void UpdateHorizonIndicator()
@@ -82,14 +192,16 @@ public class HUD : MonoBehaviour
         if (!HorizonLine)
         {
             float horizonThickness = 2;
-            HorizonLine = CreateLine(ReticuleMask.transform, horizonThickness);
+            HorizonLine = CreateLine(ReticuleMask.transform, horizonThickness, HorizonColor);
             horizonImage = HorizonLine.GetComponent<Image>();
+            horizonImage.color = HorizonColor;
             //create "up" marker
             float UpMarkWidth = reticleSize * .1f;
             float UpMarkThicknes = horizonThickness * 2f;
-            RectTransform upMarker = CreateLine(HorizonLine, 2);
+            RectTransform upMarker = CreateLine(HorizonLine, 2, HorizonColor);
             upMarker.anchoredPosition = new Vector2(0, UpMarkThicknes*2);
             upMarker.sizeDelta = new Vector2(10, UpMarkThicknes);
+            
         }
 
         Quaternion orient = ship.transform.rotation;
@@ -121,24 +233,24 @@ public class HUD : MonoBehaviour
         HorizonLine.anchoredPosition = new Vector2(xOffset, yOffset);
 
         //fade horizon when at unstable angles
-        HorizonColor.a = 1;
+        Color actualColor = HorizonColor;
         float horizonInstability = Mathf.Abs(Vector3.Dot(ship.transform.forward, Vector3.up));
         if (horizonInstability > HorizonInstabilityMin)
         {
             float t = Mathf.InverseLerp(HorizonInstabilityMin, HorizonInstabilityMax, horizonInstability);
-            HorizonColor.a = 1f-t;
+            actualColor.a = HorizonColor.a-t;
         }
-        horizonImage.color = HorizonColor;
+        horizonImage.color = actualColor;
 
     }
 
-    private RectTransform CreateLine(Transform parent, float thickness)
+    private RectTransform CreateLine(Transform parent, float thickness, Color color)
     {
         GameObject go = new GameObject("HorizonLine", typeof(Image));
         go.transform.SetParent(parent, false);
         Image img = go.GetComponent<Image>();
-        img.sprite = CreatePixelSprite();
-        img.color = Color.white;
+        img.sprite = CreatePixelSprite(color);
+        img.color = color;
         RectTransform rect = img.rectTransform;
         //rect.anchoredPosition = Vector2.zero;
         rect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -149,10 +261,10 @@ public class HUD : MonoBehaviour
     }
 
 
-    private static Sprite CreatePixelSprite()
+    private static Sprite CreatePixelSprite(Color color)
     {
         Texture2D tex = new Texture2D(1, 1);
-        tex.SetPixel(0, 0, Color.white);
+        tex.SetPixel(0, 0, color);
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, 1, 1), Vector2.one * .5f);
     }
