@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class WeaponsSystem : MonoBehaviour
 {
+    public bool Locked = false;
 
     public List<Weapon> weapons = new List<Weapon>();
     public int WeaponIndex = 0; //index of next gun in the sequence
@@ -12,6 +13,7 @@ public class WeaponsSystem : MonoBehaviour
     public float IsFiringCooldown = .25f;
     private float lastFireTime = 0;
 
+    
 
     void OnEnable()
     {
@@ -52,6 +54,7 @@ public class WeaponsSystem : MonoBehaviour
 
     public void Fire()
     {
+        if (Locked) return;
         if (weapons.Count == 0) return;
         if (Time.time - lastFireTime < WeaponIndexDelay) return;
 

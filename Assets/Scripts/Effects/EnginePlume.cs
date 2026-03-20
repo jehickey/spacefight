@@ -31,7 +31,7 @@ public class EnginePlume : MonoBehaviour
     void OnEnable()
     {
         render = GetComponent<Renderer>();
-        material = render.sharedMaterial;
+        material = render.material;
         material.EnableKeyword("_EMISSION");
     }
 

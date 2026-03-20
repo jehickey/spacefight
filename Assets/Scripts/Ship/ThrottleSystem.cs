@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ThrottleSystem: MonoBehaviour
 {
+    public bool Locked = false;
+
     [Header("Throttle Settings")]
     public float Input = 0;
     public float Actual = 0;
@@ -36,6 +38,12 @@ public class ThrottleSystem: MonoBehaviour
 
     void Update()
     {
+        if (Locked)
+        {
+            Actual = 0;
+            Boosting = false;
+            return;
+        }
         Input = Mathf.Clamp01(Input);
         ManageBoost();
         

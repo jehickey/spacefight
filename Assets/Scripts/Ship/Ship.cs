@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 public class Ship : MonoBehaviour
@@ -282,7 +281,7 @@ public class Ship : MonoBehaviour
     }
 
 
-    private void DoMessage(string text)
+    public void DoMessage(string text)
     {
         if (!hud) return;
         hud.TextContent= text;

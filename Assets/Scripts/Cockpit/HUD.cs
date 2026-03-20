@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
@@ -268,8 +267,8 @@ public class HUD : MonoBehaviour
                         (viewPos.y - .5f) * canvasRect.sizeDelta.y);
 
                     //angle of deflection
-                    Vector3 toTarget = (body.transform.position - ship.transform.position).normalized;
-                    float angle = Vector3.Angle(ship.transform.forward, toTarget);
+                    //Vector3 toTarget = (body.transform.position - ship.transform.position).normalized;
+                    //float angle = Vector3.Angle(ship.transform.forward, toTarget);
 
                     //position the box (and create it if needed)
                     if (!loc.reticle) loc.reticle = CreateBox(transform, Color.white, new Color(1, 1, 1, .25f));
@@ -290,7 +289,8 @@ public class HUD : MonoBehaviour
                     //loc.reticle.sizeDelta = new Vector2(pixelRadius, pixelRadius) * canvas.scaleFactor;
                     //loc.reticle.sizeDelta = new Vector2(canvasDiameter, canvasDiameter) * canvas.scaleFactor;
                     float size = JumpReticleSize;
-                    if (angle < Game.I.JumpSelectionAngle)
+                    //if (angle < Game.I.JumpSelectionAngle)
+                    if (loc.Selected)
                     {
                         size = JumpReticleSize * .5f + Mathf.Sin(Time.time * Mathf.PI * 2 * JumpReticlePulseRate) * JumpReticleSize * .5f; ;
                     }

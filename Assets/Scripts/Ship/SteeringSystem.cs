@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SteeringSystem : MonoBehaviour
 {
+    public bool Locked = false;
+
     public float TurnRate;      //handles pitch and yaw. degrees per second
     public float RollRate;      //handles roll. degrees per second
     public float StickZeroRate = 0.5f; //rate stick returns to center without input
@@ -17,9 +19,17 @@ public class SteeringSystem : MonoBehaviour
 
     void Update()
     {
+        if (Locked)
+        {
+            realStick = Vector3.zero;
+            Result = Vector3.zero;
+            return;
+        }
         StickManagement();
         ApplySteering();
     }
+
+
 
     private void StickManagement()
     {

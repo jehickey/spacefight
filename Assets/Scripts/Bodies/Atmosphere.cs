@@ -62,7 +62,7 @@ public class Atmosphere : MonoBehaviour
             material = new Material(Shader.Find("Custom/AtmosphereGlow"));
         }
         if (!material) return;
-        render.sharedMaterial = material;
+        render.material = material;
 
         if (sun)
         {

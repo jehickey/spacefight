@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Shapes;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
