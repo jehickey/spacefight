@@ -16,7 +16,7 @@ public class Body : MonoBehaviour
     public float DistanceFromPlayer;
     public float RotationPeriod = 10; //degrees per second
 
-    [ReadOnly(true)]
+    [ReadOnly]
     public int SphereDetail;
     public int MaxDetail = 0;
     public float TerrainSmoothness = 1;
@@ -29,13 +29,13 @@ public class Body : MonoBehaviour
 
     public Material material;
     private MaterialPropertyBlock materialBlock;
-    [ReadOnly(true)]
+    [ReadOnly]
     public Mesh mesh;
     protected MeshFilter filter;
     protected MeshRenderer render;
 
     //backup copy of original sphere mesh (for easier editing)
-    [ReadOnly(true)]
+    [ReadOnly]
     public Mesh baseSphereMesh;
 
     [Header("Atmosphere")]
@@ -44,7 +44,7 @@ public class Body : MonoBehaviour
 
     public float TextureDetailMinRadius = 2;
     public float TextureDetailMaxRadius = 3;
-    [ReadOnly(true)]
+    [ReadOnly]
     public float TextureDetail;
 
 

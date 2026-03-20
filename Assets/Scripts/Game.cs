@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using Shapes;
+using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +13,27 @@ public class Game : MonoBehaviour
     public Ship PlayerShip;
     public GameObject PlayerShipPrefab;
     public Team PlayerTeam;
+    public bool Paused = false;
+    public int KillCount = 0;
+    public int DeathCount = 0;
+
+    [Header("Jump Drive")]
+    [SerializeField]
+    private JumpLocation JumpLoc;
+    [ReadOnly]
+    public int JumpLocationCount;
+    public float JumpSelectionAngle = 5;       //how close do they have to get to trigger selection?
+    public bool doNewJump = false;
+    public bool doClearJump = false;
+
+
+    [Header("Gameplay Settings")]
+    public bool useInvulnerability;
+    public bool useInfiniteBoost;
+    public bool useSpawnEnemies;
+    public bool useSpawnPlayer;
+
+    [Header("Respawn")]
     public GameObject RespawnTarget;
     public float RespawnDistance = 10;
     public float RespawnCountdown = 3;
@@ -17,25 +41,15 @@ public class Game : MonoBehaviour
     private float respawnCountdownStart;
     private Ship lastPlayerShip;
 
-    public bool InvertPitchAxis = false;
-
-    public bool Paused = false;
-    public int KillCount = 0;
-    public int DeathCount = 0;
-
-    public bool useInvulnerability;
-    public bool useInfiniteBoost;
-    public bool useSpawnEnemies;
-    public bool useSpawnPlayer;
+    [Header("Engine Settings")]
     public bool useMonitorScreens;
-
     public bool usePrecache;
     public float precacheStatus;
-
 
     private FlightControls controls;
     private OverlayManager overlay;
 
+    //deathcam - if it's ever used
     private Vector3 deathcamPos = Vector3.zero;
     private Quaternion deathcamRot = Quaternion.identity;
     private Camera deathcam;
@@ -46,11 +60,14 @@ public class Game : MonoBehaviour
     private float timeAccumulator = 0;
     public float FPS = 0;
 
-    public float ActivationCountdown = 3;
 
     [Header("Control Settings")]
+    public bool InvertPitchAxis = false;
     public float StickControlLimit = 0.5f;       //this is a percentage of the screen
     public float StickControlDeadzone = 0.25f;   //this is a percentage of the screen
+
+
+    public float ActivationCountdown = 3;       //how long after spawn before enemies "wake up"
 
 
     [Header("Audio Settings")]
@@ -62,6 +79,7 @@ public class Game : MonoBehaviour
     public float AudioLevelExplosions = 1;
     public AudioClip defaultSoundHit;
     public AudioClip defaultSoundExplosion;
+
 
     private void Awake()
     {
@@ -103,6 +121,7 @@ public class Game : MonoBehaviour
     {
         if (usePrecache) Icosphere.PreCache(Body.MaxDetailGlobal);
         StaticGenerator.Generate(20,256,.05f);
+        //NewJump();
     }
 
     void Update()
@@ -178,7 +197,20 @@ public class Game : MonoBehaviour
             timeAccumulator = 0;
         }
 
+        if (doNewJump) NewJump();
+        if (doClearJump) ClearJump();
+        JumpLocationCount = JumpLoc ? 1 : 0;
 
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        if (!JumpLoc) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(JumpLoc.Coordinate, 5);
+        //draw line leading to jump point
+        Gizmos.DrawLine(PlayerShip.transform.position, JumpLoc.Coordinate);
     }
 
     public void AddKill()
@@ -189,6 +221,52 @@ public class Game : MonoBehaviour
     public void AddDeath()
     {
         DeathCount++;
+    }
+
+
+    private void NewJump()
+    {
+        Debug.Log("Setting up a new jump location");
+        doNewJump = false;
+        if (!PlayerShip) return;
+        JumpLoc = null;
+        string targetName = "Europa";
+        GameObject obj = GameObject.Find(targetName);
+        if (!obj) 
+        {
+            Debug.Log($"NewJump couldn't find {targetName}");
+            return; 
+        }
+        Body body = obj.GetComponent<Body>();
+        if (!body)
+        {
+            Debug.Log($"NewJump couldn't find a Body in {targetName}");
+            return;
+        }
+        Vector3 dir = PlayerShip.transform.position - body.transform.position;
+        float dist = dir.magnitude;
+        dir.Normalize();
+        JumpLoc = new JumpLocation(body.name, dist, true);
+        Vector3 offset = dir * body.Radius * 3;
+        JumpLoc.Coordinate = body.transform.position + offset;
+        JumpLoc.Distance = (JumpLoc.Coordinate - PlayerShip.transform.position).magnitude;
+        JumpLoc.Target = body;
+        JumpLoc.Selected = false;
+        JumpLoc.Available = true;
+    }
+
+    public List<JumpLocation> GetJumps()
+    {
+        List<JumpLocation> result = new List<JumpLocation>();
+        if (JumpLoc != null && JumpLoc.Available) result.Add(JumpLoc);
+        return result;
+    }
+
+    public void ClearJump()
+    {
+        doClearJump = false;
+        JumpLoc = null;
+
     }
 
     private void UpdateRespawn() {

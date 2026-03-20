@@ -11,23 +11,23 @@ public class BotControl : MonoBehaviour
     [Header("Target Information")]
     public GameObject TargetObject;
     private Ship targetShip;
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private float distanceToTarget = 0f;
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private float angleToTarget = 0f;       //Angle of deflection of target from heading (deg: 0-180)
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private Vector3 vectorToTarget;
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private Vector3 localTargetDir;
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private Vector3 relativeVelocityVector;
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private float closingSpeed;
 
     [Header("Target Selection")]
     public float ReselectBaseTimer = 3;
     public float ReselectRandomization = .25f;
-    [SerializeField, ReadOnly(true)]
+    [SerializeField, ReadOnly]
     private float reselectTimerActual = 0f;
     private float reselectTimeLast = 0;
 

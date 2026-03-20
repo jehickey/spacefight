@@ -45,22 +45,22 @@ public class Ship : MonoBehaviour
     [Header("Body Proximity")]
     public Body bodyProximity;
     [SerializeField]
-    [ReadOnly(true)]
+    [ReadOnly]
     public float bodyAltitude;
     [SerializeField]
-    [ReadOnly(true)]
+    [ReadOnly]
     public Vector3 bodyTo;
     [SerializeField]
-    [ReadOnly(true)]
+    [ReadOnly]
     public Vector3 bodyFrom;
     [SerializeField]
-    [ReadOnly(true)]
+    [ReadOnly]
     private float bodyDistance;
     [SerializeField]
-    [ReadOnly(true)]
+    [ReadOnly]
     private float bodyMinDistance;
     [SerializeField]
-    [ReadOnly(true)]
+    [ReadOnly]
     private float bodyProximityFactor;
 
 

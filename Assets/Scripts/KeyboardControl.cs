@@ -17,6 +17,7 @@ public class KeyboardControl : MonoBehaviour
     public ThrottleBox throttleBox;
     public JoystickBox steering;
     public WeaponsSystem weapons;
+    public JumpDrivePanel jumpDrive;
 
     private FlightControls controls
     {
@@ -35,6 +36,7 @@ public class KeyboardControl : MonoBehaviour
         throttleBox = GetComponentInChildren<ThrottleBox>();
         steering = GetComponentInChildren<JoystickBox>();
         weapons = GetComponentInChildren<WeaponsSystem>();
+        jumpDrive=GetComponentInChildren<JumpDrivePanel>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
@@ -80,6 +82,11 @@ public class KeyboardControl : MonoBehaviour
                 }
             }
             if (controls.Flight.Fire.IsPressed() && weapons) weapons.Fire();
+
+            if (jumpDrive)
+            {
+                if (controls.Flight.Jump.WasPressedThisFrame()) jumpDrive.Engage();
+            }
 
             MouseToStickVector();
         }

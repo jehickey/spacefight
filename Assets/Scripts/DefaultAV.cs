@@ -12,6 +12,18 @@ public class DefaultAV : MonoBehaviour
     public AudioClip BoostFail;
     public AudioClip BoostReady;
 
+    [Header("Jumpdrive Sounds")]
+    public AudioClip JumpAvailable;
+    public AudioClip JumpHighlighted;
+    public AudioClip JumpEngaging;
+    public AudioClip JumpStart;
+    public AudioClip JumpRunning;
+    public AudioClip JumpEnd;
+    public AudioClip JumpFail;
+
+
+
+
     private void Awake()
     {
         if (!Application.isPlaying) return;

@@ -1,5 +1,6 @@
-using Mono.Cecil;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
@@ -42,19 +43,25 @@ public class HUD : MonoBehaviour
     private string oldText;             //used for identifying if text has changed
     private float lastCharTime;         //used for timing
 
-    public Ship ship;
 
+    [Header("Text Display")]
+    public float JumpReticleSize = 10;
+    public float JumpReticlePulseRate = 3;
+
+    private Ship ship;
     private Canvas canvas;
     private RectTransform canvasRect;
-
     private float screenSize;
     private float reticleSize;
 
+    //ship components HUD needs to access
     private SteeringSystem steering;
-
+    private Jumpdrive jump;
+    private List<RectTransform> jumpReticles = new List<RectTransform>();
 
     private void OnEnable()
     {
+        if (!ship) ship = GetComponentInParent<Ship>(); 
         if (!canvas) canvas = GetComponent<Canvas>();
         if (!canvasRect) canvasRect = canvas.GetComponent<RectTransform>();
         if (!steering) steering = GetComponentInParent<SteeringSystem>();
@@ -62,6 +69,7 @@ public class HUD : MonoBehaviour
         {
             Debug.Log("HUD can't find SteeringSystem");
         }
+        if (!jump) jump = GetComponentInParent<Jumpdrive>();
     }
 
     void Update()
@@ -70,6 +78,7 @@ public class HUD : MonoBehaviour
         UpdateTextDisplay();
         UpdateReticule();
         UpdateStickPositionReticule();
+        UpdateJumpLocations();
     }
 
 
@@ -244,6 +253,60 @@ public class HUD : MonoBehaviour
 
     }
 
+    private void UpdateJumpLocations()
+    {
+        if (!jump) return;
+        foreach (JumpLocation loc in jump.Locations) {
+            if (loc.Available)
+            {
+                Body body = loc.Target;
+                Vector3 viewPos = Camera.main.WorldToViewportPoint(body.transform.position);
+                if (viewPos.z > 0)      //is it in front of us?
+                {
+                    Vector2 canvasPos = new Vector2(
+                        (viewPos.x - .5f) * canvasRect.sizeDelta.x,
+                        (viewPos.y - .5f) * canvasRect.sizeDelta.y);
+
+                    //angle of deflection
+                    Vector3 toTarget = (body.transform.position - ship.transform.position).normalized;
+                    float angle = Vector3.Angle(ship.transform.forward, toTarget);
+
+                    //position the box (and create it if needed)
+                    if (!loc.reticle) loc.reticle = CreateBox(transform, Color.white, new Color(1, 1, 1, .25f));
+                    loc.reticle.anchoredPosition = canvasPos;
+
+                    /*
+                    //work out the size of the box based on target body apparent diameter
+                    float radius = body.Radius;
+                    Transform t = body.transform;
+                    Vector3 center = Camera.main.WorldToScreenPoint(t.position);
+                    Vector3 edge = Camera.main.WorldToScreenPoint(t.position + t.right * radius);
+                    float pixelRadius = Vector3.Distance(center, edge);
+                    float canvasDiameter = pixelRadius / canvas.scaleFactor;
+                    //Debug.Log($"{pixelDiameter} - {canvasDiameter}");
+                    //canvasDiameter /= canvasRect.lossyScale.x;
+                    */
+                    //loc.reticle.sizeDelta = new Vector2(canvasDiameter, canvasDiameter);
+                    //loc.reticle.sizeDelta = new Vector2(pixelRadius, pixelRadius) * canvas.scaleFactor;
+                    //loc.reticle.sizeDelta = new Vector2(canvasDiameter, canvasDiameter) * canvas.scaleFactor;
+                    float size = JumpReticleSize;
+                    if (angle < Game.I.JumpSelectionAngle)
+                    {
+                        size = JumpReticleSize * .5f + Mathf.Sin(Time.time * Mathf.PI * 2 * JumpReticlePulseRate) * JumpReticleSize * .5f; ;
+                    }
+                    loc.reticle.sizeDelta = Vector2.one * size * canvas.scaleFactor;
+                }
+            }
+        }
+
+    }
+
+    private void CreateJumpReticles()
+    {
+    }
+
+
+
     private RectTransform CreateLine(Transform parent, float thickness, Color color)
     {
         GameObject go = new GameObject("HorizonLine", typeof(Image));
@@ -259,6 +322,71 @@ public class HUD : MonoBehaviour
         rect.sizeDelta = new Vector2(200, thickness);
         return rect;
     }
+
+
+    
+    private RectTransform CreateBox(Transform parent, Color borderColor, Color fillColor)
+    {
+        GameObject obj = new GameObject("Box");
+        obj.transform.SetParent(parent, false);
+        Image img = obj.AddComponent<Image>();
+        img.sprite = CreateBorderSprite(borderColor);
+        img.type = Image.Type.Sliced;
+        img.color = fillColor;
+        img.rectTransform.localScale = Vector3.one;// * canvas.scaleFactor;
+        img.rectTransform.anchoredPosition = new Vector2(0, 0);
+        return img.rectTransform;
+    }
+    
+
+
+    private static Sprite CreateBorderSprite1(Color color)
+    {
+        Texture2D tex = new Texture2D(3, 3);
+        tex.SetPixel(0, 0, color);
+        tex.Apply();
+        Vector4 border = new Vector4(1, 1, 1, 1) * 100;
+        return Sprite.Create(
+            tex,
+            new Rect(0, 0, 1, 1),
+            Vector2.one * .5f,
+            100f,
+            0,
+            SpriteMeshType.FullRect,
+            border);
+    }
+
+
+    private static Sprite CreateBorderSprite(Color color)
+    {
+        Texture2D tex = new Texture2D(3, 3);
+
+        // Fill border pixels
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                bool isBorder = (x == 0 || x == 2 || y == 0 || y == 2);
+                tex.SetPixel(x, y, isBorder ? color : new Color(0, 0, 0, 0));
+            }
+        }
+
+        tex.Apply();
+
+        // Border is 1 pixel on each side
+        Vector4 border = new Vector4(1, 1, 1, 1);
+
+        return Sprite.Create(
+            tex,
+            new Rect(0, 0, 3, 3),
+            new Vector2(0.5f, 0.5f),
+            100f,
+            0,
+            SpriteMeshType.FullRect,
+            border
+        );
+    }
+
 
 
     private static Sprite CreatePixelSprite(Color color)

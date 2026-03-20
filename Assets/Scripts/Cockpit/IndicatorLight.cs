@@ -28,6 +28,7 @@ public class IndicatorLight : MonoBehaviour
         float targetLevel = On ? Level : 0f;
         if (LevelRate > 0) actualLevel = Mathf.Lerp(actualLevel, targetLevel, Time.deltaTime * LevelRate);
         render.GetPropertyBlock(mpb);
+        mpb.SetColor("_BaseColor", color);
         mpb.SetColor("_EmissionColor", color * actualLevel);
         render.SetPropertyBlock(mpb);
 
