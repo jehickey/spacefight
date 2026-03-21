@@ -171,7 +171,7 @@ MonoBehaviour:
   RotationPeriod: 10
   SphereDetail: 3
   MaxDetail: 7
-  TerrainSmoothness: 0.05
+  TerrainSmoothness: 0.1
   actualTerrainMagnitude: 0
   heightmap: {fileID: 0}
   heightDataCount: 0
@@ -668,13 +668,12 @@ MonoBehaviour:
   Locations: []
   CloseEnough: 0.1
   OutsideCam: {fileID: 1997779885}
-  renderData: {fileID: 11400000, guid: 744b005c5c709f64391b538fb3cdf57e, type: 2}
   FOVNormal: 64
-  FOVFull: 100
+  FOVFull: 120
   MinTime: 5
   MaxTime: 15
-  JumpBuildupTime: 5
-  JumpBuildDownTime: 5
+  JumpBuildupTime: 2
+  JumpBuildDownTime: 2
   EffectsStrength: 0
 --- !u!4 &410564692 stripped
 Transform:
@@ -2720,7 +2719,7 @@ MonoBehaviour:
   m_CameraType: 0
   m_Cameras:
   - {fileID: 1714894806}
-  m_RendererIndex: 1
+  m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -3873,31 +3872,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.91412634
+      value: 0.9536005
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.25883883
+      value: 0.18896785
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.3105818
+      value: 0.23098549
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.030240849
+      value: 0.039785173
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 27.029
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 40.921
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 1931061948493623388, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 14.038
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2028569996267266493, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
       propertyPath: m_Layer

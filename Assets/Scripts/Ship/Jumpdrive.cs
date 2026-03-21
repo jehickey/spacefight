@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
 
 public class Jumpdrive : MonoBehaviour
 {
@@ -17,6 +20,7 @@ public class Jumpdrive : MonoBehaviour
 
     [Header("Jump Effects")]
     public Camera OutsideCam;                           //the cam that covers all external effects
+    public UniversalRendererData renderData;            //the renderer pipeline used by the cam
     public float FOVNormal = 64;
     public float FOVFull = 100;
     public float MinTime = 5;                           //minimum time a jump can take
@@ -26,6 +30,7 @@ public class Jumpdrive : MonoBehaviour
     public float EffectsStrength = 0;                   //manages visual effects
     private float JumpStartTime;
     private float JumpElapsedTime;
+    private Renderer OutsideCamRend;
 
     //public bool ForceAvailable = false;
 
@@ -42,6 +47,7 @@ public class Jumpdrive : MonoBehaviour
     private ThrottleSystem throttle;
     private SteeringSystem steering;
     private WeaponsSystem weapons;
+    private RelativisticDopplerFeature doppler;
 
     void Start()
     {
@@ -52,10 +58,45 @@ public class Jumpdrive : MonoBehaviour
         throttle = GetComponentInParent<ThrottleSystem>();
         steering = GetComponentInParent<SteeringSystem>();
         weapons = GetComponentInParent<WeaponsSystem>();
+        if (OutsideCam) OutsideCamRend = OutsideCam.GetComponent<Renderer>();
+    }
+
+    //get the post-processing material for blueshift
+    void GetDoppler()
+    {
+        UniversalAdditionalCameraData cameraData = OutsideCam.GetUniversalAdditionalCameraData();
+        ScriptableRenderer rend = cameraData.scriptableRenderer;
+        
+        //doppler = 
+
+        if (!renderData) return;
+
+        doppler = (RelativisticDopplerFeature)renderData.rendererFeatures.Find(f => f.name == "RelativisticDopplerFeature");
+        /*
+        UniversalAdditionalCameraData camdata = OutsideCam.GetUniversalAdditionalCameraData();
+        camdata.feat
+        if (doppler) return;
+        typeof(ScriptableRenderer)OutsideCamRend.GetPropertyBlock(
+
+        _feature = rendererData.rendererFeatures.Find(f => f.name == featureName);
+        //doppler = RelativisticDopplerFeature.I;  //URPFeatures.GetDopplerFeature(OutsideCamRend);
+        */
+        if (doppler)
+        {
+            Debug.Log("Got Doppler: " + doppler);
+            Debug.Log(doppler.settings.dopplerMaterial);
+            doppler.settings.dopplerMaterial.SetVector("_CameraForward", Camera.main.transform.forward);
+            doppler.settings.dopplerMaterial.SetFloat("_ShiftStrength", 5);
+        }
     }
 
     void Update()
     {
+        //GetDoppler();
+        RelativisticDopplerFeature.DopplerStrength = 0;
+        RelativisticDopplerFeature.DopplerMaxAngle = OutsideCam.fieldOfView * .6f;
+        if (ship) RelativisticDopplerFeature.DopplerCameraForward = OutsideCam.transform.InverseTransformDirection(ship.transform.forward);
+
         if (!InTransit)
         {
             UpdateDestinations();
