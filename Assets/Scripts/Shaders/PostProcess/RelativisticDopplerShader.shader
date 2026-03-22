@@ -7,6 +7,8 @@ Shader "Post/RelativisticDopplerShader"
         _MaxHue("Max Hue", float)                   = 0.66
         _MaxAngle("Max Angle", float)               = 50
         _SaturationDelta("Saturation Delta", float) = .5
+        _BrightnessRange("Brightness Range", float) = .5
+        _BrightnessBoost("Brightness Boost", float) = .5
         _CameraForward("Camera Forward", Vector)    = (0,0,1,0)
         _Test("Test", float)                        = 0
     }
@@ -33,6 +35,8 @@ Shader "Post/RelativisticDopplerShader"
             float _MaxHue;
             float _MaxAngle;
             float _SaturationDelta;
+            float _BrightnessBoost;
+            float _BrightnessRange;
             float3 _CameraForward;
             float _Test;
 
@@ -88,14 +92,17 @@ Shader "Post/RelativisticDopplerShader"
                 float minDot = cos(radians(_MaxAngle));
                 d = clamp(d, minDot, 1);
 
-                //set hue
+                //set value governing hue shift
                 float t = (d-minDot) / (1.0 - minDot);
                 t = saturate(t * _Strength);
+
+                //brightness Boost
 
                 // Convert to HSV
                 float3 hsv = RGBtoHSV(color);
                 hsv.x  = lerp(_MinHue, _MaxHue, t);
                 hsv.y = saturate((hsv.y + _SaturationDelta) * _Strength);
+                hsv.z *= 1 + saturate(t * _BrightnessRange) * _BrightnessBoost * _Strength;
 
                 // Convert back to RGB
                 return HSVtoRGB(hsv);

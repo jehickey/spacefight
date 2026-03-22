@@ -39,7 +39,6 @@ public class JumpDrivePanel : MonoBehaviour
     public void Engage()
     {
         if (button) button.Press();
-        Debug.Log("Jumpdrive Engaged!");
     }
 
     private void OnJumpPressed() 

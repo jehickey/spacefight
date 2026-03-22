@@ -6,18 +6,15 @@ using UnityEngine.Rendering.Universal;
 
 public class RelativisticDopplerFeature : ScriptableRendererFeature
 {
-    public static float DopplerStrength = 1;
+    public static float DopplerStrength = 0;
     public static float DopplerMinHue = 0;
     public static float DopplerMaxHue = .66f;
     public static float DopplerMaxAngle = 50;
     public static float DopplerSaturationDelta = .5f;
+    public static float DopplerBrightnessBoost = .25f;
+    public static float DopplerBrightnessRange = .5f;
     public static Vector3 DopplerCameraForward = new Vector3(0, 0, 1);
     public static float DopplerTest = 0;
-
-    RelativisticDopplerFeature()
-    {
-        Debug.Log("RDF instantiated");
-    }
 
     [System.Serializable]
     public class Settings
@@ -29,7 +26,7 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
 
     public Settings settings = new Settings();
 
-    // This handle is written by DopplerPass and read by CompositePass
+    //handle used to transfer the texture between passes
     internal TextureHandle dopplerTempHandle;
 
     public void SetCameraForward(Vector3 forward)
@@ -41,8 +38,6 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
     {
         settings.dopplerMaterial.SetFloat("_ShiftStrength", strength);
     }
-
-
 
     class DopplerPass : ScriptableRenderPass
     {
@@ -75,11 +70,11 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
             {
                 passData.material = material;
 
-                // INPUT: camera color
+                //camera color
                 builder.UseTexture(resources.cameraColor);
                 passData.source = resources.cameraColor;
 
-                // OUTPUT: dopplerTemp (same descriptor as cameraColor)
+                //dopplerTemp (same descriptor as cameraColor)
                 TextureHandle descHandle = resources.cameraColor;
                 TextureDesc desc = descHandle.GetDescriptor(renderGraph);
                 desc.name = "DopplerTemp";
@@ -87,11 +82,10 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
                 TextureHandle dopplerTemp = renderGraph.CreateTexture(desc);
                 passData.destination = dopplerTemp;
 
-                // Store handle on the feature so CompositePass can use it
+                //store handle on the feature so CompositePass can use it
                 owner.dopplerTempHandle = dopplerTemp;
 
-                // Write into dopplerTemp, not the camera target
-                //builder.SetRenderAttachment(dopplerTemp, 0);
+                //write into dopplerTemp (get errors if writing back to source)
                 builder.SetRenderAttachment(dopplerTemp, 0);
 
                 /*
@@ -119,7 +113,7 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
         [Obsolete]
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            // Empty when using RenderGraph
+            //is there any reason to keep this?
         }
     }
 
@@ -181,7 +175,6 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
         [Obsolete]
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            // Empty when using RenderGraph
         }
     }
 
@@ -204,6 +197,8 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
         settings.dopplerMaterial.SetFloat("_MaxHue", DopplerMaxHue);
         settings.dopplerMaterial.SetFloat("_MaxAngle", DopplerMaxAngle);
         settings.dopplerMaterial.SetFloat("_SaturationDelta", DopplerSaturationDelta);
+        settings.dopplerMaterial.SetFloat("_BrightnessBoost", DopplerBrightnessBoost);
+        settings.dopplerMaterial.SetFloat("_BrightnessRange", DopplerBrightnessRange);
         settings.dopplerMaterial.SetVector("_CameraForward", DopplerCameraForward);
         settings.dopplerMaterial.SetFloat("_Test", DopplerTest);
 

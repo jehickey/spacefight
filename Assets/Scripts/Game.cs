@@ -65,6 +65,22 @@ public class Game : MonoBehaviour
     public float StickControlDeadzone = 0.25f;   //this is a percentage of the screen
 
 
+    [Header("Jump Drive Effect Settings")]
+    public float JumpFOVNormal = 64;
+    public float JumpFOVFull = 100;
+    public float JumpFOVFactor = .3f;
+    public float JumpMinTime = 5;                //minimum time a jump can take
+    public float JumpMaxTime = 15;               //maximum time a jump can take
+    public float JumpBuildupTime = 5;            //how long for effect to build up?
+    public float JumpRampdownTime = 5;           //how long for effect to die down?
+    public float JumpEffectsStrength = 1;        //manages visual effects
+    public float JumpMinHue = 0;
+    public float JumpMaxHue = .66f;
+    public float JumpSaturationDelta = .75f;
+    public float JumpBrightnessBoost = .5f;
+    public float JumpBrightnessRange = .5f;
+
+
     public float ActivationCountdown = 3;       //how long after spawn before enemies "wake up"
 
 

@@ -16,23 +16,14 @@ public class Jumpdrive : MonoBehaviour
     public JumpLocation CurrentLocation;                //where are we right now (or leaving from)
     public JumpLocation Destination;                    //the selected destination
     public List<JumpLocation> Locations = new List<JumpLocation>();
-    public float CloseEnough = .1f;
+    public float ProgressCloseEnough = .01f;
 
     [Header("Jump Effects")]
     public Camera OutsideCam;                           //the cam that covers all external effects
-    public UniversalRendererData renderData;            //the renderer pipeline used by the cam
-    public float FOVNormal = 64;
-    public float FOVFull = 100;
-    public float MinTime = 5;                           //minimum time a jump can take
-    public float MaxTime = 15;                          //maximum time a jump can take
-    public float JumpBuildupTime = 5;                   //how long for effect to build up?
-    public float JumpBuildDownTime = 5;                 //how long for effect to die down?
-    public float EffectsStrength = 0;                   //manages visual effects
     private float JumpStartTime;
     private float JumpElapsedTime;
-    private Renderer OutsideCamRend;
 
-    //public bool ForceAvailable = false;
+
 
     private new AudioSource audio;
     private AudioClip clipAvailable;
@@ -58,57 +49,23 @@ public class Jumpdrive : MonoBehaviour
         throttle = GetComponentInParent<ThrottleSystem>();
         steering = GetComponentInParent<SteeringSystem>();
         weapons = GetComponentInParent<WeaponsSystem>();
-        if (OutsideCam) OutsideCamRend = OutsideCam.GetComponent<Renderer>();
-    }
+        RelativisticDopplerFeature.DopplerStrength = 0;
 
-    //get the post-processing material for blueshift
-    void GetDoppler()
-    {
-        UniversalAdditionalCameraData cameraData = OutsideCam.GetUniversalAdditionalCameraData();
-        ScriptableRenderer rend = cameraData.scriptableRenderer;
-        
-        //doppler = 
-
-        if (!renderData) return;
-
-        doppler = (RelativisticDopplerFeature)renderData.rendererFeatures.Find(f => f.name == "RelativisticDopplerFeature");
-        /*
-        UniversalAdditionalCameraData camdata = OutsideCam.GetUniversalAdditionalCameraData();
-        camdata.feat
-        if (doppler) return;
-        typeof(ScriptableRenderer)OutsideCamRend.GetPropertyBlock(
-
-        _feature = rendererData.rendererFeatures.Find(f => f.name == featureName);
-        //doppler = RelativisticDopplerFeature.I;  //URPFeatures.GetDopplerFeature(OutsideCamRend);
-        */
-        if (doppler)
-        {
-            Debug.Log("Got Doppler: " + doppler);
-            Debug.Log(doppler.settings.dopplerMaterial);
-            doppler.settings.dopplerMaterial.SetVector("_CameraForward", Camera.main.transform.forward);
-            doppler.settings.dopplerMaterial.SetFloat("_ShiftStrength", 5);
-        }
     }
 
     void Update()
     {
-        //GetDoppler();
-        RelativisticDopplerFeature.DopplerStrength = 0;
-        RelativisticDopplerFeature.DopplerMaxAngle = OutsideCam.fieldOfView * .6f;
-        if (ship) RelativisticDopplerFeature.DopplerCameraForward = OutsideCam.transform.InverseTransformDirection(ship.transform.forward);
-
         if (!InTransit)
         {
             UpdateDestinations();
             ManageSelection();
             Available = Locations.Count > 0;
-            //if (ForceAvailable) Available = true;
         }
         if (InTransit)
         {
             Available = false;
             ManageProgress();
-            ManageEffects();
+            ManageEffectDefaults();
         }
     }
 
@@ -180,20 +137,38 @@ public class Jumpdrive : MonoBehaviour
     private void ManageProgress()
     {
         if (!InTransit) return;
+        //update progress and stats
         TimeRemaining -= Time.deltaTime;
-        Progress = Mathf.InverseLerp(TransitTime, 0, TimeRemaining);
+        JumpElapsedTime = Time.time - JumpStartTime;
+        Progress = Mathf.Clamp01(Mathf.InverseLerp(TransitTime, 0, TimeRemaining));
+        if (1-Progress <= ProgressCloseEnough) Progress = 1;        //ensure we reach 1
+
         ship.transform.position = Vector3.Lerp(StartPoint, Destination.Coordinate, Progress);
-        if (Vector3.Distance(ship.transform.position, Destination.Coordinate) <= CloseEnough)
+
+        //ensure buildup and rampdown times are compatible with transit time
+        float actualBuildupTime = Game.I.JumpBuildupTime;
+        float actualRampdownTime = Game.I.JumpRampdownTime;
+        if (Game.I.JumpBuildupTime + Game.I.JumpRampdownTime > TransitTime)       //need to shorten build/ramp times
         {
-            Progress = 1;
+            actualBuildupTime = TransitTime * .5f;
+            actualRampdownTime = TransitTime * .5f;
         }
 
-        //visuals
-        JumpElapsedTime = Time.time - JumpStartTime;
-        float buildup = Mathf.InverseLerp(0, JumpBuildupTime, JumpElapsedTime);
+        //manage visual effect transitions
+        float buildup = 0;
+        buildup = Mathf.InverseLerp(0, actualBuildupTime, JumpElapsedTime);
+        if (TimeRemaining <= actualRampdownTime)
+        {
+            buildup = Mathf.InverseLerp(0, actualRampdownTime, TimeRemaining);
+        }
+        buildup = Mathf.Clamp01(buildup);
+        ship.AddShake(buildup*.5f);
         if (OutsideCam)
         {
-            OutsideCam.fieldOfView = Mathf.Lerp(FOVNormal, FOVFull, buildup);
+            if (ship) RelativisticDopplerFeature.DopplerCameraForward = OutsideCam.transform.InverseTransformDirection(ship.transform.forward);
+            OutsideCam.fieldOfView = Mathf.Lerp(Game.I.JumpFOVNormal, Game.I.JumpFOVFull, buildup);
+            RelativisticDopplerFeature.DopplerMaxAngle = OutsideCam.fieldOfView * Game.I.JumpFOVFactor;
+            RelativisticDopplerFeature.DopplerStrength = buildup * Game.I.JumpEffectsStrength;
         }
 
         if (Progress == 1 || TimeRemaining < 0)
@@ -202,19 +177,22 @@ public class Jumpdrive : MonoBehaviour
         }
     }
 
-    private void ManageEffects()
+    private void ManageEffectDefaults()
     {
-        if (EffectsStrength <= 0) return;
+        RelativisticDopplerFeature.DopplerMinHue = Game.I.JumpMinHue;
+        RelativisticDopplerFeature.DopplerMaxHue = Game.I.JumpMaxHue;
+        RelativisticDopplerFeature.DopplerSaturationDelta= Game.I.JumpSaturationDelta;
+        RelativisticDopplerFeature.DopplerBrightnessBoost= Game.I.JumpBrightnessBoost;
+        RelativisticDopplerFeature.DopplerBrightnessRange= Game.I.JumpBrightnessRange;
     }
 
-    private void EventDeparture()
+private void EventDeparture()
     {
         if (!Destination)
         {
             Debug.LogWarning("Jump Departure without a destination!");
             return;
         }
-        Debug.Log($"Jump Departure to {Destination.Name}");
         ship.DoMessage($"Jumping to {Destination.Name}");
         CurrentLocation = null;
         InTransit = true;
@@ -228,6 +206,7 @@ public class Jumpdrive : MonoBehaviour
         if (clipStart) audio.PlayOneShot(clipStart);
         audio.Play();
         DisableControls();
+        if (Destination.reticle) Destroy(Destination.reticle.gameObject);
     }
 
     private void GetTimeRemaining()
@@ -240,28 +219,33 @@ public class Jumpdrive : MonoBehaviour
         if (Destination.Distance == 0) return;
         TimeRemaining = Destination.Distance * .001f;
         //if (TimeRemaining < MinTime) Debug.Log($"Jump time of {TimeRemaining}s below minimum of {MinTime}s");
-        if (TimeRemaining > MaxTime) Debug.Log($"Jump time of {TimeRemaining}s exceeds maximum of {MaxTime}s");
-        TimeRemaining = Mathf.Clamp(TimeRemaining, MinTime, MaxTime);
+        if (TimeRemaining > Game.I.JumpMaxTime) Debug.Log($"Jump time of {TimeRemaining}s exceeds maximum of {Game.I.JumpMaxTime}s");
+        TimeRemaining = Mathf.Clamp(TimeRemaining, Game.I.JumpMinTime, Game.I.JumpMaxTime);
 
     }
 
     //Called when arriving at the destination
     private void EventArrival()
     {
-        Debug.Log("Jump Arrival");
-        ship.transform.position = Destination.Coordinate;
-        CurrentLocation = Destination;
-        TimeRemaining = 0;
-        TransitTime = 0;
-        InTransit = false;
-        StartPoint = Vector3.zero;
         audio.Stop();
         if (clipEnd) audio.PlayOneShot(clipEnd);
+        CurrentLocation = Destination;
         ship.DoMessage($"Arriving at {Destination.Name}");
-        Destination= null;
         EnableControls();
-        if (OutsideCam) OutsideCam.fieldOfView = FOVNormal;
 
+        //clean up values
+        ship.transform.position = Destination.Coordinate;
+        InTransit = false;
+        Destination = null;
+        TimeRemaining = 0;
+        TransitTime = 0;
+        StartPoint = Vector3.zero;
+
+        //make sure all effects are cleaned up
+        if (OutsideCam) OutsideCam.fieldOfView = Game.I.JumpFOVNormal;
+        RelativisticDopplerFeature.DopplerStrength = 0;
+        OutsideCam.fieldOfView = Game.I.JumpFOVNormal;
+        RelativisticDopplerFeature.DopplerMaxAngle = OutsideCam.fieldOfView * Game.I.JumpFOVFactor;
     }
 
 
