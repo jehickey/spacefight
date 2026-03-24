@@ -1,0 +1,583 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bfaffc9f96b4a46ac4ca77e6f64e7e, type: 3}
+  m_Name: Solar System Data
+  m_EditorClassIdentifier: Assembly-CSharp::SolarSystemData
+  planets:
+  - Name: Mercury
+    DiameterKm: 4879
+    RotationPeriodSec: 5070000
+    AxialTiltDeg: 0.03
+    GM: 2.2032e+13
+    OrbitalRadiusKm: 57900000
+    InclinationDeg: 7
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 0
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons: []
+  - Name: Venus
+    DiameterKm: 12104
+    RotationPeriodSec: -21000000
+    AxialTiltDeg: 177.4
+    GM: 3.24859e+14
+    OrbitalRadiusKm: 108200000
+    InclinationDeg: 3.4
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons: []
+  - Name: Earth
+    DiameterKm: 12756
+    RotationPeriodSec: 86200
+    AxialTiltDeg: 23.4
+    GM: 3.9860045e+14
+    OrbitalRadiusKm: 149600000
+    InclinationDeg: 0
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Moon
+      DiameterKm: 3475
+      RotationPeriodSec: 2360000
+      AxialTiltDeg: 6.7
+      GM: 0
+      OrbitalRadiusKm: 384400
+      InclinationDeg: 5.1
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+  - Name: Mars
+    DiameterKm: 6792
+    RotationPeriodSec: 88600
+    AxialTiltDeg: 25.2
+    GM: 4.282837e+13
+    OrbitalRadiusKm: 227900000
+    InclinationDeg: 1.85
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Phobos
+      DiameterKm: 22.2
+      RotationPeriodSec: 26600
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 9376
+      InclinationDeg: 1.1
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Deimos
+      DiameterKm: 12.6
+      RotationPeriodSec: 109000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 23463
+      InclinationDeg: 1.8
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+  - Name: Jupiter
+    DiameterKm: 142984
+    RotationPeriodSec: 35700
+    AxialTiltDeg: 3.1
+    GM: 1.2668654e+17
+    OrbitalRadiusKm: 778300000
+    InclinationDeg: 1.31
+    OrbitalPhase: 0
+    MaterialName: Jupiter
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Io
+      DiameterKm: 3643
+      RotationPeriodSec: 153000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 421800
+      InclinationDeg: 0.04
+      OrbitalPhase: 0
+      MaterialName: Io
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Europa
+      DiameterKm: 3122
+      RotationPeriodSec: 307000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 671100
+      InclinationDeg: 0.47
+      OrbitalPhase: 0
+      MaterialName: Europa
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Ganymede
+      DiameterKm: 5268
+      RotationPeriodSec: 618000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 1070400
+      InclinationDeg: 0.2
+      OrbitalPhase: 0
+      MaterialName: Ganymede
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Callisto
+      DiameterKm: 4821
+      RotationPeriodSec: 1440000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 1882700
+      InclinationDeg: 0.19
+      OrbitalPhase: 0
+      MaterialName: Callisto
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Amalthea
+      DiameterKm: 250
+      RotationPeriodSec: 120000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 181000
+      InclinationDeg: 0.37
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Himalia
+      DiameterKm: 170
+      RotationPeriodSec: 2900000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 11400000
+      InclinationDeg: 27.5
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Elara
+      DiameterKm: 80
+      RotationPeriodSec: 2900000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 11700000
+      InclinationDeg: 26.6
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Pasiphae
+      DiameterKm: 60
+      RotationPeriodSec: -32000000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 23500000
+      InclinationDeg: 151.4
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Sinope
+      DiameterKm: 38
+      RotationPeriodSec: -32000000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 23800000
+      InclinationDeg: 158.1
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Lysithea
+      DiameterKm: 36
+      RotationPeriodSec: 1170000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 5920000
+      InclinationDeg: 28.3
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Carme
+      DiameterKm: 46
+      RotationPeriodSec: -23000000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 20100000
+      InclinationDeg: 164.9
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Ananke
+      DiameterKm: 29
+      RotationPeriodSec: -21000000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 18300000
+      InclinationDeg: 148.9
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Leda
+      DiameterKm: 20
+      RotationPeriodSec: 1100000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 5400000
+      InclinationDeg: 27.5
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+  - Name: Saturn
+    DiameterKm: 120536
+    RotationPeriodSec: 38400
+    AxialTiltDeg: 26.7
+    GM: 3.793119e+16
+    OrbitalRadiusKm: 1.427e+9
+    InclinationDeg: 2.49
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Mimas
+      DiameterKm: 396
+      RotationPeriodSec: 82900
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 185540
+      InclinationDeg: 1.6
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Enceladus
+      DiameterKm: 504
+      RotationPeriodSec: 118000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 237948
+      InclinationDeg: 0
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Tethys
+      DiameterKm: 1062
+      RotationPeriodSec: 190000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 294672
+      InclinationDeg: 1.1
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Dione
+      DiameterKm: 1123
+      RotationPeriodSec: 237000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 377415
+      InclinationDeg: 0.02
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Rhea
+      DiameterKm: 1528
+      RotationPeriodSec: 390000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 527108
+      InclinationDeg: 0.35
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Titan
+      DiameterKm: 5151
+      RotationPeriodSec: 1380000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 1221870
+      InclinationDeg: 0.33
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 1
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Iapetus
+      DiameterKm: 1470
+      RotationPeriodSec: 6850000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 3560820
+      InclinationDeg: 7.5
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+  - Name: Uranus
+    DiameterKm: 51118
+    RotationPeriodSec: -62100
+    AxialTiltDeg: 97.8
+    GM: 5.793939e+15
+    OrbitalRadiusKm: 2.871e+9
+    InclinationDeg: 0.77
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Miranda
+      DiameterKm: 472
+      RotationPeriodSec: 122000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 129390
+      InclinationDeg: 4.2
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Ariel
+      DiameterKm: 1158
+      RotationPeriodSec: 209000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 190900
+      InclinationDeg: 0.26
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Umbriel
+      DiameterKm: 1169
+      RotationPeriodSec: 264000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 266000
+      InclinationDeg: 0.36
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Titania
+      DiameterKm: 1578
+      RotationPeriodSec: 753000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 435910
+      InclinationDeg: 0.14
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Oberon
+      DiameterKm: 1523
+      RotationPeriodSec: 1130000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 583520
+      InclinationDeg: 0.07
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+  - Name: Neptune
+    DiameterKm: 49528
+    RotationPeriodSec: 58000
+    AxialTiltDeg: 28.3
+    GM: 6.836529e+15
+    OrbitalRadiusKm: 4.498e+9
+    InclinationDeg: 1.77
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 1
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Triton
+      DiameterKm: 2707
+      RotationPeriodSec: -508000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 354759
+      InclinationDeg: 156.9
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+  - Name: Pluto
+    DiameterKm: 2376
+    RotationPeriodSec: 552000
+    AxialTiltDeg: 119.6
+    GM: 8.71e+11
+    OrbitalRadiusKm: 5.906e+9
+    InclinationDeg: 17.2
+    OrbitalPhase: 0
+    MaterialName: 
+    HeightmapName: 
+    HasAtmosphere: 0
+    TerrainDeformation: 0
+    TerrainSmoothness: 0
+    moons:
+    - Name: Charon
+      DiameterKm: 1212
+      RotationPeriodSec: 552000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 19570
+      InclinationDeg: 0
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Styx
+      DiameterKm: 16
+      RotationPeriodSec: 1060000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 42900
+      InclinationDeg: 0
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Nix
+      DiameterKm: 49
+      RotationPeriodSec: 1150000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 48700
+      InclinationDeg: 0
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Kerberos
+      DiameterKm: 19
+      RotationPeriodSec: 1830000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 57700
+      InclinationDeg: 0
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0
+    - Name: Hydra
+      DiameterKm: 65
+      RotationPeriodSec: 1230000
+      AxialTiltDeg: 0
+      GM: 0
+      OrbitalRadiusKm: 64700
+      InclinationDeg: 0
+      OrbitalPhase: 0
+      MaterialName: 
+      HeightmapName: 
+      HasAtmosphere: 0
+      TerrainDeformation: 0
+      TerrainSmoothness: 0

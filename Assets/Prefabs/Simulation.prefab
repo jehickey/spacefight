@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2195556293362969960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 328916332576306986}
+  - component: {fileID: 3700088443673436027}
+  m_Layer: 0
+  m_Name: Simulation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &328916332576306986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2195556293362969960}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.76783, y: -0, z: 625.35803}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3700088443673436027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2195556293362969960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 438bc0a5b2b9a5344a9efe07e06ae691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Simulation
+  TimeScale: 0
+  FlareMaterial: {fileID: 2100000, guid: 17b079dbde301f741928f240fcd6b231, type: 2}
+  ShockwaveMaterial: {fileID: 2100000, guid: 63283f6be4feb424490025547644df18, type: 2}
+  TrailMaterial: {fileID: 2100000, guid: 327b3be6e27cb874f972d809c71055d9, type: 2}
+  SpeedUnit: 1
+  ForceDecayRate: 1
+  ImpactDamageMultiplier: 0.05
+  ImpactForceMultiplier: 100
+  ImpactDisplacementMultiplier: 2
+  BodyProximityRadii: 2
+  BodyClosestApproachRadii: 1.025
+  BodyProximityFactorCurve: 3
+  BodyProximityThrustFactor: 0.25
+  TerrainMagnitudeScale: 0.1
+  TerrainDistanceScale: 1
+  sunPrefab: {fileID: 5576066060547450780, guid: f7a3138e58a01544fbf74dfcd260406c, type: 3}
+  planetPrefabs:
+  - {fileID: 1630140040223499928, guid: 6dc398cd17b9a754fb2f02d73218b23c, type: 3}
+  - {fileID: 1342221048082830156, guid: 5f627f432ea03c646a7f14e82fe2a053, type: 3}
+  - {fileID: 7286896802267778710, guid: 797df63edcb30ac45a0def0a4c43a294, type: 3}
+  - {fileID: 8401928996219516572, guid: 744b51c995799134eb5bf51b402618ed, type: 3}
+  - {fileID: 3186705862947448531, guid: 248dae1569db6f248993832737237d67, type: 3}

@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6022650536996829001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4129887315575685135}
+  - component: {fileID: 6745577294568284512}
+  m_Layer: 0
+  m_Name: Io
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4129887315575685135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6022650536996829001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 243.17212, y: 0, z: 382.40384}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &6745577294568284512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6022650536996829001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0affe10b8a9d841bb05533077263eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Body
+  RealRadius: 1
+  RealOrbitalRadius: 1
+  parentBody: {fileID: 0}
+  Radius: 20
+  DistanceFromPlayer: 0
+  RotationPeriod: 10
+  OrbitRadius: 400
+  OrbitPeriod: 100
+  OrbitPhase: 0.025
+  TidalLock: 1
+  TerrainDeformation: 1
+  Regenerate: 0
+  DoDeform: 0
+  SphereDetail: 0
+  MaxDetail: 9
+  TerrainSmoothness: 0.02
+  actualTerrainMagnitude: 0
+  heightmap: {fileID: 0}
+  heightDataCount: 0
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
+  atmosphere: {fileID: 0}
+  material: {fileID: 2100000, guid: 0ef62cdc6e478c9438117eb63e77855c, type: 2}
+  mesh: {fileID: 0}
+  baseSphereMesh: {fileID: 0}

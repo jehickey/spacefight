@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4039626186585204704
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5779119774600085052}
+  - component: {fileID: 1920631326781565271}
+  m_Layer: 0
+  m_Name: DefaultAV
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5779119774600085052
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4039626186585204704}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.03111, y: 0, z: 91.80538}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1920631326781565271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4039626186585204704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d43a8b71a5fe26445a09fe179e53daa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultAV
+  BoostStart: {fileID: 8300000, guid: 6ff31b28cadd24c4d82ddba50e07a3ba, type: 3}
+  BoostRunning: {fileID: 8300000, guid: 8ff599a4a1e828348af15b0e1656aff4, type: 3}
+  BoostEnd: {fileID: 8300000, guid: aa30690f97c71d64ba6ff8cd087795db, type: 3}
+  BoostFail: {fileID: 8300000, guid: 9ac6211381fb13a4bbff739be247a3cd, type: 3}
+  BoostReady: {fileID: 8300000, guid: 26c581864a3eaa346b1ad7611158111d, type: 3}
+  JumpAvailable: {fileID: 8300000, guid: 26c581864a3eaa346b1ad7611158111d, type: 3}
+  JumpHighlighted: {fileID: 8300000, guid: 03b8046f8887c9b469f959132b8d99ce, type: 3}
+  JumpEngaging: {fileID: 8300000, guid: 26c581864a3eaa346b1ad7611158111d, type: 3}
+  JumpStart: {fileID: 8300000, guid: 6ff31b28cadd24c4d82ddba50e07a3ba, type: 3}
+  JumpRunning: {fileID: 8300000, guid: 8ff599a4a1e828348af15b0e1656aff4, type: 3}
+  JumpEnd: {fileID: 8300000, guid: aa30690f97c71d64ba6ff8cd087795db, type: 3}
+  JumpFail: {fileID: 8300000, guid: f698d03fb9119164fb570c2d226c32d8, type: 3}

@@ -79,6 +79,8 @@ public class Game : MonoBehaviour
     public float JumpSaturationDelta = .75f;
     public float JumpBrightnessBoost = .5f;
     public float JumpBrightnessRange = .5f;
+    public float JumpEnemyDespawnProgress = .25f;
+    public float JumpChargeTime = 3f;
 
 
     public float ActivationCountdown = 3;       //how long after spawn before enemies "wake up"
@@ -176,10 +178,6 @@ public class Game : MonoBehaviour
             Time.timeScale = 1;
         }
 
-
-        
-
-
         //maintain info for deathcam
         if (Camera.main)
         {
@@ -235,6 +233,14 @@ public class Game : MonoBehaviour
     public void AddDeath()
     {
         DeathCount++;
+    }
+
+    public void DespawnEnemies()
+    {
+        foreach (BotControl bot in GameObject.FindObjectsByType<BotControl>( FindObjectsSortMode.None))
+        {
+            Destroy(bot.gameObject);
+        }
     }
 
 

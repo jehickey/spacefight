@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -8,6 +9,7 @@ public class Simulation : MonoBehaviour
     [Header("Time")]
     public float TimeScale = 1f;
     public float TimeDelta => Time.deltaTime * TimeScale;
+
 
     public Material FlareMaterial;
     public Material ShockwaveMaterial;
@@ -32,6 +34,19 @@ public class Simulation : MonoBehaviour
     public float TerrainMagnitudeScale = .01f;
     public float TerrainDistanceScale = 1f;
 
+    [Header("Planetary Bodies")]
+    public bool useSpawnPlanets = false;
+    public bool useSpawnMoons = false;
+    public bool doSpawnPlanets = false;
+    public Sun sunPrefab;
+    public Sun sun;
+    public SolarSystemData systemData;
+    public float RadiusCompression = .5f;
+    public float DistanceCompression = .5f;
+    public float RadiusFactor = 1;
+    public float DistanceFactor = 1;
+
+    //public List<Body> planetPrefabs = new List<Body>();
 
     private void Awake()
     {
@@ -47,6 +62,10 @@ public class Simulation : MonoBehaviour
     private void OnEnable()
     {
         if (!I) I = this;   //so it runs on domain reload
+        if (!systemData)
+        {
+            Debug.Log("No solar system data assigned!");
+        }
     }
 
     private void OnDestroy()
@@ -54,8 +73,61 @@ public class Simulation : MonoBehaviour
         if (I == this) I = null;
     }
 
+    private void Start()
+    {
+        if (useSpawnPlanets) SpawnPlanets();
+    }
+
     void Update()
     {
+        if (doSpawnPlanets) SpawnPlanets();
         if (TerrainMagnitudeScale < 0) TerrainMagnitudeScale = 0;
     }
+
+    void SpawnPlanets()
+    {
+        doSpawnPlanets = false;
+        if (!useSpawnPlanets) return;
+        if (!systemData)
+        {
+            Debug.Log("No Solar System Data!");
+            return;
+        }
+        DespawnPlanets();
+        //set up sun
+        sun = null;
+        if (sunPrefab)
+        {
+            sun = Instantiate(sunPrefab);
+            sun.transform.position = Vector3.zero;
+        }
+
+
+        foreach (PlanetData p in systemData.planets)
+        {
+            GameObject obj = new GameObject();
+            Body body = obj.AddComponent<Body>();
+            body.Data = p;
+            body.parentBody = sun;
+            if (useSpawnMoons)
+            {
+                foreach (BodyData m in p.moons) {
+                    GameObject moonObj = new GameObject();
+                    Body moon = moonObj.AddComponent<Body>();
+                    moon.Data = m;
+                    moon.parentBody = body;
+                }
+            }
+        }
+
+    }
+
+    void DespawnPlanets()
+    {
+        foreach (Body body in GameObject.FindObjectsByType<Body>(FindObjectsSortMode.None))
+        {
+            Destroy(body.gameObject);
+        }
+    }
+
 }

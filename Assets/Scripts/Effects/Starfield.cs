@@ -12,6 +12,7 @@ public class Starfield : MonoBehaviour
 
     public float minPixels = 1.5f;
     public float MaxRelToMin = 3f;
+    public float Brightness = 1;
 
     private Camera cam;
     //public Transform anchorTransform;
@@ -49,7 +50,7 @@ public class Starfield : MonoBehaviour
         orientation = Quaternion.identity;
 
         background = GetComponentInChildren<StellarBackground>();
-        
+        if (starMaterial) starMaterial.EnableKeyword("_EMISSION");
         if (background)
         {
             background.Radius = FieldRadius*.5f + BackgroundBuffer;
@@ -77,7 +78,7 @@ public class Starfield : MonoBehaviour
         //being based on ship orientation rather than camera
         cam = Camera.main;
 
-
+        if (starMaterial) starMaterial.SetColor("_EmissionColor", Color.white * Brightness);
         //if the player ceases to exist, orientation and position should not change
         if (cam)
         {

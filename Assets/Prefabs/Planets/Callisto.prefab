@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8720768331510580488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3549457455128876696}
+  - component: {fileID: 5637101046012039974}
+  m_Layer: 0
+  m_Name: Callisto
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3549457455128876696
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720768331510580488}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 700, y: 0, z: 700}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &5637101046012039974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720768331510580488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0affe10b8a9d841bb05533077263eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Body
+  RealRadius: 1
+  RealOrbitalRadius: 1
+  parentBody: {fileID: 0}
+  Radius: 20
+  DistanceFromPlayer: 0
+  RotationPeriod: 10
+  OrbitRadius: 700
+  OrbitPeriod: 10
+  OrbitPhase: 0.126
+  TidalLock: 0
+  TerrainDeformation: 0
+  Regenerate: 0
+  DoDeform: 0
+  SphereDetail: 0
+  MaxDetail: 0
+  TerrainSmoothness: 0.02
+  actualTerrainMagnitude: 0
+  heightmap: {fileID: 0}
+  heightDataCount: 0
+  TextureDetailMinRadius: 2
+  TextureDetailMaxRadius: 3
+  TextureDetail: 0
+  atmosphere: {fileID: 0}
+  material: {fileID: 2100000, guid: 5968cd25112a53e4c9a8596f56fe8674, type: 2}
+  mesh: {fileID: 0}
+  baseSphereMesh: {fileID: 0}

@@ -42,9 +42,8 @@ public class Atmosphere : MonoBehaviour
     void ManageMesh()
     {
         if (!filter) return;
-        if (SphereDetail == 0) mesh = null;
         SphereDetail = parentBody.SphereDetail;
-
+        if (SphereDetail == 0) mesh = null;
 
         if (mesh == null)
         {

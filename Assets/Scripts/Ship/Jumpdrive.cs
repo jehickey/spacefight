@@ -20,9 +20,10 @@ public class Jumpdrive : MonoBehaviour
 
     [Header("Jump Effects")]
     public Camera OutsideCam;                           //the cam that covers all external effects
+    private float JumpChargeStartTime;
     private float JumpStartTime;
     private float JumpElapsedTime;
-
+    private bool despawned;
 
 
     private new AudioSource audio;
@@ -92,6 +93,14 @@ public class Jumpdrive : MonoBehaviour
             return false;
         }
         */
+
+        //verify there's Line-Of-Sight
+        if (!HasLineOfSight(Destination.Target.transform))
+        {
+            Debug.Log("No line of sight!");
+            return false;
+        }
+
         //verify we're not already at this destination
         //Destination = location;
         EventDeparture();
@@ -171,6 +180,12 @@ public class Jumpdrive : MonoBehaviour
             RelativisticDopplerFeature.DopplerStrength = buildup * Game.I.JumpEffectsStrength;
         }
 
+        if (!despawned && Progress >= Game.I.JumpEnemyDespawnProgress)
+        {
+            Game.I.DespawnEnemies();
+            despawned = true;
+        }
+
         if (Progress == 1 || TimeRemaining < 0)
         {
             EventArrival();
@@ -193,6 +208,7 @@ private void EventDeparture()
             Debug.LogWarning("Jump Departure without a destination!");
             return;
         }
+        despawned= false;
         ship.DoMessage($"Jumping to {Destination.Name}");
         CurrentLocation = null;
         InTransit = true;
@@ -262,6 +278,22 @@ private void EventDeparture()
         if (steering) steering.Locked = false;
         if (weapons) weapons.Locked = false;
     }
+
+
+    private bool HasLineOfSight (Transform to)
+    {
+        int obstructionMask = ~(1 << LayerMask.NameToLayer("Inside"));
+        Vector3 origin = transform.position;
+        Vector3 direction = (to.position - origin);
+        float distance = direction.magnitude;
+        direction.Normalize();
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, distance, obstructionMask))
+        {
+            return hit.transform == to;
+        }
+        return true;        //returns true if nothing is hit at all (even target)
+    }
+
 
     private void SetupAudio()
     {
