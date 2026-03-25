@@ -220,7 +220,7 @@ public class Body : MonoBehaviour
         OrbitRadius = GetFactoredDistance( Data.OrbitalRadiusKm/2);
         //if (Data.IsMoon) OrbitRadius /= Simulation.I.RadiusFactor;
 
-        OrbitPhase = Data.OrbitalPhase;
+        if (OrbitPhase==0) OrbitPhase = Data.OrbitalPhase;
         OrbitPeriod = GetOrbitalPeriodSeconds(Data.OrbitalRadiusKm, sunGM);
 
         //setup material

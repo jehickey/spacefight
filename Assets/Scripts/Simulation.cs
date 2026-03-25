@@ -102,13 +102,14 @@ public class Simulation : MonoBehaviour
             sun.transform.position = Vector3.zero;
         }
 
-
+        int planetNumber = 0;
         foreach (PlanetData p in systemData.planets)
         {
             GameObject obj = new GameObject();
             Body body = obj.AddComponent<Body>();
             body.Data = p;
             body.parentBody = sun;
+            body.OrbitPhase = SetStartingPhase( ++planetNumber);
             if (useSpawnMoons)
             {
                 foreach (BodyData m in p.moons) {
@@ -116,6 +117,7 @@ public class Simulation : MonoBehaviour
                     Body moon = moonObj.AddComponent<Body>();
                     moon.Data = m;
                     moon.parentBody = body;
+                    moon.OrbitPhase = 0;        //random positioning
                 }
             }
         }
@@ -129,5 +131,15 @@ public class Simulation : MonoBehaviour
             Destroy(body.gameObject);
         }
     }
+
+
+    float SetStartingPhase(int planetNumber)
+    {
+        float fullArc = .25f;
+        float arc = fullArc / 9;
+
+        return arc * planetNumber;
+    }
+
 
 }

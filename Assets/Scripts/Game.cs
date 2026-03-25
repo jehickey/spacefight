@@ -32,8 +32,10 @@ public class Game : MonoBehaviour
     public bool useSpawnPlayer;
 
     [Header("Respawn")]
-    public GameObject RespawnTarget;
-    public float RespawnDistance = 10;
+    public bool forceRespawn = false;
+    public Body RespawnTarget;
+    public string RespawnTargetName;
+    public float RespawnRadii = 10;
     public float RespawnCountdown = 3;
     private float respawnCount;
     private float respawnCountdownStart;
@@ -294,6 +296,18 @@ public class Game : MonoBehaviour
         //lastPlayerShip = PlayerShip;
         if (!useSpawnPlayer) return;
         if (Paused) return;
+
+        if (forceRespawn)
+        {
+            forceRespawn = false;
+            if (PlayerShip)
+            {
+                Destroy(PlayerShip.gameObject);
+                PlayerShip = null;
+                respawnCount = .001f;
+            }
+        }
+
         if (overlay) overlay.Countdown = Mathf.CeilToInt(respawnCount);
         if (PlayerShip) return;
         if (!PlayerShip)
@@ -303,6 +317,7 @@ public class Game : MonoBehaviour
             if (playerInput)        //found one
             {
                 PlayerShip = playerInput.GetComponentInParent<Ship> ();
+                forceRespawn = false;
                 return;
             }
 
@@ -314,6 +329,8 @@ public class Game : MonoBehaviour
             respawnCount = RespawnCountdown - (Time.time - respawnCountdownStart);
             if (respawnCount <= 0) RespawnPlayer();
         }
+
+
     }
 
     private void RespawnPlayer()
@@ -322,6 +339,9 @@ public class Game : MonoBehaviour
         if (!PlayerShipPrefab) return;
         respawnCount = 0;
         if (deathcam) Destroy(deathcam.gameObject);
+
+        if (RespawnTargetName == string.Empty) RespawnTargetName = "Jupiter";
+        RespawnTarget = GameObject.Find(RespawnTargetName)?.GetComponent<Body>();
 
         GameObject obj = Instantiate(PlayerShipPrefab);
         if (obj)
@@ -333,7 +353,7 @@ public class Game : MonoBehaviour
                 //pick a spot and orientation
                 if (RespawnTarget)
                 {
-                    PlayerShip.transform.position = RespawnTarget.transform.position + Random.onUnitSphere * RespawnDistance;
+                    PlayerShip.transform.position = RespawnTarget.transform.position + Random.onUnitSphere * RespawnRadii * RespawnTarget.Radius;
                     PlayerShip.transform.LookAt(RespawnTarget.transform.position);
                 }
                 else

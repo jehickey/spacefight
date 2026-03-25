@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RadarBox : MonoBehaviour
@@ -165,12 +167,11 @@ public class RadarBox : MonoBehaviour
 
     public Vector2 PolarProject(Vector3 worldPos)
     {
-        //Oh how I hate this function
+        //It is a function, coded by an idiot, full of sound and fury, signifying nothing.
         //Debug.DrawRay(ansform.position, playerViewTransform.forward * 50f, Color.cyan);
         Vector3 local = myShip.transform.InverseTransformPoint(worldPos);
         Vector3 dir = local.normalized;
         float dist = local.magnitude;
-
         Vector2 offs = new Vector2(dir.x, dir.y);
         if (dir.z < 0)
         {
@@ -180,7 +181,6 @@ public class RadarBox : MonoBehaviour
         offs.y = -offs.y;
 
         float halfway = (TextureRes - EdgeSizeBuffer * 2) * .25f;
-        //Debug.Log($"{offs.y}   z={dir.z}");
         offs *= halfway;
         //offs.y = 0;
         //Debug.Log($"X={offs.x} {offs.y}   z={dir.z}");
@@ -191,10 +191,10 @@ public class RadarBox : MonoBehaviour
     {
         y = TextureRes - y;
         screenTex.SetPixel(x, y, color);
-        screenTex.SetPixel(x-1, y, color);
-        screenTex.SetPixel(x+1, y, color);
-        screenTex.SetPixel(x, y-1, color);
-        screenTex.SetPixel(x, y+1, color);
+        screenTex.SetPixel(x - 1, y, color);
+        screenTex.SetPixel(x + 1, y, color);
+        screenTex.SetPixel(x, y - 1, color);
+        screenTex.SetPixel(x, y + 1, color);
     }
 
     private void DrawCircle(int cx, int cy, int radius, Color color)

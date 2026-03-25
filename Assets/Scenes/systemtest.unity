@@ -311,12 +311,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5963307832757667488, guid: f81986d0c73e6584dbbdb8e49887e631, type: 3}
+      propertyPath: RespawnRadii
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5963307832757667488, guid: f81986d0c73e6584dbbdb8e49887e631, type: 3}
       propertyPath: useSpawnPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5963307832757667488, guid: f81986d0c73e6584dbbdb8e49887e631, type: 3}
       propertyPath: useInfiniteBoost
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5963307832757667488, guid: f81986d0c73e6584dbbdb8e49887e631, type: 3}
+      propertyPath: RespawnTargetName
+      value: Earth
       objectReference: {fileID: 0}
     - target: {fileID: 6518131022211454168, guid: f81986d0c73e6584dbbdb8e49887e631, type: 3}
       propertyPath: m_IsActive
@@ -430,7 +438,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100000000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -521,6 +529,71 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65535be6a1c55224eb230d582c936171, type: 3}
+--- !u!1001 &1340350692
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2425910934079869377, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_Name
+      value: Starfield
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915070284582148159, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: FieldRadius
+      value: 200000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915070284582148159, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: useBackground
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 371.7911
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3723.1074
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949555342004671176, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c8d12662a0e31b44fbf7bb99e6458d47, type: 3}
 --- !u!1001 &1501676168
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -637,7 +710,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 4689ea33e132ce2418120249759e1e78, type: 2}
     - target: {fileID: 3700088443673436027, guid: 5e591ef2e6a7c61499b09d98aa56bb43, type: 3}
       propertyPath: RadiusFactor
-      value: 0.1
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3700088443673436027, guid: 5e591ef2e6a7c61499b09d98aa56bb43, type: 3}
+      propertyPath: useSpawnMoons
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3700088443673436027, guid: 5e591ef2e6a7c61499b09d98aa56bb43, type: 3}
       propertyPath: DistanceFactor
@@ -649,6 +726,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3700088443673436027, guid: 5e591ef2e6a7c61499b09d98aa56bb43, type: 3}
       propertyPath: RadiusCompression
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3700088443673436027, guid: 5e591ef2e6a7c61499b09d98aa56bb43, type: 3}
+      propertyPath: DistanceCompression
       value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -728,6 +809,7 @@ SceneRoots:
   - {fileID: 961739753}
   - {fileID: 203844589}
   - {fileID: 231160369}
+  - {fileID: 1340350692}
   - {fileID: 1518679659}
   - {fileID: 1159951012}
   - {fileID: 1671605436}

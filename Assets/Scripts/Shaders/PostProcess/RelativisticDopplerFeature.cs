@@ -189,8 +189,7 @@ public class RelativisticDopplerFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (settings.dopplerMaterial == null || settings.compositeMaterial == null)
-            return;
+        if (settings.dopplerMaterial == null || settings.compositeMaterial == null) return;
 
         settings.dopplerMaterial.SetFloat("_Strength", DopplerStrength);
         settings.dopplerMaterial.SetFloat("_MinHue", DopplerMinHue);
