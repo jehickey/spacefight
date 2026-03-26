@@ -9,6 +9,7 @@ public class KeyboardControl : MonoBehaviour
     [Tooltip("Defines how rapidly a keypress influences the throttle")]
     public float ThrottlePush = 1;
 
+    private PlayerController player;
     private Ship ship;
     private FlightControls flightControls;
 
@@ -29,14 +30,10 @@ public class KeyboardControl : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!ship) ship = GetComponent<Ship>();
+        //if (!ship) ship = GetComponent<Ship>();
         if (flightControls == null) flightControls = new FlightControls();
         flightControls.Enable();
 
-        throttleBox = GetComponentInChildren<ThrottleBox>();
-        steering = GetComponentInChildren<JoystickBox>();
-        weapons = GetComponentInChildren<WeaponsSystem>();
-        jumpDrive=GetComponentInChildren<JumpDrivePanel>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
@@ -60,6 +57,7 @@ public class KeyboardControl : MonoBehaviour
             if (Game.I.Paused) flightControls.Flight.Disable();
             if (!Game.I.Paused) flightControls.Flight.Enable();
         }
+        ConnectToCockpit();
         screenSize = Mathf.Min(Screen.width, Screen.height);
         if (ship)
         {
@@ -91,6 +89,37 @@ public class KeyboardControl : MonoBehaviour
             MouseToStickVector();
         }
 
+    }
+
+
+    private void ConnectToCockpit()
+    {
+        if (!player)                                        //connect to Player
+        {
+            player = GetComponent<PlayerController>();
+            if (!player)
+            {
+                ship = null;
+                return;
+            }
+        }
+        if (!ship)                                          //connect to Ship
+        {
+            ship = player.ship;
+            if (!ship)
+            {
+                throttleBox = null;
+                steering = null;
+                weapons = null;
+                jumpDrive = null;
+                return;
+            }
+        }
+        //Connect to each component as needed
+        if (!throttleBox) throttleBox = ship.GetComponentInChildren<ThrottleBox>();
+        if (!steering) steering = ship.GetComponentInChildren<JoystickBox>();
+        if (!weapons) weapons = ship.GetComponentInChildren<WeaponsSystem>();
+        if (!jumpDrive) jumpDrive = ship.GetComponentInChildren<JumpDrivePanel>();
     }
 
 

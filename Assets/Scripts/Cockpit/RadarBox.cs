@@ -44,7 +44,7 @@ public class RadarBox : MonoBehaviour
         oldRes = 0;
         oldIndex = RadarMaterialIndex;
 
-        myShip = FindFirstObjectByType<KeyboardControl>().GetComponent<Ship>();
+        myShip = GetComponentInParent<Ship>();
     }
 
     void Start()

@@ -284,10 +284,6 @@ public class Body : MonoBehaviour
         return 2.0f * Mathf.PI * Mathf.Sqrt((float)((r * r * r) / GM));
     }
 
-
-
-
-
     private void AdjustTextureDetails()
     {
         TextureDetail = Mathf.InverseLerp(TextureDetailMaxRadius*Radius, TextureDetailMinRadius*Radius, DistanceFromPlayer);

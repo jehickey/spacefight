@@ -285,8 +285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173bff6b4c825fc4a9e172ba7124d078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game
+  player: {fileID: 0}
+  PlayerPrefab: {fileID: 4329679207707271770, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
   PlayerShip: {fileID: 0}
-  PlayerShipPrefab: {fileID: 1100058265375416699, guid: 8c50df436538b0d4cb02823e4139cc96, type: 3}
+  PlayerShipPrefab: {fileID: 5726039617810286261, guid: 05cbe50ba8dc8604d96d9a2ed1056a97, type: 3}
   PlayerTeam: {fileID: 9098588817499902106}
   Paused: 0
   KillCount: 0
@@ -307,8 +309,10 @@ MonoBehaviour:
   useInfiniteBoost: 1
   useSpawnEnemies: 0
   useSpawnPlayer: 1
+  forceRespawn: 0
   RespawnTarget: {fileID: 0}
-  RespawnDistance: 10
+  RespawnTargetName: 
+  RespawnRadii: 10
   RespawnCountdown: 3
   useMonitorScreens: 1
   usePrecache: 1

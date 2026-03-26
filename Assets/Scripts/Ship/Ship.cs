@@ -16,12 +16,6 @@ public class Ship : MonoBehaviour
     public float DistanceFromPlayer;
     private AudioListener listener;
 
-    [SerializeField]
-    private float RumbleIntensity = 0;
-    [SerializeField]
-    private float RumbleFade = 1;
-    [SerializeField]
-    private float RumbleMax = 5;
     private Vector3 baseCamLocalPos;
     private Quaternion baseCamLocalRot;
 
@@ -35,7 +29,7 @@ public class Ship : MonoBehaviour
     private WeaponsSystem Weapons;
     private ThrottleSystem Throttle;
     private SteeringSystem Steering;
-    private Camera cam;
+    //private Camera cam;
     private BotControl pilot;
     private Destructable destructable;
 
@@ -87,14 +81,6 @@ public class Ship : MonoBehaviour
         if (!Weapons) Weapons = GetComponent<WeaponsSystem>();
         if (!pilot) pilot = GetComponent<BotControl>();
         if (!destructable) destructable = GetComponent<Destructable>();
-
-
-        if (!cam) cam = GetComponentInChildren<Camera>();
-        if (cam)
-        {
-            baseCamLocalPos = cam.transform.localPosition;
-            baseCamLocalRot = cam.transform.localRotation;
-        }
     }
 
     private void OnDestroy()
@@ -131,9 +117,14 @@ public class Ship : MonoBehaviour
 
         CollisionChecks();
         //DoRumble();
+        ApplyThrustAndForces();
     }
 
     private void LateUpdate()
+    {
+    }
+
+    private void ApplyThrustAndForces()
     {
         if (Mass <= 0) Mass = .001f;
         Vector3 posDelta = forcedDisplacement / Mass;
@@ -293,30 +284,6 @@ public class Ship : MonoBehaviour
         //RumbleIntensity += value * Time.deltaTime;
         //RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
     }
-
-    private void DoRumble()
-    {
-        RumbleIntensity -= RumbleFade * Time.deltaTime;
-        RumbleIntensity = Mathf.Clamp(RumbleIntensity, 0, RumbleMax);
-        if (cam)
-        {
-            float shakeFrequency = 12f;
-            float shakePosAmplitude = 0.02f;
-            float shakeRotAmplitude = 0.5f;
-
-            float t = Time.time * shakeFrequency;
-
-            // Smooth Perlin noise offsets
-            float px = (Mathf.PerlinNoise(t, 0f) - 0.5f) * shakePosAmplitude * RumbleIntensity;
-            float py = (Mathf.PerlinNoise(0f, t) - 0.5f) * shakePosAmplitude * RumbleIntensity;
-
-            float rx = (Mathf.PerlinNoise(t, t) - 0.5f) * shakeRotAmplitude * RumbleIntensity;
-
-            cam.transform.localPosition = baseCamLocalPos + new Vector3(px, py, 0f);
-            cam.transform.localRotation = baseCamLocalRot * Quaternion.Euler(rx, 0f, 0f);
-        }
-    }
-
 
     public void TakeDamage(float damage, Transform origin = null)
     {

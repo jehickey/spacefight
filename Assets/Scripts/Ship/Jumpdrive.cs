@@ -56,6 +56,15 @@ public class Jumpdrive : MonoBehaviour
 
     void Update()
     {
+        if (!OutsideCam)
+        {
+            PlayerController player = GameObject.FindFirstObjectByType<PlayerController>();
+            if (player)
+            {
+                OutsideCam = player.OutsideCam;
+            }
+        }
+
         if (!InTransit)
         {
             UpdateDestinations();

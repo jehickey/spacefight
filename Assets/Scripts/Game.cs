@@ -8,6 +8,8 @@ public class Game : MonoBehaviour
 {
     public static Game I { get; private set; }
 
+    public PlayerController player;
+    public GameObject PlayerPrefab;
     public Ship PlayerShip;
     public GameObject PlayerShipPrefab;
     public Team PlayerTeam;
@@ -48,11 +50,6 @@ public class Game : MonoBehaviour
 
     private FlightControls controls;
     private OverlayManager overlay;
-
-    //deathcam - if it's ever used
-    private Vector3 deathcamPos = Vector3.zero;
-    private Quaternion deathcamRot = Quaternion.identity;
-    private Camera deathcam;
 
     //fps info
     private float updateInterval = .5f;
@@ -180,25 +177,7 @@ public class Game : MonoBehaviour
             Time.timeScale = 1;
         }
 
-        //maintain info for deathcam
-        if (Camera.main)
-        {
-            deathcamPos = Camera.main.transform.position;
-            deathcamRot = Camera.main.transform.rotation;
-        }
-        if (!PlayerShip && !deathcam)
-        {
-            /*
-            deathcam=new GameObject("Deathcam").AddComponent<Camera>();
-            deathcam.transform.position=deathcamPos;
-            deathcam.transform.rotation=deathcamRot;
-            deathcam.backgroundColor = Color.black;
-            deathcam.clearFlags = CameraClearFlags.SolidColor;
-            deathcam.nearClipPlane = 0.01f;
-            */
-        }
-        if (PlayerShip && deathcam) Destroy(deathcam);
-
+        SetupPlayer();
         UpdateRespawn();
 
         //fps management
@@ -226,6 +205,26 @@ public class Game : MonoBehaviour
         //draw line leading to jump point
         Gizmos.DrawLine(PlayerShip.transform.position, JumpLoc.Coordinate);
     }
+
+    private void SetupPlayer()
+    {
+        if (!player) player = GameObject.FindFirstObjectByType<PlayerController>();
+        if (!player)
+        {
+            if (!PlayerPrefab)
+            {
+                Debug.Log("Player Prefab not assigned in Game!");
+                return;
+            }
+            GameObject obj = Instantiate(PlayerPrefab);
+            if (obj)
+            {
+                player = obj.GetComponent<PlayerController>();
+                if (player) player.transform.position = Vector3.zero;
+            }
+        }
+    }
+
 
     public void AddKill()
     {
@@ -312,11 +311,11 @@ public class Game : MonoBehaviour
         if (PlayerShip) return;
         if (!PlayerShip)
         {
-            //first see if there is a Player somewhere
-            KeyboardControl playerInput = FindFirstObjectByType<KeyboardControl>();
-            if (playerInput)        //found one
+            //first see if there is a Player Ship somewhere
+            PlayerMountPoint mount = FindFirstObjectByType<PlayerMountPoint>();
+            if (mount)        //found one
             {
-                PlayerShip = playerInput.GetComponentInParent<Ship> ();
+                PlayerShip = mount.GetComponentInParent<Ship> ();
                 forceRespawn = false;
                 return;
             }
@@ -327,18 +326,17 @@ public class Game : MonoBehaviour
                 respawnCountdownStart = Time.time;
             }
             respawnCount = RespawnCountdown - (Time.time - respawnCountdownStart);
-            if (respawnCount <= 0) RespawnPlayer();
+            if (respawnCount <= 0) RespawnPlayerShip();
         }
 
 
     }
 
-    private void RespawnPlayer()
+    private void RespawnPlayerShip()
     {
         if (PlayerShip) return;
         if (!PlayerShipPrefab) return;
         respawnCount = 0;
-        if (deathcam) Destroy(deathcam.gameObject);
 
         if (RespawnTargetName == string.Empty) RespawnTargetName = "Jupiter";
         RespawnTarget = GameObject.Find(RespawnTargetName)?.GetComponent<Body>();
