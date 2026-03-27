@@ -462,6 +462,174 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""VR"",
+            ""id"": ""8d318a4f-596b-4232-80d6-0b03611115ff"",
+            ""actions"": [
+                {
+                    ""name"": ""RightPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""320d009e-be66-46f6-b131-6e27963bc45a"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightRotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""979a78e3-0b74-472c-9910-c007eb69278b"",
+                    ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GripRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""da746353-e58a-4dbf-9d2f-0678792d8ffc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TriggerRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""81beff31-ec39-4545-a5d1-1adaa9755d2b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""b64819ed-cf6a-487b-83c1-ebd15372199a"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LeftRotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""895cf4d8-30bc-46c4-bad3-ab051ac561cc"",
+                    ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GripLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""cb95d29f-a8b4-48fa-81d4-07372b7aa56c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TriggerLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""8f60c0be-60ad-42cb-98f3-2ba5497c5aa1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""043c2655-7206-4177-a508-95b35f59f026"",
+                    ""path"": ""<XRController>{RightHand}/devicePosition"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f37b4ae-cfc6-47f9-ac04-1366ac6ef3ba"",
+                    ""path"": ""<XRController>{RightHand}/deviceRotation"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""515a7955-865a-49db-b815-dea12c72ebf8"",
+                    ""path"": ""<OculusTouchController>{RightHand}/gripPressed"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GripRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1531c93a-798b-4f73-a77e-b3fb8b32a3b2"",
+                    ""path"": ""<XRController>{RightHand}/triggerPressed"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TriggerRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""795e18d1-7970-41af-888b-1eb39d9699a2"",
+                    ""path"": ""<XRController>{LeftHand}/devicePosition"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""657a3909-521d-4e68-8f37-d42779fe2b17"",
+                    ""path"": ""<XRController>{LeftHand}/deviceRotation"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b9676dc-ad54-4912-a5ab-7bad155d6e07"",
+                    ""path"": ""<OculusTouchController>{LeftHand}/gripPressed"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GripLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""16fe40dc-9d12-49f8-9132-35cf06dcd7f8"",
+                    ""path"": ""<XRController>{LeftHand}/triggerPressed"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TriggerLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -483,12 +651,23 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
         m_Game_ShowFPS = m_Game.FindAction("ShowFPS", throwIfNotFound: true);
         m_Game_ToggleEnemies = m_Game.FindAction("ToggleEnemies", throwIfNotFound: true);
+        // VR
+        m_VR = asset.FindActionMap("VR", throwIfNotFound: true);
+        m_VR_RightPosition = m_VR.FindAction("RightPosition", throwIfNotFound: true);
+        m_VR_RightRotation = m_VR.FindAction("RightRotation", throwIfNotFound: true);
+        m_VR_GripRight = m_VR.FindAction("GripRight", throwIfNotFound: true);
+        m_VR_TriggerRight = m_VR.FindAction("TriggerRight", throwIfNotFound: true);
+        m_VR_LeftPosition = m_VR.FindAction("LeftPosition", throwIfNotFound: true);
+        m_VR_LeftRotation = m_VR.FindAction("LeftRotation", throwIfNotFound: true);
+        m_VR_GripLeft = m_VR.FindAction("GripLeft", throwIfNotFound: true);
+        m_VR_TriggerLeft = m_VR.FindAction("TriggerLeft", throwIfNotFound: true);
     }
 
     ~@FlightControls()
     {
         UnityEngine.Debug.Assert(!m_Flight.enabled, "This will cause a leak and performance issues, FlightControls.Flight.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Game.enabled, "This will cause a leak and performance issues, FlightControls.Game.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_VR.enabled, "This will cause a leak and performance issues, FlightControls.VR.Disable() has not been called.");
     }
 
     /// <summary>
@@ -873,6 +1052,179 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GameActions" /> instance referencing this action map.
     /// </summary>
     public GameActions @Game => new GameActions(this);
+
+    // VR
+    private readonly InputActionMap m_VR;
+    private List<IVRActions> m_VRActionsCallbackInterfaces = new List<IVRActions>();
+    private readonly InputAction m_VR_RightPosition;
+    private readonly InputAction m_VR_RightRotation;
+    private readonly InputAction m_VR_GripRight;
+    private readonly InputAction m_VR_TriggerRight;
+    private readonly InputAction m_VR_LeftPosition;
+    private readonly InputAction m_VR_LeftRotation;
+    private readonly InputAction m_VR_GripLeft;
+    private readonly InputAction m_VR_TriggerLeft;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "VR".
+    /// </summary>
+    public struct VRActions
+    {
+        private @FlightControls m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public VRActions(@FlightControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "VR/RightPosition".
+        /// </summary>
+        public InputAction @RightPosition => m_Wrapper.m_VR_RightPosition;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/RightRotation".
+        /// </summary>
+        public InputAction @RightRotation => m_Wrapper.m_VR_RightRotation;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/GripRight".
+        /// </summary>
+        public InputAction @GripRight => m_Wrapper.m_VR_GripRight;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/TriggerRight".
+        /// </summary>
+        public InputAction @TriggerRight => m_Wrapper.m_VR_TriggerRight;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/LeftPosition".
+        /// </summary>
+        public InputAction @LeftPosition => m_Wrapper.m_VR_LeftPosition;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/LeftRotation".
+        /// </summary>
+        public InputAction @LeftRotation => m_Wrapper.m_VR_LeftRotation;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/GripLeft".
+        /// </summary>
+        public InputAction @GripLeft => m_Wrapper.m_VR_GripLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/TriggerLeft".
+        /// </summary>
+        public InputAction @TriggerLeft => m_Wrapper.m_VR_TriggerLeft;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_VR; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="VRActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(VRActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="VRActions" />
+        public void AddCallbacks(IVRActions instance)
+        {
+            if (instance == null || m_Wrapper.m_VRActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_VRActionsCallbackInterfaces.Add(instance);
+            @RightPosition.started += instance.OnRightPosition;
+            @RightPosition.performed += instance.OnRightPosition;
+            @RightPosition.canceled += instance.OnRightPosition;
+            @RightRotation.started += instance.OnRightRotation;
+            @RightRotation.performed += instance.OnRightRotation;
+            @RightRotation.canceled += instance.OnRightRotation;
+            @GripRight.started += instance.OnGripRight;
+            @GripRight.performed += instance.OnGripRight;
+            @GripRight.canceled += instance.OnGripRight;
+            @TriggerRight.started += instance.OnTriggerRight;
+            @TriggerRight.performed += instance.OnTriggerRight;
+            @TriggerRight.canceled += instance.OnTriggerRight;
+            @LeftPosition.started += instance.OnLeftPosition;
+            @LeftPosition.performed += instance.OnLeftPosition;
+            @LeftPosition.canceled += instance.OnLeftPosition;
+            @LeftRotation.started += instance.OnLeftRotation;
+            @LeftRotation.performed += instance.OnLeftRotation;
+            @LeftRotation.canceled += instance.OnLeftRotation;
+            @GripLeft.started += instance.OnGripLeft;
+            @GripLeft.performed += instance.OnGripLeft;
+            @GripLeft.canceled += instance.OnGripLeft;
+            @TriggerLeft.started += instance.OnTriggerLeft;
+            @TriggerLeft.performed += instance.OnTriggerLeft;
+            @TriggerLeft.canceled += instance.OnTriggerLeft;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="VRActions" />
+        private void UnregisterCallbacks(IVRActions instance)
+        {
+            @RightPosition.started -= instance.OnRightPosition;
+            @RightPosition.performed -= instance.OnRightPosition;
+            @RightPosition.canceled -= instance.OnRightPosition;
+            @RightRotation.started -= instance.OnRightRotation;
+            @RightRotation.performed -= instance.OnRightRotation;
+            @RightRotation.canceled -= instance.OnRightRotation;
+            @GripRight.started -= instance.OnGripRight;
+            @GripRight.performed -= instance.OnGripRight;
+            @GripRight.canceled -= instance.OnGripRight;
+            @TriggerRight.started -= instance.OnTriggerRight;
+            @TriggerRight.performed -= instance.OnTriggerRight;
+            @TriggerRight.canceled -= instance.OnTriggerRight;
+            @LeftPosition.started -= instance.OnLeftPosition;
+            @LeftPosition.performed -= instance.OnLeftPosition;
+            @LeftPosition.canceled -= instance.OnLeftPosition;
+            @LeftRotation.started -= instance.OnLeftRotation;
+            @LeftRotation.performed -= instance.OnLeftRotation;
+            @LeftRotation.canceled -= instance.OnLeftRotation;
+            @GripLeft.started -= instance.OnGripLeft;
+            @GripLeft.performed -= instance.OnGripLeft;
+            @GripLeft.canceled -= instance.OnGripLeft;
+            @TriggerLeft.started -= instance.OnTriggerLeft;
+            @TriggerLeft.performed -= instance.OnTriggerLeft;
+            @TriggerLeft.canceled -= instance.OnTriggerLeft;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="VRActions.UnregisterCallbacks(IVRActions)" />.
+        /// </summary>
+        /// <seealso cref="VRActions.UnregisterCallbacks(IVRActions)" />
+        public void RemoveCallbacks(IVRActions instance)
+        {
+            if (m_Wrapper.m_VRActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="VRActions.AddCallbacks(IVRActions)" />
+        /// <seealso cref="VRActions.RemoveCallbacks(IVRActions)" />
+        /// <seealso cref="VRActions.UnregisterCallbacks(IVRActions)" />
+        public void SetCallbacks(IVRActions instance)
+        {
+            foreach (var item in m_Wrapper.m_VRActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_VRActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="VRActions" /> instance referencing this action map.
+    /// </summary>
+    public VRActions @VR => new VRActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Flight" which allows adding and removing callbacks.
     /// </summary>
@@ -979,5 +1331,69 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleEnemies(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "VR" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="VRActions.AddCallbacks(IVRActions)" />
+    /// <seealso cref="VRActions.RemoveCallbacks(IVRActions)" />
+    public interface IVRActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "RightPosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightPosition(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightRotation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightRotation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GripRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGripRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TriggerRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTriggerRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftPosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftPosition(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftRotation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftRotation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GripLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGripLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TriggerLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTriggerLeft(InputAction.CallbackContext context);
     }
 }

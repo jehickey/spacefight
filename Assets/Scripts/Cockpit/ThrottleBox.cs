@@ -7,6 +7,7 @@ public class ThrottleBox : MonoBehaviour
     public float NeutralPosition = .5f;
     public float NeutralDriftRate = .5f;
     public bool Boost = false;
+    public float GrabPushRate = 2f;
 
     [SerializeField]
     private Vector3 ThrowCenter = Vector3.zero;
@@ -20,6 +21,7 @@ public class ThrottleBox : MonoBehaviour
     [SerializeField]
     private Transform ThrottleBar;
 
+    private GrabMoveLinear grabHandle;
 
     private ThrottleSystem throttleSystem;
 
@@ -31,10 +33,17 @@ public class ThrottleBox : MonoBehaviour
     private void OnEnable()
     {
         if (!throttleSystem) throttleSystem = GetComponentInParent<ThrottleSystem>();
+        if (!grabHandle) grabHandle = GetComponentInChildren<GrabMoveLinear>();
     }
 
     void Update()
     {
+        //accept input from grabber
+        if (grabHandle)
+        {
+            InputPosition += grabHandle.linearDelta * GrabPushRate * Time.deltaTime;
+        }
+
         //neutral drift
         InputPosition = Mathf.Lerp(InputPosition, NeutralPosition, Time.deltaTime * NeutralDriftRate);
 
