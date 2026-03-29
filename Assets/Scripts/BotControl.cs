@@ -117,7 +117,7 @@ public class BotControl : MonoBehaviour
         ship ??= GetComponent<Ship>();
         if (!ship) return;
 
-        if (steering) steering.Stick = Vector3.zero;
+        if (steering) steering.Input = Vector3.zero;
 
 
         UpdateThreats();
@@ -290,7 +290,7 @@ public class BotControl : MonoBehaviour
         precisionScale *= (1f-factorBreakoff);
         float yaw = Mathf.Clamp(localTargetDir.x, -1f, 1f) * precisionScale;
         float pitch = Mathf.Clamp(localTargetDir.y, -1f, 1f) * precisionScale;
-        if (steering) steering.Stick += new Vector3(yaw, steering.Stick.y, -pitch);
+        if (steering) steering.Input += new Vector3(yaw, steering.Input.y, -pitch);
     }
 
     public static Vector3 Aim(GameObject shooter, GameObject target)
@@ -343,13 +343,13 @@ public class BotControl : MonoBehaviour
         precisionScale *= factorBreakoff * 2f;// * (angleToTarget/180f);   
         float yaw = Mathf.Clamp(localBreakaway.x, -1f, 1f) * precisionScale;
         float pitch = Mathf.Clamp(localBreakaway.y, -1f, 1f) * precisionScale;
-        if (steering) steering.Stick += new Vector3(yaw, steering.Stick.y, -pitch);
+        if (steering) steering.Input += new Vector3(yaw, steering.Input.y, -pitch);
     }
 
 
     void Rolling()
     {
-        float yaw = steering.Stick.x;
+        float yaw = steering.Input.x;
         //signed roll angle around the forward axis
         float rollTurn = -yaw * 0.75f;      //roll a bit into the turn
         float rollAngle = Vector3.SignedAngle(transform.up, Vector3.up, transform.forward);
@@ -358,7 +358,7 @@ public class BotControl : MonoBehaviour
         //bias rolling on turns, turn upward when not turning
         float turnAmount = Mathf.Abs(yaw);
         float roll = Mathf.Lerp(rollLevel, rollTurn, turnAmount);
-        if (steering) steering.Stick.y = roll;
+        if (steering) steering.Input.y = roll;
 
     }
 

@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrabMoveLinear : MonoBehaviour
+public class GrabMoveLinear : GrabMove
 {
     public Vector3 movementDir = Vector3.zero;
-    public float linearDelta;
-    private List<Grabber> grabbers = new List<Grabber>();
+    //public float linearDelta;
 
-    void Update()
+    protected override void Update()
     {
-     GetGrabberDelta();   
+        base.Update();
+        GetGrabberDelta();   
     }
 
     private void OnDrawGizmos()
@@ -25,15 +25,6 @@ public class GrabMoveLinear : MonoBehaviour
         }
     }
 
-    public void Grabbed(Grabber grabbedBy)
-    {
-        if (!grabbers.Contains(grabbedBy)) grabbers.Add(grabbedBy);
-    }
-
-    public void Released(Grabber grabbedBy)
-    {
-        if (grabbers.Contains(grabbedBy)) grabbers.Remove(grabbedBy);
-    }
 
     private void GetGrabberDelta()
     {
@@ -42,22 +33,10 @@ public class GrabMoveLinear : MonoBehaviour
             linearDelta = 0;
             return;
         }
-
-        //get averaged grabcount position
-        Vector3 grabPos = grabbers[0].transform.position;
-        if (grabbers.Count > 1)
-        {
-            for (int i = 1; i < grabbers.Count; i++)
-            {
-                grabPos += grabbers[i].transform.position;
-            }
-            grabPos /= grabbers.Count;
-        }
-
         movementDir.Normalize();
-        Vector3 worldDelta = grabPos - transform.position;
-        Vector3 localDelta = transform.InverseTransformDirection(worldDelta);
-        linearDelta = Vector3.Dot(localDelta, movementDir);
+        Vector3 worldDelta = GetGrabberPosition() - transform.position;
+        Delta = transform.InverseTransformDirection(worldDelta);
+        linearDelta = Vector3.Dot(Delta, movementDir);
 
     }
 

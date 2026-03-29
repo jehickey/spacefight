@@ -8,6 +8,8 @@ public class ThrottleBox : MonoBehaviour
     public float NeutralDriftRate = .5f;
     public bool Boost = false;
     public float GrabPushRate = 2f;
+    public bool TriggerPressed = false;      //need a timeout for this if it's not reinforced regularly
+
 
     [SerializeField]
     private Vector3 ThrowCenter = Vector3.zero;
@@ -22,6 +24,7 @@ public class ThrottleBox : MonoBehaviour
     private Transform ThrottleBar;
 
     private GrabMoveLinear grabHandle;
+    private GrabTrigger trigger;
 
     private ThrottleSystem throttleSystem;
 
@@ -34,6 +37,7 @@ public class ThrottleBox : MonoBehaviour
     {
         if (!throttleSystem) throttleSystem = GetComponentInParent<ThrottleSystem>();
         if (!grabHandle) grabHandle = GetComponentInChildren<GrabMoveLinear>();
+        if (!trigger) trigger = GetComponentInChildren<GrabTrigger>();
     }
 
     void Update()
@@ -42,6 +46,12 @@ public class ThrottleBox : MonoBehaviour
         if (grabHandle)
         {
             InputPosition += grabHandle.linearDelta * GrabPushRate * Time.deltaTime;
+        }
+
+        if (trigger)
+        {
+            Boost = trigger.Pressed;
+            //if (trigger.Pressed) Debug.Log("Boost!");
         }
 
         //neutral drift

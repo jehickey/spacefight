@@ -69,7 +69,7 @@ public class Cannon : MonoBehaviour
         }
 
 
-        steering.Stick = BotControl.Aim(gameObject, Target) * precision;
+        steering.Input = BotControl.Aim(gameObject, Target) * precision;
     }
 
 

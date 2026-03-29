@@ -538,6 +538,51 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HeadsetTracked"",
+                    ""type"": ""Button"",
+                    ""id"": ""08a8640f-36d7-45c0-9471-e90cf86c23ba"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""HeadPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""91c12d30-b2f0-4d21-8683-359a74064f36"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""HeadRotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""7e560cac-8927-4389-b4ac-aee0857c1f11"",
+                    ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LeftThumbstickPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd4adac9-b306-4efc-a585-ed32d74eead3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightThumbstickPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d8fc999-9af8-429d-a81b-29b69ad5c3ed"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -628,6 +673,61 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""TriggerLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c5a81e71-64eb-49c6-9172-1aeee9e5906e"",
+                    ""path"": ""<OpenXRHmd>/isTracked"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeadsetTracked"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6aa35aa2-39ee-4402-b13c-2e5ac6279b1c"",
+                    ""path"": ""<XRHMD>/centerEyePosition"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeadPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41f933be-5946-4306-92ba-fdafec99aeaa"",
+                    ""path"": ""<XRHMD>/centerEyeRotation"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeadRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd38320b-fbca-40a4-93ec-f757c1ac8771"",
+                    ""path"": ""<OculusTouchController>{LeftHand}/thumbstickClicked"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftThumbstickPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61551b03-f80f-4654-92d1-b5d7fecab809"",
+                    ""path"": ""<OculusTouchController>/thumbstickClicked"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightThumbstickPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -661,6 +761,11 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_VR_LeftRotation = m_VR.FindAction("LeftRotation", throwIfNotFound: true);
         m_VR_GripLeft = m_VR.FindAction("GripLeft", throwIfNotFound: true);
         m_VR_TriggerLeft = m_VR.FindAction("TriggerLeft", throwIfNotFound: true);
+        m_VR_HeadsetTracked = m_VR.FindAction("HeadsetTracked", throwIfNotFound: true);
+        m_VR_HeadPosition = m_VR.FindAction("HeadPosition", throwIfNotFound: true);
+        m_VR_HeadRotation = m_VR.FindAction("HeadRotation", throwIfNotFound: true);
+        m_VR_LeftThumbstickPress = m_VR.FindAction("LeftThumbstickPress", throwIfNotFound: true);
+        m_VR_RightThumbstickPress = m_VR.FindAction("RightThumbstickPress", throwIfNotFound: true);
     }
 
     ~@FlightControls()
@@ -1064,6 +1169,11 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_VR_LeftRotation;
     private readonly InputAction m_VR_GripLeft;
     private readonly InputAction m_VR_TriggerLeft;
+    private readonly InputAction m_VR_HeadsetTracked;
+    private readonly InputAction m_VR_HeadPosition;
+    private readonly InputAction m_VR_HeadRotation;
+    private readonly InputAction m_VR_LeftThumbstickPress;
+    private readonly InputAction m_VR_RightThumbstickPress;
     /// <summary>
     /// Provides access to input actions defined in input action map "VR".
     /// </summary>
@@ -1107,6 +1217,26 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "VR/TriggerLeft".
         /// </summary>
         public InputAction @TriggerLeft => m_Wrapper.m_VR_TriggerLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/HeadsetTracked".
+        /// </summary>
+        public InputAction @HeadsetTracked => m_Wrapper.m_VR_HeadsetTracked;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/HeadPosition".
+        /// </summary>
+        public InputAction @HeadPosition => m_Wrapper.m_VR_HeadPosition;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/HeadRotation".
+        /// </summary>
+        public InputAction @HeadRotation => m_Wrapper.m_VR_HeadRotation;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/LeftThumbstickPress".
+        /// </summary>
+        public InputAction @LeftThumbstickPress => m_Wrapper.m_VR_LeftThumbstickPress;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/RightThumbstickPress".
+        /// </summary>
+        public InputAction @RightThumbstickPress => m_Wrapper.m_VR_RightThumbstickPress;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1157,6 +1287,21 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @TriggerLeft.started += instance.OnTriggerLeft;
             @TriggerLeft.performed += instance.OnTriggerLeft;
             @TriggerLeft.canceled += instance.OnTriggerLeft;
+            @HeadsetTracked.started += instance.OnHeadsetTracked;
+            @HeadsetTracked.performed += instance.OnHeadsetTracked;
+            @HeadsetTracked.canceled += instance.OnHeadsetTracked;
+            @HeadPosition.started += instance.OnHeadPosition;
+            @HeadPosition.performed += instance.OnHeadPosition;
+            @HeadPosition.canceled += instance.OnHeadPosition;
+            @HeadRotation.started += instance.OnHeadRotation;
+            @HeadRotation.performed += instance.OnHeadRotation;
+            @HeadRotation.canceled += instance.OnHeadRotation;
+            @LeftThumbstickPress.started += instance.OnLeftThumbstickPress;
+            @LeftThumbstickPress.performed += instance.OnLeftThumbstickPress;
+            @LeftThumbstickPress.canceled += instance.OnLeftThumbstickPress;
+            @RightThumbstickPress.started += instance.OnRightThumbstickPress;
+            @RightThumbstickPress.performed += instance.OnRightThumbstickPress;
+            @RightThumbstickPress.canceled += instance.OnRightThumbstickPress;
         }
 
         /// <summary>
@@ -1192,6 +1337,21 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @TriggerLeft.started -= instance.OnTriggerLeft;
             @TriggerLeft.performed -= instance.OnTriggerLeft;
             @TriggerLeft.canceled -= instance.OnTriggerLeft;
+            @HeadsetTracked.started -= instance.OnHeadsetTracked;
+            @HeadsetTracked.performed -= instance.OnHeadsetTracked;
+            @HeadsetTracked.canceled -= instance.OnHeadsetTracked;
+            @HeadPosition.started -= instance.OnHeadPosition;
+            @HeadPosition.performed -= instance.OnHeadPosition;
+            @HeadPosition.canceled -= instance.OnHeadPosition;
+            @HeadRotation.started -= instance.OnHeadRotation;
+            @HeadRotation.performed -= instance.OnHeadRotation;
+            @HeadRotation.canceled -= instance.OnHeadRotation;
+            @LeftThumbstickPress.started -= instance.OnLeftThumbstickPress;
+            @LeftThumbstickPress.performed -= instance.OnLeftThumbstickPress;
+            @LeftThumbstickPress.canceled -= instance.OnLeftThumbstickPress;
+            @RightThumbstickPress.started -= instance.OnRightThumbstickPress;
+            @RightThumbstickPress.performed -= instance.OnRightThumbstickPress;
+            @RightThumbstickPress.canceled -= instance.OnRightThumbstickPress;
         }
 
         /// <summary>
@@ -1395,5 +1555,40 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTriggerLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HeadsetTracked" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHeadsetTracked(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HeadPosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHeadPosition(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HeadRotation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHeadRotation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftThumbstickPress" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftThumbstickPress(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightThumbstickPress" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightThumbstickPress(InputAction.CallbackContext context);
     }
 }

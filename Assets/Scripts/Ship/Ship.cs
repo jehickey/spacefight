@@ -99,7 +99,7 @@ public class Ship : MonoBehaviour
         {
             pilot.enabled = (FreshSpawnCountdown == 0);
             if (!pilot.enabled && Throttle) Throttle.Input = 1;
-            if (!pilot.enabled && Steering) Steering.Stick = Vector3.zero;
+            if (!pilot.enabled && Steering) Steering.Input = Vector3.zero;
         }
         if (FreshSpawnCountdown != 0)
         {

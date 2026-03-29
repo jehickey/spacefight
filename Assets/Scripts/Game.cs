@@ -1,7 +1,10 @@
-using System.Collections.Generic;
 using Shapes;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 [DisallowMultipleComponent]
 public class Game : MonoBehaviour
@@ -16,6 +19,10 @@ public class Game : MonoBehaviour
     public bool Paused = false;
     public int KillCount = 0;
     public int DeathCount = 0;
+
+    [ReadOnly]
+    private UnityEngine.XR.InputDevice headDevice;
+    public bool VRHeadset = false;
 
     [Header("Jump Drive")]
     [SerializeField]
@@ -194,6 +201,7 @@ public class Game : MonoBehaviour
         if (doClearJump) ClearJump();
         JumpLocationCount = JumpLoc ? 1 : 0;
 
+        VRHeadset = IsHeadsetWorn();
     }
 
 
@@ -205,6 +213,39 @@ public class Game : MonoBehaviour
         //draw line leading to jump point
         Gizmos.DrawLine(PlayerShip.transform.position, JumpLoc.Coordinate);
     }
+
+
+    public static bool IsVRActive()
+    {
+        List<XRDisplaySubsystem> displays = new List<XRDisplaySubsystem>();
+        SubsystemManager.GetSubsystems(displays);
+        foreach (var d in displays)
+        {
+            if (d.running)
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsHeadsetWorn()
+    {
+        if (!IsVRActive()) return false;
+
+        if (!headDevice.isValid)
+        {
+            List<UnityEngine.XR.InputDevice> devices = new List<UnityEngine.XR.InputDevice>();
+            InputDevices.GetDevicesAtXRNode(XRNode.Head, devices);
+            if (devices.Count > 0)
+            {
+                headDevice = devices[0];
+            }
+        }
+        if (!headDevice.isValid) return false;
+        bool userPresent = false;
+        headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out userPresent);
+        return userPresent;
+    }
+
 
     private void SetupPlayer()
     {

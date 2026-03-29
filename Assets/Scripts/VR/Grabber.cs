@@ -14,9 +14,9 @@ public class Grabber : MonoBehaviour
 
     [Header("Status")]
     [ReadOnly]
-    public GrabMoveLinear hovering;
+    public GrabMove hovering;
     [ReadOnly]
-    public GrabMoveLinear holding;
+    public GrabMove holding;
 
     [ReadOnly]
     public Color HandColor = Color.white;
@@ -30,7 +30,8 @@ public class Grabber : MonoBehaviour
 
     private FlightControls controls;
     private Material handMaterial;
-    private SphereCollider trigger;
+    private new SphereCollider collider;
+    private GrabTrigger holdTrigger;
 
     public enum LeftRight
     {
@@ -44,8 +45,8 @@ public class Grabber : MonoBehaviour
         if (controls == null) controls = new FlightControls();
         controls.Enable();
 
-        trigger = GetComponent<SphereCollider>();
-        trigger.isTrigger = true;
+        collider = GetComponent<SphereCollider>();
+        collider.isTrigger = true;
 
         if (!HandObject)
         {
@@ -59,14 +60,14 @@ public class Grabber : MonoBehaviour
         }
     }
 
-    void Update()
+    void LateUpdate()
     {
         bool wasGripping = Gripping;
         GripStart = false;
         UpdatePositions();
-        if (GripStart) Debug.Log("Grip Start");
+        //if (GripStart) Debug.Log("Grip Start");
         //if (Gripping) Debug.Log("Gripping");
-        if (wasGripping && !Gripping) Debug.Log("Grip Release");
+        //if (wasGripping && !Gripping) Debug.Log("Grip Release");
 
         if (GripStart && hovering)
         {
@@ -74,7 +75,8 @@ public class Grabber : MonoBehaviour
             if (!holding)
             {
                 holding = hovering;
-                holding.Grabbed(this);
+                holding.DoGrab(this);
+                holdTrigger = holding.GetComponent<GrabTrigger>();
                 //Debug.Log($"Grabbing {holding.name}");
             }
         }
@@ -82,13 +84,16 @@ public class Grabber : MonoBehaviour
         if (!Gripping && holding)
         {
             //Debug.Log($"Releasing {holding.name}");
-            holding.Released(this);
+            holding.DoRelease(this);
             holding = null;
+            holdTrigger.Pressed= false;
+            holdTrigger = null;
         }
 
+        UpdateButtons();
         UpdateColor();
         LockGrabbingHand();
-        UpdateTrigger();
+        UpdateCollider();
 
     }
 
@@ -96,7 +101,7 @@ public class Grabber : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log($"TriggerEnter {other.name}");
-        GrabMoveLinear grab = other.GetComponent<GrabMoveLinear>();
+        GrabMove grab = other.GetComponent<GrabMove>();
         if (!grab) return;
         if (!holding) hovering = grab;
     }
@@ -104,15 +109,15 @@ public class Grabber : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         //Debug.Log($"TriggerExit {other.name}");
-        GrabMoveLinear grab = other.GetComponent<GrabMoveLinear>();
+        GrabMove grab = other.GetComponent<GrabMove>();
         if (!grab) return;
         hovering = null;
     }
 
     private void OnValidate()
     {
-        if (!trigger) trigger = GetComponent<SphereCollider>();
-        UpdateTrigger();
+        if (!collider) collider = GetComponent<SphereCollider>();
+        UpdateCollider();
     }
 
 
@@ -131,6 +136,21 @@ public class Grabber : MonoBehaviour
             transform.localRotation = controls.VR.RightRotation.ReadValue<Quaternion>();
             GripStart = controls.VR.GripRight.WasPressedThisFrame();
             Gripping = controls.VR.GripRight.IsPressed();
+        }
+    }
+
+    private void UpdateButtons()
+    {
+        if (!holding || !holdTrigger) return;
+        if (Hand == LeftRight.Left)
+        {
+            holdTrigger.Pressed = controls.VR.TriggerLeft.IsPressed();
+            if (controls.VR.TriggerLeft.WasPressedThisFrame()) holdTrigger.DoPress();
+        }
+        if (Hand == LeftRight.Right)
+        {
+            holdTrigger.Pressed = controls.VR.TriggerRight.IsPressed();
+            if (controls.VR.TriggerRight.WasPressedThisFrame()) holdTrigger.DoPress();
         }
     }
 
@@ -157,9 +177,9 @@ public class Grabber : MonoBehaviour
     }
 
 
-    private void UpdateTrigger()
+    private void UpdateCollider()
     {
-        if (trigger) trigger.radius = GrabTriggerRadius;
+        if (collider) collider.radius = GrabTriggerRadius;
         if (TriggerArea)
         {
             if (Gripping)

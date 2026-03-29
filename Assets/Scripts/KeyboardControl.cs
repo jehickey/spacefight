@@ -15,10 +15,10 @@ public class KeyboardControl : MonoBehaviour
 
     private float screenSize;
 
-    public ThrottleBox throttleBox;
-    public JoystickBox steering;
-    public WeaponsSystem weapons;
+    public ThrottleBox throttle;
+    public JoystickBox joystick;
     public JumpDrivePanel jumpDrive;
+
 
     private FlightControls controls
     {
@@ -63,23 +63,28 @@ public class KeyboardControl : MonoBehaviour
         {
             //steering.SetPitch(controls.Flight.Pitch.ReadValue<float>());
             //ship.SetYaw(controls.Flight.Yaw.ReadValue<float>());
-            if (steering) steering.SetRoll(-controls.Flight.Roll.ReadValue<float>());
+            if (joystick) joystick.SetRoll(-controls.Flight.Roll.ReadValue<float>());
 
             //throttle control
-            if (throttleBox)
+            if (throttle)
             {
                 if (controls.Flight.Throttle.IsPressed())
                 {
                     float input = controls.Flight.Throttle.ReadValue<float>();
                     input *= ThrottlePush * Time.deltaTime;
-                    throttleBox.InputPosition += input;
+                    throttle.InputPosition += input;
                 }
 
-                if (throttleBox) {
-                    throttleBox.Boost = controls.Flight.Boost.IsPressed();
+                if (throttle) {
+                    throttle.Boost = controls.Flight.Boost.IsPressed();
                 }
             }
-            if (controls.Flight.Fire.IsPressed() && weapons) weapons.Fire();
+
+            //work the fire button, but only if not in VR
+            if (joystick && !Game.I.VRHeadset)
+            {
+                joystick.TriggerPressed = controls.Flight.Fire.IsPressed();
+            }
 
             if (jumpDrive)
             {
@@ -108,17 +113,15 @@ public class KeyboardControl : MonoBehaviour
             ship = player.ship;
             if (!ship)
             {
-                throttleBox = null;
-                steering = null;
-                weapons = null;
+                throttle = null;
+                joystick = null;
                 jumpDrive = null;
                 return;
             }
         }
         //Connect to each component as needed
-        if (!throttleBox) throttleBox = ship.GetComponentInChildren<ThrottleBox>();
-        if (!steering) steering = ship.GetComponentInChildren<JoystickBox>();
-        if (!weapons) weapons = ship.GetComponentInChildren<WeaponsSystem>();
+        if (!throttle) throttle = ship.GetComponentInChildren<ThrottleBox>();
+        if (!joystick) joystick = ship.GetComponentInChildren<JoystickBox>();
         if (!jumpDrive) jumpDrive = ship.GetComponentInChildren<JumpDrivePanel>();
     }
 
@@ -126,34 +129,32 @@ public class KeyboardControl : MonoBehaviour
     public void MouseToStickVector()
     {
         if (!MouseSteering) return;
+        if (Game.I.VRHeadset) return;
         Vector2 mousePos = controls.Flight.PitchYaw.ReadValue<Vector2>();
 
-        // Convert mouse position into a centered coordinate system
+        //convert mouse position into a centered coordinate system
         mousePos = mousePos - new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 
-        // Compute radius in pixels
+        //compute radius in pixels
         float deadzoneRadius = screenSize * Game.I.StickControlDeadzone;
         float limitRadius = screenSize * Game.I.StickControlLimit;
 
-        // Distance from center
+        //distance from center
         float dist = mousePos.magnitude;
         if (dist < deadzoneRadius) dist=0;
 
-        // Clamp to limit radius
+        //clamp to limit radius
         if (dist > limitRadius)
             mousePos = mousePos.normalized * limitRadius;
 
-        // Normalize into 0..1 range between deadzone and limit
+        //normalize into 0..1 range between deadzone and limit
         float t = Mathf.InverseLerp(deadzoneRadius, limitRadius, mousePos.magnitude);
 
-        // Direction (unit vector)
+        //direction (unit vector)
         Vector2 dir = mousePos.normalized;
 
-        // Final circular stick vector (x = yaw, z = pitch)
-        //Vector3 result = new Vector3(dir.x * t, 0f, dir.y * t);
-        steering.StickPosition.x = dir.x * t;
-        steering.StickPosition.z = -dir.y * t;
-        if (Game.I.InvertPitchAxis) steering.StickPosition.z *= -1;
+        //final circular stick vector (x = yaw, z = pitch)
+        joystick.SetStick(new Vector3(dir.x * t, 0, -dir.y * t));
     }
 
 

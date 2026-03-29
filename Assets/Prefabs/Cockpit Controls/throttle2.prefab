@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6818260249636710800}
   - component: {fileID: 772248234526041898}
   - component: {fileID: 2701939119145878982}
+  - component: {fileID: 2987488200241338128}
   m_Layer: 0
   m_Name: Grab Proxy
   m_TagString: Untagged
@@ -94,8 +95,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54683cf189a2cef429edf511b854cf3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabMove
+  Grabbed: 0
   movementDir: {x: 0, y: 0, z: 1}
   linearDelta: 0
+--- !u!114 &2987488200241338128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023792901347532471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c997f32e02197a42b8fd824e5454251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrabTrigger
+  Pressed: 0
 --- !u!1001 &8662578240866072846
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -118,15 +133,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9de3c241b8dd9349aa4cc3946d8e252, type: 3}
       propertyPath: m_LocalScale.x
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9de3c241b8dd9349aa4cc3946d8e252, type: 3}
       propertyPath: m_LocalScale.y
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9de3c241b8dd9349aa4cc3946d8e252, type: 3}
       propertyPath: m_LocalScale.z
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9de3c241b8dd9349aa4cc3946d8e252, type: 3}
       propertyPath: m_LocalPosition.x
@@ -255,6 +270,7 @@ MonoBehaviour:
   NeutralDriftRate: 1
   Boost: 0
   GrabPushRate: 20
+  TriggerPressed: 0
   ThrowCenter: {x: 0, y: 0, z: 0}
   ThrowAxis: {x: 0, y: 0, z: 1}
   ThrowMin: -0.018

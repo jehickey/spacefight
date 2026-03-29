@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
         if (doAlign)
         {
             AlignToShip ();
-            doAlign = false;
+            //doAlign = false;
         }
     }
 
