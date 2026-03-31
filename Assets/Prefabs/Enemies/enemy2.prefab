@@ -71,6 +71,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.x
       value: 46.377514
       objectReference: {fileID: 0}
@@ -185,8 +197,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Trail
   MaxParticles: 100
   depositionRate: 40
-  ParticleSize: 0.01
-  ParticleShrinkRate: 0.01
+  ParticleSize: 0.1
+  ParticleShrinkRate: 0.1
   ParticleDetail: 0
   material: {fileID: 0}
   mesh: {fileID: 0}
@@ -254,10 +266,8 @@ MonoBehaviour:
   team: {fileID: 0}
   Velocity: {x: 0, y: 0, z: 0}
   Mass: 100
+  hud: {fileID: 0}
   DistanceFromPlayer: 0
-  RumbleIntensity: 0
-  RumbleFade: 1
-  RumbleMax: 5
   FreshSpawnCountdown: 0
   soundGotHit: {fileID: 0}
   clipExplosion: {fileID: 8300000, guid: 89ca65ebcd8c7ee4ab7aed07e8e23660, type: 3}
@@ -284,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37d075e86ef46c41aab38450f50c8b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponsSystem
+  Locked: 0
   weapons: []
   WeaponIndex: 0
   WeaponIndexDelay: 0.1
@@ -302,6 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e547290e71487ef48b84948a46e943ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrottleSystem
+  Locked: 0
   Input: 1
   Actual: 0
   Rate: 1
@@ -331,14 +343,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71394f64921273741817f7eb81d76db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteeringSystem
+  Locked: 0
   TurnRate: 100
   RollRate: 50
   StickZeroRate: 0.5
   StickResponse: 2
-  Pitch: 0
-  Roll: 0
-  Yaw: 0
-  Stick: {x: 0, y: 0, z: 0}
+  Input: {x: 0, y: 0, z: 0}
   realStick: {x: 0, y: 0, z: 0}
   Result: {x: 0, y: 0, z: 0}
 --- !u!114 &6739729150939075091
@@ -363,6 +373,8 @@ MonoBehaviour:
   SeparationForce: 0.1
   SeparationSpin: 3
   SeparationTTL: 3
+  SeparationLinearDampening: 0.01
+  SeparationAngularDampening: 0.01
   TTL: 0
   doDestroy: 0
 --- !u!114 &1998266204135949515
@@ -452,8 +464,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Trail
   MaxParticles: 100
   depositionRate: 40
-  ParticleSize: 0.01
-  ParticleShrinkRate: 0.01
+  ParticleSize: 0.1
+  ParticleShrinkRate: 0.1
   ParticleDetail: 0
   material: {fileID: 0}
   mesh: {fileID: 0}

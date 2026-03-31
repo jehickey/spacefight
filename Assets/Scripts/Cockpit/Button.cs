@@ -18,6 +18,7 @@ public class Button : MonoBehaviour
     public bool isReturning = false;
     public bool doPress = false;
 
+    public bool ReturnBlocked = false;
 
     public event Action Pressed;
 
@@ -77,7 +78,7 @@ public class Button : MonoBehaviour
             }
         }
 
-        if (isReturning)
+        if (isReturning && !ReturnBlocked)
         {
             if (ReturnStartTime == 0) ReturnStartTime = Time.time;
             float upProgress = Mathf.InverseLerp(0, ReturnTime, Time.time - ReturnStartTime);
@@ -98,6 +99,7 @@ public class Button : MonoBehaviour
         Pressing = true;
         isThrowing = true;
         isReturning = false;
+        ReturnBlocked = false;
     }
 
 
@@ -109,6 +111,23 @@ public class Button : MonoBehaviour
         render.GetPropertyBlock(light_mpb);
         material.SetColor("_EmissionColor", LightColor * currentLightLevel);
         render.SetPropertyBlock(light_mpb);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other == null) return;
+        Grabber grabber = other.GetComponent<Grabber>();
+        if (grabber)
+        {
+            Press();
+            ReturnBlocked = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        ReturnBlocked = false;
     }
 
 }

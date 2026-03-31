@@ -8,6 +8,7 @@ public class GrabMove : MonoBehaviour
     public Vector3 Delta;
     public bool Grabbed = false;
 
+    public bool triggerPressed = false;
 
 
     protected List<Grabber> grabbers = new List<Grabber>();
@@ -18,12 +19,14 @@ public class GrabMove : MonoBehaviour
     {
         if (!grabbers.Contains(grabbedBy)) grabbers.Add(grabbedBy);
         Grabbed = true;
+        triggerPressed = false;
     }
 
     public virtual void DoRelease(Grabber grabbedBy)
     {
         if (grabbers.Contains(grabbedBy)) grabbers.Remove(grabbedBy);
         if (grabbers.Count == 0) Grabbed = false;
+        triggerPressed = false;
     }
 
 
@@ -32,7 +35,7 @@ public class GrabMove : MonoBehaviour
         if (!grabTrigger) grabTrigger = GetComponent<GrabTrigger>();
     }
 
-    protected virtual void Update()
+    protected virtual void LateUpdate()
     {
         //update button grabbers with grab state (for activation)
         if (grabTrigger) grabTrigger.Grabbed = Grabbed;

@@ -162,6 +162,7 @@ public class Ship : MonoBehaviour
 
     private Vector3 InfluenceControlsNearPlanet(Vector3 steering)
     {
+        if (!Game.I || !Game.I.PlanetaryRollAdjustment) return steering;    //skip if disbled
         if (!bodyProximity) return steering;
 
         //dampen altitude change steering

@@ -86,8 +86,11 @@ public class Grabber : MonoBehaviour
             //Debug.Log($"Releasing {holding.name}");
             holding.DoRelease(this);
             holding = null;
-            holdTrigger.Pressed= false;
-            holdTrigger = null;
+            if (holdTrigger)
+            {
+                holdTrigger.Pressed = false;
+                holdTrigger = null;
+            }
         }
 
         UpdateButtons();
@@ -141,16 +144,24 @@ public class Grabber : MonoBehaviour
 
     private void UpdateButtons()
     {
-        if (!holding || !holdTrigger) return;
+        if (!holding) return;
         if (Hand == LeftRight.Left)
         {
-            holdTrigger.Pressed = controls.VR.TriggerLeft.IsPressed();
-            if (controls.VR.TriggerLeft.WasPressedThisFrame()) holdTrigger.DoPress();
+            holding.triggerPressed = controls.VR.TriggerLeft.IsPressed();
+            if (holdTrigger)
+            {
+                holdTrigger.Pressed = controls.VR.TriggerLeft.IsPressed();
+                if (controls.VR.TriggerLeft.WasPressedThisFrame()) holdTrigger.DoPress();
+            }
         }
         if (Hand == LeftRight.Right)
         {
-            holdTrigger.Pressed = controls.VR.TriggerRight.IsPressed();
-            if (controls.VR.TriggerRight.WasPressedThisFrame()) holdTrigger.DoPress();
+            holding.triggerPressed = controls.VR.TriggerRight.IsPressed();
+            if (holdTrigger)
+            {
+                holdTrigger.Pressed = controls.VR.TriggerRight.IsPressed();
+                if (controls.VR.TriggerRight.WasPressedThisFrame()) holdTrigger.DoPress();
+            }
         }
     }
 

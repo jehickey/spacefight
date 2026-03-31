@@ -6,9 +6,9 @@ public class GrabMoveLinear : GrabMove
     public Vector3 movementDir = Vector3.zero;
     //public float linearDelta;
 
-    protected override void Update()
+    protected override void LateUpdate()
     {
-        base.Update();
+        base.LateUpdate();
         GetGrabberDelta();   
     }
 

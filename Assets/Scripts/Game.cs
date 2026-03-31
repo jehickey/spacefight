@@ -20,9 +20,17 @@ public class Game : MonoBehaviour
     public int KillCount = 0;
     public int DeathCount = 0;
 
+    [Header("VR Settings")]
+    public bool EnableVR = true;
+    public float VRInputTimeout = 5;
     [ReadOnly]
-    private UnityEngine.XR.InputDevice headDevice;
     public bool VRHeadset = false;
+    public bool EnableVRMountEditing = false;
+    private UnityEngine.XR.InputDevice headDevice;
+    private Vector3 lastHeadsetPosition = Vector3.zero;
+    private Quaternion lastHeadsetRotation = Quaternion.identity;
+    private float headsetDeadTime = 0;
+
 
     [Header("Jump Drive")]
     [SerializeField]
@@ -65,8 +73,10 @@ public class Game : MonoBehaviour
     public float FPS = 0;
 
 
-    [Header("Control Settings")]
+    [Header("Flight Control Settings")]
     public bool InvertPitchAxis = false;
+    public bool TurnStickToRoll = false;
+    public bool PlanetaryRollAdjustment = true;  //use auto-roll to stay vertical near a planet
     public float StickControlLimit = 0.5f;       //this is a percentage of the screen
     public float StickControlDeadzone = 0.25f;   //this is a percentage of the screen
 
@@ -229,6 +239,7 @@ public class Game : MonoBehaviour
 
     public bool IsHeadsetWorn()
     {
+        if (!EnableVR) return false;
         if (!IsVRActive()) return false;
 
         if (!headDevice.isValid)
@@ -243,7 +254,31 @@ public class Game : MonoBehaviour
         if (!headDevice.isValid) return false;
         bool userPresent = false;
         headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out userPresent);
-        return userPresent;
+
+        if (!userPresent) return false;
+        return CheckVRInputDetected();
+    }
+
+
+    private bool CheckVRInputDetected()
+    {
+
+
+        //get a position update
+        Vector3 pos = controls.VR.HeadPosition.ReadValue<Vector3>();
+        Quaternion rot = controls.VR.HeadRotation.ReadValue<Quaternion>();
+
+        //compare to previous position
+        if (pos != lastHeadsetPosition || rot != lastHeadsetRotation)   //movement detected
+        {
+            headsetDeadTime = 0;
+            lastHeadsetPosition = pos;
+            lastHeadsetRotation = rot;
+            return true;
+        }
+
+        headsetDeadTime += Time.deltaTime;
+        return headsetDeadTime < VRInputTimeout;
     }
 
 

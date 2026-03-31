@@ -66,7 +66,7 @@ public class KeyboardControl : MonoBehaviour
             if (joystick) joystick.SetRoll(-controls.Flight.Roll.ReadValue<float>());
 
             //throttle control
-            if (throttle)
+            if (throttle && !Game.I.VRHeadset)
             {
                 if (controls.Flight.Throttle.IsPressed())
                 {
@@ -75,9 +75,7 @@ public class KeyboardControl : MonoBehaviour
                     throttle.InputPosition += input;
                 }
 
-                if (throttle) {
-                    throttle.Boost = controls.Flight.Boost.IsPressed();
-                }
+                throttle.Boost = controls.Flight.Boost.IsPressed();
             }
 
             //work the fire button, but only if not in VR
@@ -154,7 +152,7 @@ public class KeyboardControl : MonoBehaviour
         Vector2 dir = mousePos.normalized;
 
         //final circular stick vector (x = yaw, z = pitch)
-        joystick.SetStick(new Vector3(dir.x * t, 0, -dir.y * t));
+        joystick.SetStick2D(new Vector3(dir.x * t, -dir.y * t));
     }
 
 

@@ -5,6 +5,7 @@ public class GrabMoveRotation : GrabMove
     private Quaternion initialObjectRot;
     private Quaternion originalRotation;
     public Quaternion rotationDelta;
+    public Transform ReferenceTransform;    //used for stable directional reference (or it uses this object)
 
     //object stays in position but registers angle of hand
     //angle is always relative to base angle
@@ -14,14 +15,19 @@ public class GrabMoveRotation : GrabMove
     {
         base.Start();
         //originalRotation = transform.localRotation;
+
+        //default reference transform to self if not set
+        if (!ReferenceTransform) ReferenceTransform = transform;
     }
 
-    protected override void Update()
+    protected override void LateUpdate()
     {
-        base.Update();
+        base.LateUpdate();
         if (Grabbed)
         {
-            rotationDelta = GetGrabberRotation() * Quaternion.Inverse(originalRotation);
+            //rotationDelta = GetGrabberRotation() * Quaternion.Inverse(originalRotation);
+            Quaternion currentLocal = Quaternion.Inverse(ReferenceTransform.rotation) * grabbers[0].transform.rotation;
+            rotationDelta = currentLocal * Quaternion.Inverse(originalRotation);
             //transform.rotation = offsetRotation * initialObjectRot;
         }
 
@@ -30,7 +36,8 @@ public class GrabMoveRotation : GrabMove
     public override void DoGrab(Grabber grabbedBy)
     {
         base.DoGrab(grabbedBy);
-        initialObjectRot = transform.rotation;
-        originalRotation = grabbedBy.transform.localRotation;
+        //initialObjectRot = transform.rotation;
+        //originalRotation = grabbedBy.transform.localRotation;
+        originalRotation = Quaternion.Inverse(ReferenceTransform.rotation) * grabbedBy.transform.rotation;
     }
 }

@@ -43,13 +43,13 @@ public class Headset : MonoBehaviour
     void Start()
     {
         playerController = GetComponentInParent<PlayerController>();
-        xrInput = XRGeneralSettings.Instance.Manager.activeLoader.GetLoadedSubsystem<XRInputSubsystem>();
-        if (xrInput != null)
-        {
-            xrInput.TrySetTrackingOriginMode(TrackingMode);     //use device mode, but offer others
-            Recenter();
-        }
         camera = transform.GetComponentInChildren<Camera>();
+        InitVR();
+    }
+
+    private void Update()
+    {
+        InitVR();
     }
 
     void LateUpdate()
@@ -58,8 +58,17 @@ public class Headset : MonoBehaviour
         if (CameraOffsetObject)
         {
             headsetPosition = controls.VR.HeadPosition.ReadValue<Vector3>();
-            //CameraOffsetObject.localRotation = controls.VR.HeadRotation.ReadValue<Quaternion>();
-            //CameraOffsetObject.localPosition += new Vector3(0, CameraYOffset, 0);
+        }
+    }
+
+    private void InitVR()
+    {
+        if (xrInput != null) return;        //already initialized
+        xrInput = XRGeneralSettings.Instance.Manager.activeLoader?.GetLoadedSubsystem<XRInputSubsystem>();
+        if (xrInput != null)                //it has just initialized
+        {
+            xrInput.TrySetTrackingOriginMode(TrackingMode);     //use device mode, but offer others
+            Recenter();
         }
     }
 
@@ -93,7 +102,6 @@ public class Headset : MonoBehaviour
             didRecenter = false;
         }
     }
-
 
     void Recenter()
     {

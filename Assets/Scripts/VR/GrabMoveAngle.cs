@@ -6,9 +6,9 @@ public class GrabMoveAngle : GrabMove
     //public Vector3 movementDir = Vector3.zero;
     //public Vector3 Delta;
 
-    protected override void Update()
+    protected override void LateUpdate()
     {
-        base.Update();
+        base.LateUpdate();
         GetGrabberDelta();
     }
 

@@ -43,12 +43,12 @@ public class ThrottleBox : MonoBehaviour
     void Update()
     {
         //accept input from grabber
-        if (grabHandle)
+        if (grabHandle && grabHandle.Grabbed)
         {
             InputPosition += grabHandle.linearDelta * GrabPushRate * Time.deltaTime;
         }
 
-        if (trigger)
+        if (trigger && trigger.Grabbed)
         {
             Boost = trigger.Pressed;
             //if (trigger.Pressed) Debug.Log("Boost!");
