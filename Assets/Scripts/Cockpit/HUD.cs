@@ -6,6 +6,7 @@ public class HUD : MonoBehaviour
 {
 
     [Header("Reticule")]
+    public RectTransform ReticuleContainer;
     public Image Reticule;
     public Image ReticuleMask;
     public Color ReticleColor = Color.white;
@@ -13,6 +14,8 @@ public class HUD : MonoBehaviour
     public Text Altimeter;
     public Color AltimeterColor= Color.white;
     public float AltimeterHeight = .9f;
+    private RectTransform reticuleRect;
+
 
     [Header("Stick Position")]
     public Image StickPosition;
@@ -43,7 +46,7 @@ public class HUD : MonoBehaviour
     private float lastCharTime;         //used for timing
 
 
-    [Header("Text Display")]
+    [Header("Jump Destinations")]
     public float JumpReticleSize = 10;
     public float JumpReticlePulseRate = 3;
 
@@ -55,8 +58,12 @@ public class HUD : MonoBehaviour
 
     //ship components HUD needs to access
     private SteeringSystem steering;
+    private WeaponsSystem weapons;
     private Jumpdrive jump;
     private List<RectTransform> jumpReticles = new List<RectTransform>();
+
+    private new Camera camera;
+
 
     private void OnEnable()
     {
@@ -64,15 +71,28 @@ public class HUD : MonoBehaviour
         if (!canvas) canvas = GetComponent<Canvas>();
         if (!canvasRect) canvasRect = canvas.GetComponent<RectTransform>();
         if (!steering) steering = GetComponentInParent<SteeringSystem>();
+        if (!weapons) weapons = GetComponentInParent<WeaponsSystem>();
         if (!steering)
         {
             Debug.Log("HUD can't find SteeringSystem");
         }
         if (!jump) jump = GetComponentInParent<Jumpdrive>();
+
+        if (ReticuleContainer) reticuleRect = ReticuleContainer.GetComponent<RectTransform>();
     }
 
-    void Update()
+    void LateUpdate()
     {
+        if (!camera)
+        {
+            if (Game.I && Game.I.VRHeadset)
+            {
+                Headset headset = FindFirstObjectByType<Headset>();
+                if (headset) camera = headset.camera;
+            }
+            if (!camera) camera = Camera.main;
+        }
+
         screenSize = Mathf.Min(canvasRect.rect.width, canvasRect.rect.height);
         UpdateTextDisplay();
         UpdateReticule();
@@ -149,12 +169,24 @@ public class HUD : MonoBehaviour
     private void UpdateReticule()
     {
         if (!Reticule || !ship) return;
+        UpdateReticulePosition();
         reticleSize = Game.I.StickControlDeadzone * screenSize * 2f;
         Reticule.rectTransform.sizeDelta = Vector2.one * reticleSize;
         Reticule.color = ReticleColor;
         if (ReticuleMask) ReticuleMask.rectTransform.sizeDelta = Reticule.rectTransform.sizeDelta;
         UpdateHorizonIndicator();
         UpdateAltimeter();
+    }
+
+    private void UpdateReticulePosition()
+    {
+        if (!ReticuleContainer || !ship || !camera) return;
+        Plane plane = new Plane(canvas.transform.forward, canvas.transform.position);
+        Ray ray = new Ray(camera.transform.position, ship.transform.forward);   //raycast onto canvas plane
+        if (!plane.Raycast(ray, out float dist)) return;                        //get a raycast distance
+        Vector3 worldHit = ray.GetPoint(dist);                                  //where did it hit? (world)
+        Vector3 localHit = canvas.transform.InverseTransformPoint(worldHit);    //localize to canvas
+        reticuleRect.anchoredPosition = new Vector2(localHit.x, localHit.y);    //move reticle to hit point
     }
 
     private void UpdateAltimeter()
@@ -258,44 +290,44 @@ public class HUD : MonoBehaviour
         foreach (JumpLocation loc in jump.Locations) {
             if (loc.Available)
             {
-                Body body = loc.Target;
-                Vector3 viewPos = Camera.main.WorldToViewportPoint(body.transform.position);
-                if (viewPos.z > 0)      //is it in front of us?
+                if (!loc.reticle) loc.reticle = CreateBox(transform, Color.white, new Color(1, 1, 1, .25f));
+                Vector3 worldPos = loc.Target.transform.position;
+
+                // 1. Project world point onto canvas plane
+                Plane plane = new Plane(canvas.transform.forward, canvas.transform.position);
+
+                // Ray from camera to the target
+                Ray ray = new Ray(camera.transform.position, (worldPos - camera.transform.position).normalized);
+
+                if (!plane.Raycast(ray, out float dist))
                 {
-                    Vector2 canvasPos = new Vector2(
-                        (viewPos.x - .5f) * canvasRect.sizeDelta.x,
-                        (viewPos.y - .5f) * canvasRect.sizeDelta.y);
-
-                    //angle of deflection
-                    //Vector3 toTarget = (body.transform.position - ship.transform.position).normalized;
-                    //float angle = Vector3.Angle(ship.transform.forward, toTarget);
-
-                    //position the box (and create it if needed)
-                    if (!loc.reticle) loc.reticle = CreateBox(transform, Color.white, new Color(1, 1, 1, .25f));
-                    loc.reticle.anchoredPosition = canvasPos;
-
-                    /*
-                    //work out the size of the box based on target body apparent diameter
-                    float radius = body.Radius;
-                    Transform t = body.transform;
-                    Vector3 center = Camera.main.WorldToScreenPoint(t.position);
-                    Vector3 edge = Camera.main.WorldToScreenPoint(t.position + t.right * radius);
-                    float pixelRadius = Vector3.Distance(center, edge);
-                    float canvasDiameter = pixelRadius / canvas.scaleFactor;
-                    //Debug.Log($"{pixelDiameter} - {canvasDiameter}");
-                    //canvasDiameter /= canvasRect.lossyScale.x;
-                    */
-                    //loc.reticle.sizeDelta = new Vector2(canvasDiameter, canvasDiameter);
-                    //loc.reticle.sizeDelta = new Vector2(pixelRadius, pixelRadius) * canvas.scaleFactor;
-                    //loc.reticle.sizeDelta = new Vector2(canvasDiameter, canvasDiameter) * canvas.scaleFactor;
-                    float size = JumpReticleSize;
-                    //if (angle < Game.I.JumpSelectionAngle)
-                    if (loc.Selected)
-                    {
-                        size = JumpReticleSize * .5f + Mathf.Sin(Time.time * Mathf.PI * 2 * JumpReticlePulseRate) * JumpReticleSize * .5f; ;
-                    }
-                    loc.reticle.sizeDelta = Vector2.one * size * canvas.scaleFactor;
+                    // Target is behind the camera or off-plane
+                    loc.reticle.gameObject.SetActive(false);
+                    return;
                 }
+                loc.reticle.gameObject.SetActive(true);
+
+                Vector3 hitPoint = ray.GetPoint(dist);
+
+                // 2. Convert world to canvas local
+                Vector3 localHit = canvas.transform.InverseTransformPoint(hitPoint);
+
+                // 3. Apply to UI
+                loc.reticle.anchoredPosition = new Vector2(localHit.x, localHit.y);
+
+                // 4. Size logic stays the same
+                float size = JumpReticleSize;
+                if (loc.Selected)
+                    size = JumpReticleSize * .5f + Mathf.Sin(Time.time * Mathf.PI * 2 * JumpReticlePulseRate) * JumpReticleSize * .5f;
+
+                loc.reticle.sizeDelta = Vector2.one * size * canvas.scaleFactor;
+
+                //turn it to always face the camera
+                loc.reticle.transform.rotation = Quaternion.LookRotation(
+                    loc.reticle.transform.position - camera.transform.position,
+                    camera.transform.up);
+
+
             }
         }
 

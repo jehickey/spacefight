@@ -254,7 +254,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3007833277593550772, guid: 05cbe50ba8dc8604d96d9a2ed1056a97, type: 3}
       propertyPath: JumpReticleSize
-      value: 25
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4640617456123537390, guid: 05cbe50ba8dc8604d96d9a2ed1056a97, type: 3}
       propertyPath: m_LocalPosition.x
@@ -508,6 +508,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e72fe1bdc444b2847a40c72dc28ce656, type: 3}
+--- !u!1 &1274023521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1274023523}
+  - component: {fileID: 1274023522}
+  m_Layer: 0
+  m_Name: XR Interaction Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1274023522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274023521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.XRInteractionManager
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
+--- !u!4 &1274023523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274023521}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 30.122301, y: 31.597088, z: 17.205935}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1299576504
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -709,7 +755,7 @@ PrefabInstance:
     - target: {fileID: 1614420499900182466, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
       propertyPath: m_InteractionManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1274023522}
     - target: {fileID: 2153541779098582616, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
       propertyPath: ship
       value: 
@@ -778,7 +824,6 @@ PrefabInstance:
     - {fileID: 4202247934572824338, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
     - {fileID: 5032424879928073194, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
     - {fileID: 1614420499900182466, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
-    - {fileID: 7883070105290844958, guid: c5d37280ef2b39345b96e86ef654eade, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1610,5 +1655,6 @@ SceneRoots:
   - {fileID: 9183516205009112758}
   - {fileID: 1926558277}
   - {fileID: 3564330588623686257}
+  - {fileID: 1274023523}
   - {fileID: 1299576504}
   - {fileID: 713582749}

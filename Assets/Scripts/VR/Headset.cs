@@ -1,11 +1,9 @@
-using System.Runtime.CompilerServices;
-using Unity.XR.CoreUtils;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Windows;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
 using UnityEngine.XR.Management;
-using static UnityEngine.GraphicsBuffer;
 
 public class Headset : MonoBehaviour
 {
@@ -13,6 +11,7 @@ public class Headset : MonoBehaviour
     public float CameraYOffset = 0;
     public Transform CameraOffsetObject;
     public new Camera camera;
+    private List<Camera> cameras = new List<Camera>();
 
     private XRInputSubsystem xrInput;
     private FlightControls flightControls;
@@ -34,17 +33,21 @@ public class Headset : MonoBehaviour
      private void OnEnable()
      {
          controls.Enable();
-     }
+        Application.onBeforeRender += BeforeRender;
+
+    }
      private void OnDisable()
      {
          controls.Disable();
+        Application.onBeforeRender -= BeforeRender;
     }
 
     void Start()
     {
         playerController = GetComponentInParent<PlayerController>();
-        camera = transform.GetComponentInChildren<Camera>();
-        InitVR();
+        cameras.AddRange(GetComponentsInChildren<Camera>());
+        if (cameras.Count > 0) camera = cameras[0];
+        //InitVR();
     }
 
     private void Update()
@@ -61,6 +64,12 @@ public class Headset : MonoBehaviour
         }
     }
 
+
+    void BeforeRender()
+    {
+        HeadTracking();
+    }
+
     private void InitVR()
     {
         if (xrInput != null) return;        //already initialized
@@ -69,9 +78,52 @@ public class Headset : MonoBehaviour
         {
             xrInput.TrySetTrackingOriginMode(TrackingMode);     //use device mode, but offer others
             Recenter();
+            Debug.Log("INIT");
         }
     }
 
+
+    void HeadTracking()
+    {
+        //if we're not in VR, reset cameras to centered and forward
+        if (Game.I && !Game.I.VRHeadset)
+        {
+            foreach (Camera cam in cameras)
+            {
+                cam.transform.localPosition = Vector3.zero;
+                cam.transform.localRotation = Quaternion.identity;
+            }
+            return;
+        }
+
+        var hmd = InputSystem.GetDevice<XRHMD>();
+        if (hmd == null)
+        {
+            Debug.Log("Got null HMD");
+            return;
+        }
+
+        Vector3 pos = hmd.centerEyePosition.ReadValue();
+        Quaternion rot = hmd.centerEyeRotation.ReadValue();
+
+        foreach (Camera cam in cameras)
+        {
+            cam.transform.localPosition = Vector3.Lerp(
+                cam.transform.localPosition,
+                pos,
+                1f - Mathf.Exp(-20f * Time.deltaTime));
+            //cam.transform.localPosition = pos;
+
+            /*
+            cam.transform.localRotation = Quaternion.Slerp(
+                cam.transform.localRotation,
+                rot,
+                1f - Mathf.Exp(-5f * Time.deltaTime));
+            */
+            cam.transform.localRotation = rot;
+        }
+
+    }
 
     void CheckRecenterButtons()
     {

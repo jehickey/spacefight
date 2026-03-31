@@ -552,7 +552,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""name"": ""HeadPosition"",
                     ""type"": ""Value"",
                     ""id"": ""91c12d30-b2f0-4d21-8683-359a74064f36"",
-                    ""expectedControlType"": ""Vector3"",
+                    ""expectedControlType"": ""Pose"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -561,7 +561,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""name"": ""HeadRotation"",
                     ""type"": ""Value"",
                     ""id"": ""7e560cac-8927-4389-b4ac-aee0857c1f11"",
-                    ""expectedControlType"": ""Quaternion"",
+                    ""expectedControlType"": ""Pose"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

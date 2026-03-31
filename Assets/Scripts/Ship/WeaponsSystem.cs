@@ -13,7 +13,8 @@ public class WeaponsSystem : MonoBehaviour
     public float IsFiringCooldown = .25f;
     private float lastFireTime = 0;
 
-    
+    public Vector3 WeaponCenterLocalToShip = Vector3.zero;
+
 
     void OnEnable()
     {
@@ -44,13 +45,20 @@ public class WeaponsSystem : MonoBehaviour
             {
                 WeaponIndexDelay = (1f / rateAvg) / weapons.Count;
             }
+            GetCenter();
         }
-
         //if (Time.time - lastFireTime < 1/FireRate) return; //enforce fire rate
 
     }
 
-
+    private void GetCenter()
+    {
+        Vector3 origin = Vector3.zero;
+        foreach (Weapon weapon in weapons) origin += weapon.transform.localPosition;
+        origin /= weapons.Count;
+        WeaponCenterLocalToShip = origin;
+        Vector3 direction = weapons[0].transform.forward;
+    }
 
     public void Fire()
     {

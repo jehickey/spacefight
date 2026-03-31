@@ -1,6 +1,4 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Grabber : MonoBehaviour
 {
@@ -64,10 +62,13 @@ public class Grabber : MonoBehaviour
     {
         bool wasGripping = Gripping;
         GripStart = false;
+
+        //set hands visible only if we're in VR
+        HandObject.SetActive(Game.I && Game.I.VRHeadset);
+        ControllerObject.gameObject.SetActive(Game.I && Game.I.VRHeadset);
+        TriggerArea.gameObject.SetActive(Game.I && Game.I.VRHeadset);
+
         UpdatePositions();
-        //if (GripStart) Debug.Log("Grip Start");
-        //if (Gripping) Debug.Log("Gripping");
-        //if (wasGripping && !Gripping) Debug.Log("Grip Release");
 
         if (GripStart && hovering)
         {
