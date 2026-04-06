@@ -58,6 +58,7 @@ public class Weapon : MonoBehaviour
             if (projectile && ship)
             {
                 projectile.parentOrigin = ship.transform;
+                if (ship.team) projectile.color = ship.team.color;
                 //projectile.Speed += ship.Speed;
             }
 

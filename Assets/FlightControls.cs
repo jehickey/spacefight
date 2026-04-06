@@ -583,6 +583,24 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftThumbstick"",
+                    ""type"": ""Value"",
+                    ""id"": ""9c86a0a5-0ee1-4ce3-847a-6d3b5f12bfce"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightThumbstick"",
+                    ""type"": ""Value"",
+                    ""id"": ""31cd5087-b6e8-492c-a242-fc08afca18f7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -728,6 +746,28 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""action"": ""RightThumbstickPress"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10099ecf-422a-4c9c-91e8-5a72ab70b00d"",
+                    ""path"": ""<OculusTouchController>{LeftHand}/thumbstick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftThumbstick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""985b47d7-6542-47ab-81c5-606c16f9aea7"",
+                    ""path"": ""<OculusTouchController>{RightHand}/thumbstick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightThumbstick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -766,6 +806,8 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_VR_HeadRotation = m_VR.FindAction("HeadRotation", throwIfNotFound: true);
         m_VR_LeftThumbstickPress = m_VR.FindAction("LeftThumbstickPress", throwIfNotFound: true);
         m_VR_RightThumbstickPress = m_VR.FindAction("RightThumbstickPress", throwIfNotFound: true);
+        m_VR_LeftThumbstick = m_VR.FindAction("LeftThumbstick", throwIfNotFound: true);
+        m_VR_RightThumbstick = m_VR.FindAction("RightThumbstick", throwIfNotFound: true);
     }
 
     ~@FlightControls()
@@ -1174,6 +1216,8 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_VR_HeadRotation;
     private readonly InputAction m_VR_LeftThumbstickPress;
     private readonly InputAction m_VR_RightThumbstickPress;
+    private readonly InputAction m_VR_LeftThumbstick;
+    private readonly InputAction m_VR_RightThumbstick;
     /// <summary>
     /// Provides access to input actions defined in input action map "VR".
     /// </summary>
@@ -1237,6 +1281,14 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "VR/RightThumbstickPress".
         /// </summary>
         public InputAction @RightThumbstickPress => m_Wrapper.m_VR_RightThumbstickPress;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/LeftThumbstick".
+        /// </summary>
+        public InputAction @LeftThumbstick => m_Wrapper.m_VR_LeftThumbstick;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/RightThumbstick".
+        /// </summary>
+        public InputAction @RightThumbstick => m_Wrapper.m_VR_RightThumbstick;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1302,6 +1354,12 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @RightThumbstickPress.started += instance.OnRightThumbstickPress;
             @RightThumbstickPress.performed += instance.OnRightThumbstickPress;
             @RightThumbstickPress.canceled += instance.OnRightThumbstickPress;
+            @LeftThumbstick.started += instance.OnLeftThumbstick;
+            @LeftThumbstick.performed += instance.OnLeftThumbstick;
+            @LeftThumbstick.canceled += instance.OnLeftThumbstick;
+            @RightThumbstick.started += instance.OnRightThumbstick;
+            @RightThumbstick.performed += instance.OnRightThumbstick;
+            @RightThumbstick.canceled += instance.OnRightThumbstick;
         }
 
         /// <summary>
@@ -1352,6 +1410,12 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
             @RightThumbstickPress.started -= instance.OnRightThumbstickPress;
             @RightThumbstickPress.performed -= instance.OnRightThumbstickPress;
             @RightThumbstickPress.canceled -= instance.OnRightThumbstickPress;
+            @LeftThumbstick.started -= instance.OnLeftThumbstick;
+            @LeftThumbstick.performed -= instance.OnLeftThumbstick;
+            @LeftThumbstick.canceled -= instance.OnLeftThumbstick;
+            @RightThumbstick.started -= instance.OnRightThumbstick;
+            @RightThumbstick.performed -= instance.OnRightThumbstick;
+            @RightThumbstick.canceled -= instance.OnRightThumbstick;
         }
 
         /// <summary>
@@ -1590,5 +1654,19 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightThumbstickPress(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftThumbstick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftThumbstick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightThumbstick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightThumbstick(InputAction.CallbackContext context);
     }
 }

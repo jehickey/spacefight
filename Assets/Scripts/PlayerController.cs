@@ -11,14 +11,42 @@ public class PlayerController : MonoBehaviour
 
     public bool doAlign = false;
 
+    public Grabber LeftHand;
+    public Grabber RightHand;
+
+    public Transform joystickHandle;
+    public Transform throttleHandle;
+
     void Start()
     {
-        
+
+        if (!joystickHandle)
+        {
+            JoystickBox stick = GameObject.FindFirstObjectByType<JoystickBox>();
+            if (stick)
+            {
+                GrabMove grab = stick.GetComponentInChildren<GrabMove>();
+                if (grab) joystickHandle = grab.transform;
+            }
+        }
+
+        if (!throttleHandle)
+        {
+            ThrottleBox throttle = GameObject.FindFirstObjectByType<ThrottleBox>();
+            if (throttle)
+            {
+                GrabMove grab = throttle.GetComponentInChildren<GrabMove>();
+                if (grab) throttleHandle = grab.transform;
+            }
+        }
+
+
     }
 
     void LateUpdate()
     {
         AlignToShip();
+        SetHandPosition();
     }
 
     private void OnValidate()
@@ -52,5 +80,34 @@ public class PlayerController : MonoBehaviour
         transform.position = mountPoint.transform.position;
         transform.rotation = mountPoint.transform.rotation;
     }
+
+
+    private void SetHandPosition()
+    {
+        if (Game.I && Game.I.VRHeadset) return;     //don't mess with the hands when in VR
+        if (RightHand && joystickHandle)
+        {
+            if (!RightHand.ForcedPosition)
+            {
+                RightHand.transform.position = joystickHandle.position;
+                RightHand.transform.rotation = joystickHandle.rotation;
+            }
+        }
+        if (LeftHand && throttleHandle)
+        {
+            if (!LeftHand.ForcedPosition)
+            {
+                LeftHand.transform.position = throttleHandle.position;
+                LeftHand.transform.rotation = throttleHandle.rotation;
+            }
+        }
+    }
+
+
+
+
+
+
+
 
 }

@@ -497,6 +497,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeftThumbstick",
+                    "type": "Value",
+                    "id": "9c86a0a5-0ee1-4ce3-847a-6d3b5f12bfce",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightThumbstick",
+                    "type": "Value",
+                    "id": "31cd5087-b6e8-492c-a242-fc08afca18f7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -640,6 +658,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "RightThumbstickPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10099ecf-422a-4c9c-91e8-5a72ab70b00d",
+                    "path": "<OculusTouchController>{LeftHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftThumbstick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "985b47d7-6542-47ab-81c5-606c16f9aea7",
+                    "path": "<OculusTouchController>{RightHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightThumbstick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

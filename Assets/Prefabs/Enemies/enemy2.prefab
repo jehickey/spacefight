@@ -84,15 +84,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 46.377514
+      value: 201.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -12.669119
+      value: 0.000013323297
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 73.639595
+      value: -6513
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3e8153858774a47b2b5b8013a76007, type: 3}
       propertyPath: m_LocalRotation.w
@@ -241,12 +241,12 @@ MonoBehaviour:
   ThrottleDefault: 0.5
   ThrottleAimBias: 0.5
   precisionAngle: 5
-  baselineRangeBreakoff: 1
-  baselineRangeFiring: 4
-  baselineRangeIdeal: 3
-  rangeBreakoff: 1
-  rangeFiring: 4
-  rangeIdeal: 3
+  baselineRangeBreakoff: 10
+  baselineRangeFiring: 40
+  baselineRangeIdeal: 30
+  rangeBreakoff: 10
+  rangeFiring: 40
+  rangeIdeal: 30
   factorBreakoff: 0
   factorFiring: 0
   factorNearIdeal: 0
@@ -301,6 +301,7 @@ MonoBehaviour:
   WeaponsFireInterlinked: 0
   IsFiring: 0
   IsFiringCooldown: 0.25
+  WeaponCenterLocalToShip: {x: 0, y: 0, z: 0}
 --- !u!114 &548925477471173260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,17 +367,19 @@ MonoBehaviour:
   RootObject: {fileID: 0}
   Health: 0
   MaxHealth: 10
-  clipExplosion: {fileID: 0}
-  soundGotHit: {fileID: 0}
+  TTL: 0
   lastHitBy: {fileID: 0}
+  doDestroy: 0
   PartSeparation: 1
-  SeparationForce: 0.1
+  SeparationForce: 1
   SeparationSpin: 3
   SeparationTTL: 3
   SeparationLinearDampening: 0.01
   SeparationAngularDampening: 0.01
-  TTL: 0
-  doDestroy: 0
+  ExplosionSize: 0.5
+  ExplosionDuration: 2
+  clipExplosion: {fileID: 0}
+  soundGotHit: {fileID: 0}
 --- !u!114 &1998266204135949515
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,21 +8,29 @@ public class Destructable : MonoBehaviour
     public GameObject RootObject;       //in case this object is part of another
     public float Health;
     public float MaxHealth = 10;
-    public AudioClip clipExplosion;
-    public SoundMachine soundGotHit;
+    public float TTL = 0;
     public Transform lastHitBy;
+    public bool doDestroy = false;
+
+    [Header("Breakup")]
     public bool PartSeparation = false;
     public float SeparationForce = 1;
     public float SeparationSpin = 1;
     public float SeparationTTL = 3;
     public float SeparationLinearDampening = .01f;
     public float SeparationAngularDampening = .01f;
-    public float TTL = 0;
 
-    public bool doDestroy = false;
+    [Header("Explosion")]
+    public float ExplosionSize = .5f;
+    public float ExplosionDuration = 2f;
+
+    [Header("Audio")]
+    public AudioClip clipExplosion;
+    public SoundMachine soundGotHit;
 
     private Ship ship;
     private float startTime;
+
 
     private void OnEnable()
     {
@@ -68,7 +76,7 @@ public class Destructable : MonoBehaviour
 
     private void Die()
     {
-        Flare flare = Flare.Spawn(transform.position, Color.white, 2f, 0.15f, 0.005f, 0.05f, clipExplosion);
+        Flare flare = Flare.Spawn(transform.position, Color.white, ExplosionDuration, 0.15f, ExplosionSize*.1f, ExplosionSize, clipExplosion);
         flare.useShockwave = true;
         if (RootObject)
         {

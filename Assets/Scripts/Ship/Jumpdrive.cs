@@ -226,7 +226,7 @@ private void EventDeparture()
         StartPoint = ship.transform.position;
         JumpStartTime = Time.time;
         Destination.Selected = false;
-        Game.I.ClearJump();
+        //Game.I.ClearJump();
         Locations.Clear();
         if (clipStart) audio.PlayOneShot(clipStart);
         audio.Play();
@@ -255,6 +255,7 @@ private void EventDeparture()
         audio.Stop();
         if (clipEnd) audio.PlayOneShot(clipEnd);
         CurrentLocation = Destination;
+        if (CurrentLocation.reticle) Destroy(CurrentLocation.reticle.gameObject);
         ship.DoMessage($"Arriving at {Destination.Name}");
         EnableControls();
 

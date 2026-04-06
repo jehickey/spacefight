@@ -114,6 +114,7 @@ public class BotControl : MonoBehaviour
 
     void Update()
     {
+        if (Game.I && !Game.I.useEnemyAI) return;
         ship ??= GetComponent<Ship>();
         if (!ship) return;
 

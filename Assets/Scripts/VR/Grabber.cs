@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum LeftRight
+{
+    None,
+    Left,
+    Right
+}
+
 public class Grabber : MonoBehaviour
 {
     [Header("Settings")]
@@ -7,8 +14,10 @@ public class Grabber : MonoBehaviour
     public GameObject HandObject;
     public Transform ControllerObject;
     public Transform TriggerArea;
-    public Vector3 Offset = new Vector3(0, -0.025f, -0.025f);
+    //public Vector3 Offset = new Vector3(0, -0.025f, -0.025f);
     public float GrabTriggerRadius = .025f;
+
+    public bool ForcedPosition = false;
 
     [Header("Status")]
     [ReadOnly]
@@ -31,11 +40,7 @@ public class Grabber : MonoBehaviour
     private new SphereCollider collider;
     private GrabTrigger holdTrigger;
 
-    public enum LeftRight
-    {
-        Left,
-        Right
-    }
+    private HandOffset Offset;
 
 
     void Start()
@@ -45,6 +50,9 @@ public class Grabber : MonoBehaviour
 
         collider = GetComponent<SphereCollider>();
         collider.isTrigger = true;
+
+        Offset = GetComponentInChildren<HandOffset>();
+
 
         if (!HandObject)
         {
@@ -64,7 +72,7 @@ public class Grabber : MonoBehaviour
         GripStart = false;
 
         //set hands visible only if we're in VR
-        HandObject.SetActive(Game.I && Game.I.VRHeadset);
+        //HandObject.SetActive(Game.I && Game.I.VRHeadset);
         ControllerObject.gameObject.SetActive(Game.I && Game.I.VRHeadset);
         TriggerArea.gameObject.SetActive(Game.I && Game.I.VRHeadset);
 
@@ -127,19 +135,27 @@ public class Grabber : MonoBehaviour
 
     private void UpdatePositions()
     {
+        if (ForcedPosition) return;
+        if (!Game.I || !Game.I.VRHeadset) return;       //no position changes outside of VR
         if (Hand == LeftRight.Left)
         {
-            transform.localPosition = controls.VR.LeftPosition.ReadValue<Vector3>() + Offset;
+            transform.localPosition = controls.VR.LeftPosition.ReadValue<Vector3>();
             transform.localRotation = controls.VR.LeftRotation.ReadValue<Quaternion>();
             GripStart = controls.VR.GripLeft.WasPressedThisFrame();
             Gripping = controls.VR.GripLeft.IsPressed();
         }
         if (Hand == LeftRight.Right)
         {
-            transform.localPosition = controls.VR.RightPosition.ReadValue<Vector3>() + Offset;
+            transform.localPosition = controls.VR.RightPosition.ReadValue<Vector3>();
             transform.localRotation = controls.VR.RightRotation.ReadValue<Quaternion>();
             GripStart = controls.VR.GripRight.WasPressedThisFrame();
             Gripping = controls.VR.GripRight.IsPressed();
+        }
+
+        if (Offset)
+        {
+            transform.localPosition += Offset.data.position;
+            transform.localRotation *= Offset.GetRotation(transform);
         }
     }
 
@@ -179,6 +195,7 @@ public class Grabber : MonoBehaviour
     private void LockGrabbingHand()
     {
         if (!HandObject) return;
+        if (ForcedPosition) return;
         if (!holding)
         {
             HandObject.transform.localPosition = Vector3.zero;

@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1797681184002972794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c46d514a0a806e14e9a07e57d58fd864, type: 3}
+  m_Name: RelativisticDopplerFeature
+  m_EditorClassIdentifier: Assembly-CSharp::RelativisticDopplerFeature
+  m_Active: 1
+  settings:
+    dopplerMaterial: {fileID: 2100000, guid: 74f2dd44faf4ec04eb67a273af5869ad, type: 2}
+    compositeMaterial: {fileID: 2100000, guid: 03945f6bbb06b1149a266eed1800d830, type: 2}
+    injectionPoint: 600
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25,8 +42,8 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 8779218178969558826}
-  m_RendererFeatureMap: 2adf21636b0cd679
+  - {fileID: -1797681184002972794}
+  m_RendererFeatureMap: 866319d87c5a0de7
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -55,20 +72,3 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &8779218178969558826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97437d040c3cda54dba523acf670861b, type: 3}
-  m_Name: RelativisticDopplerFeature
-  m_EditorClassIdentifier: Assembly-CSharp::RelativisticDopplerFeature
-  m_Active: 1
-  settings:
-    dopplerMaterial: {fileID: 2100000, guid: 74f2dd44faf4ec04eb67a273af5869ad, type: 2}
-    compositeMaterial: {fileID: 2100000, guid: 03945f6bbb06b1149a266eed1800d830, type: 2}
-    injectionPoint: 600

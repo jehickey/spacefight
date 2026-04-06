@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public Color color = Color.white;
     public float Length;     //meters, in cases where it matters
     public float Speed;      //meters per second
     public float Damage;     //damage units done on impact
@@ -10,9 +11,19 @@ public class Projectile : MonoBehaviour
 
     public Transform parentOrigin;
 
+    private Material material;
+
     void Start()
     {
         startTime = Time.time;
+        Renderer renderer = GetComponentInChildren<Renderer>();
+        if (renderer)
+        {
+            material = renderer.material;
+            float intensity = 15f;
+            material.color = color * intensity;
+            material.SetColor("_EmissionColor", color*intensity);
+        }
     }
 
 

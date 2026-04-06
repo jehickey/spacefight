@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
     [ReadOnly]
     public bool VRHeadset = false;
     public bool EnableVRMountEditing = false;
+    public bool EnableVRHandPositionSettings = false;
     private UnityEngine.XR.InputDevice headDevice;
     private Vector3 lastHeadsetPosition = Vector3.zero;
     private Quaternion lastHeadsetRotation = Quaternion.identity;
@@ -32,7 +33,8 @@ public class Game : MonoBehaviour
 
     [Header("Jump Drive")]
     [SerializeField]
-    private JumpLocation JumpLoc;
+    private List<JumpLocation> JumpLocs = new List<JumpLocation>();
+    public float JumpMinBodyDistanceRadii = 2f;
     [ReadOnly]
     public int JumpLocationCount;
     public float JumpSelectionAngle = 5;       //how close do they have to get to trigger selection?
@@ -45,6 +47,7 @@ public class Game : MonoBehaviour
     public bool useInfiniteBoost;
     public bool useSpawnEnemies;
     public bool useSpawnPlayer;
+    public bool useEnemyAI;
 
     [Header("Respawn")]
     public bool forceRespawn = false;
@@ -205,9 +208,18 @@ public class Game : MonoBehaviour
             timeAccumulator = 0;
         }
 
-        if (doNewJump) NewJump();
+        if (JumpLocs == null) JumpLocs = new List<JumpLocation>();
+        if (doNewJump)
+        {
+            JumpLocs.Clear();
+            NewJump("Europa");
+            NewJump("Io");
+            NewJump("Ganymede");
+            NewJump("Callisto");
+            doNewJump = false;
+        }
         if (doClearJump) ClearJump();
-        JumpLocationCount = JumpLoc ? 1 : 0;
+        JumpLocationCount = JumpLocs.Count;
 
         VRHeadset = IsHeadsetWorn();
     }
@@ -215,11 +227,16 @@ public class Game : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!JumpLoc) return;
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(JumpLoc.Coordinate, 5);
-        //draw line leading to jump point
-        Gizmos.DrawLine(PlayerShip.transform.position, JumpLoc.Coordinate);
+        foreach (JumpLocation loc in JumpLocs)
+        {
+            if (loc.Available)
+            {
+                Gizmos.color = loc.Selected ? Color.green : Color.yellow;
+                Gizmos.DrawWireSphere(loc.Coordinate, 5);
+                //draw line leading to jump point
+                Gizmos.DrawLine(PlayerShip.transform.position, loc.Coordinate);
+            }
+        }
     }
 
 
@@ -319,13 +336,13 @@ public class Game : MonoBehaviour
     }
 
 
-    private void NewJump()
+    private void NewJump(string setTarget = "")
     {
-        Debug.Log("Setting up a new jump location");
-        doNewJump = false;
+        //Debug.Log("Setting up a new jump location");
         if (!PlayerShip) return;
-        JumpLoc = null;
-        string targetName = "Europa";
+        string[] targets = new string[] { "Europa", "Ganymede", "Callisto", "Io" };
+        if (setTarget == string.Empty) setTarget = targets[Random.Range(0, targets.Length)];
+        string targetName = setTarget;
         GameObject obj = GameObject.Find(targetName);
         if (!obj) 
         {
@@ -341,26 +358,40 @@ public class Game : MonoBehaviour
         Vector3 dir = PlayerShip.transform.position - body.transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
-        JumpLoc = new JumpLocation(body.name, dist, true);
+        JumpLocation loc = new JumpLocation(body.name, dist, true);
         Vector3 offset = dir * body.Radius * 3;
-        JumpLoc.Coordinate = body.transform.position + offset;
-        JumpLoc.Distance = (JumpLoc.Coordinate - PlayerShip.transform.position).magnitude;
-        JumpLoc.Target = body;
-        JumpLoc.Selected = false;
-        JumpLoc.Available = true;
+        loc.Coordinate = body.transform.position + offset;
+        loc.Distance = (loc.Coordinate - PlayerShip.transform.position).magnitude;
+        loc.Target = body;
+        loc.Selected = false;
+        loc.Available = true;
+        JumpLocs.Add(loc);
     }
 
     public List<JumpLocation> GetJumps()
     {
         List<JumpLocation> result = new List<JumpLocation>();
-        if (JumpLoc != null && JumpLoc.Available) result.Add(JumpLoc);
+        foreach (JumpLocation loc in JumpLocs)
+        {
+            if (loc.Available)
+            {
+                float bodyDist = (loc.Target.transform.position - PlayerShip.transform.position).magnitude;
+                //don't make the jump available if we're close to the planet
+                if (loc.Target && bodyDist > loc.Target.Radius * JumpMinBodyDistanceRadii)
+                {
+                    loc.Distance = (loc.Coordinate - PlayerShip.transform.position).magnitude;
+                    result.Add(loc);
+                }
+            }
+        }
+        //if (JumpLoc != null && JumpLoc.Available) result.Add(JumpLoc);
         return result;
     }
 
     public void ClearJump()
     {
         doClearJump = false;
-        JumpLoc = null;
+        JumpLocs.Clear();
 
     }
 
