@@ -7,6 +7,7 @@ public class MonitorTextDisplay : MonoBehaviour
     public string TextContent = "Testing";
     public bool Scrolling = false;
     public int FontSize = 50;
+    public Color TextColor = Color.white;
 
     public Text textbox;
     public float scrollRate = 10;
@@ -14,6 +15,7 @@ public class MonitorTextDisplay : MonoBehaviour
     public float maxScroll;
     RectTransform rect;
     public float ScrollSpeedRandFactor = .5f;
+    public bool wordWrap = false;
 
     void Start()
     {
@@ -26,7 +28,17 @@ public class MonitorTextDisplay : MonoBehaviour
         if (!textbox) return;
         textbox.text = TextContent;
         textbox.fontSize = FontSize;
+        textbox.color = TextColor;
         maxScroll = textbox.preferredHeight;
+
+        if (wordWrap)
+        {
+            textbox.horizontalOverflow = HorizontalWrapMode.Wrap;
+        }
+        else
+        {
+            textbox.horizontalOverflow = HorizontalWrapMode.Overflow;
+        }
         if (Scrolling)
         {
             scrollY -= scrollRate * Time.deltaTime;

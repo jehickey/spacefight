@@ -271,6 +271,7 @@ Transform:
   - {fileID: 8732505938550695970}
   - {fileID: 7884745223666133513}
   - {fileID: 8192452952704831570}
+  - {fileID: 7410785159298920965}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5963307832757667488
@@ -293,22 +294,22 @@ MonoBehaviour:
   Paused: 0
   KillCount: 0
   DeathCount: 0
-  JumpLoc:
-    Available: 0
-    Target: {fileID: 0}
-    Name: 
-    Distance: 0
-    Coordinate: {x: 0, y: 0, z: 0}
-    Selected: 0
-    reticle: {fileID: 0}
+  EnableVR: 1
+  VRInputTimeout: 5
+  VRHeadset: 0
+  EnableVRMountEditing: 1
+  EnableVRHandPositionSettings: 1
+  JumpLocs: []
+  JumpMinBodyDistanceRadii: 4
   JumpLocationCount: 0
   JumpSelectionAngle: 10
   doNewJump: 1
   doClearJump: 0
   useInvulnerability: 0
-  useInfiniteBoost: 1
+  useInfiniteBoost: 0
   useSpawnEnemies: 0
   useSpawnPlayer: 1
+  useEnemyAI: 0
   forceRespawn: 0
   RespawnTarget: {fileID: 0}
   RespawnTargetName: 
@@ -319,6 +320,8 @@ MonoBehaviour:
   precacheStatus: 0
   FPS: 0
   InvertPitchAxis: 0
+  TurnStickToRoll: 1
+  PlanetaryRollAdjustment: 1
   StickControlLimit: 0.45
   StickControlDeadzone: 0.08
   JumpFOVNormal: 64
@@ -345,6 +348,58 @@ MonoBehaviour:
   AudioLevelExplosions: 1
   defaultSoundHit: {fileID: 0}
   defaultSoundExplosion: {fileID: 0}
+--- !u!1 &1675968720795367252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1830993292564369019}
+  - component: {fileID: 6038745624843203804}
+  m_Layer: 0
+  m_Name: Team Enemy 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1830993292564369019
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675968720795367252}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7884745223666133513}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6038745624843203804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675968720795367252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec7e988a9ca64946a04edc1904deeac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Team
+  teamName: Enemies
+  color: {r: 1, g: 0, b: 0.9094448, a: 1}
+  ShipsTotal: 0
+  ShipsLost: 0
+  ShipsKilled: 0
+  Ships: []
+  Threats: []
+  teams: []
 --- !u!1 &1934518622949691758
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +751,7 @@ Transform:
   m_Children:
   - {fileID: 9026976250314599697}
   - {fileID: 3034718956447273366}
+  - {fileID: 1830993292564369019}
   m_Father: {fileID: 2807903068119803360}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3247914488717731629
@@ -1027,7 +1083,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8192452952704831570
 Transform:
   m_ObjectHideFlags: 0
@@ -1194,6 +1250,52 @@ MonoBehaviour:
   Ships: []
   Threats: []
   teams: []
+--- !u!1 &8032962921045689717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7410785159298920965}
+  - component: {fileID: 2843244214338484666}
+  m_Layer: 0
+  m_Name: MountManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7410785159298920965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8032962921045689717}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2807903068119803360}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2843244214338484666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8032962921045689717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6248c978d283cf84284b35f8c62ac74f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VRMountManager
+  customFile: vrmounts.json
+  resourceFile: Settings/VRMounts
 --- !u!1 &8610260535221451405
 GameObject:
   m_ObjectHideFlags: 0

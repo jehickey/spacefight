@@ -300,7 +300,7 @@ public class Game : MonoBehaviour
     private void SetupPlayer()
     {
         if (!player) player = GameObject.FindFirstObjectByType<PlayerController>();
-        if (!player)
+        if (!player && useSpawnPlayer)
         {
             if (!PlayerPrefab)
             {

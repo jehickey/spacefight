@@ -6,7 +6,8 @@ public class MonitorScreen : MonoBehaviour
 {
 
     //works similar to Radar
-    
+    public bool useClearScreen = true;
+
     public RenderTexture texture;
     public Renderer render;
     public Material screenMaterial;
@@ -192,6 +193,7 @@ public class MonitorScreen : MonoBehaviour
     private void ClearScreen()
     {
         if (!screenTex) return;
+        if (!useClearScreen) return;
         var pixels = screenTex.GetPixels32();
         for (int i = 0; i < pixels.Length; i++)
         {
