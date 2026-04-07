@@ -104,7 +104,7 @@ public class Armature : MonoBehaviour
         GripFinger(Finger1, finger1BaseRot, actualGripLevel);
         GripFinger(Finger2, finger2BaseRot, actualGripLevel);
         GripFinger(Finger3, finger3BaseRot, actualGripLevel);
-        GripFinger(Thumb, thumbBaseRot, -actualGripLevel);
+        GripFinger(Thumb, thumbBaseRot, actualGripLevel);
     }
 
     void GripFinger(Transform fingerSeg, Quaternion baseRot, float level)

@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
             {
                 RightHand.transform.position = joystickHandle.position;
                 RightHand.transform.rotation = joystickHandle.rotation;
+                RightHand.Gripping = true;
             }
         }
         if (LeftHand && throttleHandle)
@@ -99,6 +100,7 @@ public class PlayerController : MonoBehaviour
             {
                 LeftHand.transform.position = throttleHandle.position;
                 LeftHand.transform.rotation = throttleHandle.rotation;
+                LeftHand.Gripping = true;
             }
         }
     }

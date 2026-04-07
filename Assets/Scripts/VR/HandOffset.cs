@@ -203,7 +203,8 @@ public class HandOffset : MonoBehaviour
 
     private void UpdatePosition()
     {
-        transform.localPosition = transform.right * LableSideOffset;
+        if (handedness == LeftRight.Left) transform.localPosition = Camera.main.transform.right * LableSideOffset;
+        if (handedness == LeftRight.Right) transform.localPosition = -Camera.main.transform.right * LableSideOffset;
         if (Camera.main && canvas) canvas.transform.LookAt(Camera.main.transform.position);
     }
 

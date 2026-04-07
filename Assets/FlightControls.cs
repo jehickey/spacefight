@@ -739,7 +739,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""61551b03-f80f-4654-92d1-b5d7fecab809"",
-                    ""path"": ""<OculusTouchController>/thumbstickClicked"",
+                    ""path"": ""<OculusTouchController>{RightHand}/thumbstickClicked"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

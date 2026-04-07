@@ -1,6 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum Axes
+{
+    None,
+    X,
+    Y,
+    Z,
+}
+
 public class VRMount : MonoBehaviour
 {
 
@@ -11,10 +19,13 @@ public class VRMount : MonoBehaviour
     public Quaternion RotationScreen = Quaternion.identity;
     public Quaternion RotationVR = Quaternion.identity;
 
-
+    public VRMount MirrorMount = null;
+    public Axes MirrorAxis = Axes.None;
     public bool ForceCenter = false;
 
     public GrabMoveReposition grab;
+
+    public event System.Action OnPositionChanged;
 
 
     private Material material;
@@ -43,6 +54,12 @@ public class VRMount : MonoBehaviour
                 material.EnableKeyword("_EMISSION");
             }
         }
+
+        if (MirrorMount)
+        {
+            MirrorMount.OnPositionChanged += HandleMirrorReposition;
+        }
+
     }
 
     void Update()
@@ -58,7 +75,7 @@ public class VRMount : MonoBehaviour
         }
 
         //grabbers should only be active if in VR and they're enabled
-        if (Game.I) grab.gameObject.SetActive(Game.I.VRHeadset && Game.I.EnableVRMountEditing);
+        if (Game.I && grab) grab.gameObject.SetActive(Game.I.VRHeadset && Game.I.EnableVRMountEditing);
 
         if (grab)
         {
@@ -81,8 +98,19 @@ public class VRMount : MonoBehaviour
         RotationVR = transform.localRotation;
         //the grabber handles repositioning, just save it
         VRMountManager.I.Set(MountName, transform);
+        OnPositionChanged?.Invoke();
     }
 
+    private void HandleMirrorReposition()
+    {
+        if (!MirrorMount) return;
+        Vector3 pos = MirrorMount.transform.localPosition;
+        if (MirrorAxis == Axes.X) pos.x *= -1;
+        if (MirrorAxis == Axes.Y) pos.y *= -1;
+        if (MirrorAxis == Axes.Z) pos.z *= -1;
+        transform.localPosition = pos;
+        HandleReposition();
+    }
 
     private void SetColor(Color color, float brightness)
     {
