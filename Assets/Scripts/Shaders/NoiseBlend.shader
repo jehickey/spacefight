@@ -44,9 +44,17 @@ Shader "Custom/NoiseBlend"
                 //multiply blend
                 //float4 result = lerp(baseCol, baseCol * noiseCol, _Strength);
                 //additive blend
-                float4 result = baseCol + noiseCol*_Strength;
+                //float4 result = baseCol + noiseCol*_Strength;
                 //screen
                 //float4 result = 1 - (1 - baseCol) * (1 - noiseCol);
+
+                //crossfade
+                float4 result = lerp(baseCol, noiseCol, _Strength);
+
+                //replace if non-zero
+                //float4 result = baseCol;
+                //if (dot(noiseCol.rgb,noiseCol.rgb) > 0) result=noiseCol;
+
 
                 return result;
             }

@@ -153,7 +153,7 @@ public class Game : MonoBehaviour
     private void Start()
     {
         if (usePrecache) Icosphere.PreCache(Body.MaxDetailGlobal);
-        StaticGenerator.Generate(20,256,.05f);
+        StaticGenerator.Generate(50,256,.3f);
         //NewJump();
     }
 

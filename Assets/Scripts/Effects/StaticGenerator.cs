@@ -26,7 +26,8 @@ public static class StaticGenerator
 
             for (int p = 0; p < pixels.Length; p++)
             {
-                byte v = (byte)(Random.value < NoiseLevel ? 255 : 0);
+                byte pixel = (byte)(Random.value * 255);
+                byte v = (byte)(Random.value < NoiseLevel ? pixel : 0);
                 pixels[p] = new Color32(v, v, v, 255);
             }
 

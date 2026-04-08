@@ -770,6 +770,274 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Testing"",
+            ""id"": ""bca89564-e678-4969-9550-8554a924c49b"",
+            ""actions"": [
+                {
+                    ""name"": ""1"",
+                    ""type"": ""Button"",
+                    ""id"": ""ade7fcff-c619-4760-9993-7e9f578e58f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""2"",
+                    ""type"": ""Button"",
+                    ""id"": ""f7ad871d-b6e5-4027-9123-8b6dade56179"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""3"",
+                    ""type"": ""Button"",
+                    ""id"": ""16a69482-c628-436d-85a2-434e1899cbce"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""4"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb1ad2eb-7cff-44c3-a59a-e0191ec0a12b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""5"",
+                    ""type"": ""Button"",
+                    ""id"": ""f329701b-e167-4c0a-a085-1af18131b109"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""de00331b-2eb4-4cef-bed7-956644d72f5a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""21a57bf2-72d0-41c1-be3a-c5c146618cb8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Up"",
+                    ""type"": ""Button"",
+                    ""id"": ""92e9fb00-ddfa-480e-b0de-3b5c030ea8c4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""91ee40d3-98a1-4f9d-a592-b4fc653c3836"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""What"",
+                    ""type"": ""Button"",
+                    ""id"": ""dc8fb31f-9d29-442d-9a70-744552bd51da"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Yes"",
+                    ""type"": ""Button"",
+                    ""id"": ""4bbc69a1-d765-4ea7-b55a-fbdbd0783805"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""No"",
+                    ""type"": ""Button"",
+                    ""id"": ""53e1094f-f8e9-40a1-9d05-21fefc633e60"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ack"",
+                    ""type"": ""Button"",
+                    ""id"": ""463d3ba8-cc48-43c4-b71b-ab9b71865d2b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3d965ef1-54b2-4cd0-83fb-3beb62af4799"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""019a293a-9c81-4427-925d-cc98ed09310e"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b7e6428-61e5-4a23-bb89-71cddadc09e7"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d51f5b54-f61e-4764-9582-fb44df1f7bb8"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d624b418-fe92-452a-9d48-55d5db65c11d"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""79c4cdb1-8cc5-40ea-aace-2183960630b5"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""504fb8b8-afab-46d9-8e38-39e10ea66232"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0f950ce-1b65-4128-8df5-c30d24418cd0"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bc069b2-0cc6-4efc-b14f-f6c8b2c4d531"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2976aa54-1c9c-4814-bce5-cd3f856e7995"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""What"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5cc410cb-a8a7-4e28-a96d-ea9da2b3387e"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Yes"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d9024da-9cfd-44f3-939d-0951a59911c6"",
+                    ""path"": ""<Keyboard>/minus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""No"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9789b1e5-f252-4091-8880-fff8a05712b0"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -808,6 +1076,21 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         m_VR_RightThumbstickPress = m_VR.FindAction("RightThumbstickPress", throwIfNotFound: true);
         m_VR_LeftThumbstick = m_VR.FindAction("LeftThumbstick", throwIfNotFound: true);
         m_VR_RightThumbstick = m_VR.FindAction("RightThumbstick", throwIfNotFound: true);
+        // Testing
+        m_Testing = asset.FindActionMap("Testing", throwIfNotFound: true);
+        m_Testing__1 = m_Testing.FindAction("1", throwIfNotFound: true);
+        m_Testing__2 = m_Testing.FindAction("2", throwIfNotFound: true);
+        m_Testing__3 = m_Testing.FindAction("3", throwIfNotFound: true);
+        m_Testing__4 = m_Testing.FindAction("4", throwIfNotFound: true);
+        m_Testing__5 = m_Testing.FindAction("5", throwIfNotFound: true);
+        m_Testing_Left = m_Testing.FindAction("Left", throwIfNotFound: true);
+        m_Testing_Right = m_Testing.FindAction("Right", throwIfNotFound: true);
+        m_Testing_Up = m_Testing.FindAction("Up", throwIfNotFound: true);
+        m_Testing_Down = m_Testing.FindAction("Down", throwIfNotFound: true);
+        m_Testing_What = m_Testing.FindAction("What", throwIfNotFound: true);
+        m_Testing_Yes = m_Testing.FindAction("Yes", throwIfNotFound: true);
+        m_Testing_No = m_Testing.FindAction("No", throwIfNotFound: true);
+        m_Testing_Ack = m_Testing.FindAction("Ack", throwIfNotFound: true);
     }
 
     ~@FlightControls()
@@ -815,6 +1098,7 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Flight.enabled, "This will cause a leak and performance issues, FlightControls.Flight.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Game.enabled, "This will cause a leak and performance issues, FlightControls.Game.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_VR.enabled, "This will cause a leak and performance issues, FlightControls.VR.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Testing.enabled, "This will cause a leak and performance issues, FlightControls.Testing.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1449,6 +1733,234 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="VRActions" /> instance referencing this action map.
     /// </summary>
     public VRActions @VR => new VRActions(this);
+
+    // Testing
+    private readonly InputActionMap m_Testing;
+    private List<ITestingActions> m_TestingActionsCallbackInterfaces = new List<ITestingActions>();
+    private readonly InputAction m_Testing__1;
+    private readonly InputAction m_Testing__2;
+    private readonly InputAction m_Testing__3;
+    private readonly InputAction m_Testing__4;
+    private readonly InputAction m_Testing__5;
+    private readonly InputAction m_Testing_Left;
+    private readonly InputAction m_Testing_Right;
+    private readonly InputAction m_Testing_Up;
+    private readonly InputAction m_Testing_Down;
+    private readonly InputAction m_Testing_What;
+    private readonly InputAction m_Testing_Yes;
+    private readonly InputAction m_Testing_No;
+    private readonly InputAction m_Testing_Ack;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Testing".
+    /// </summary>
+    public struct TestingActions
+    {
+        private @FlightControls m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public TestingActions(@FlightControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/_1".
+        /// </summary>
+        public InputAction @_1 => m_Wrapper.m_Testing__1;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/_2".
+        /// </summary>
+        public InputAction @_2 => m_Wrapper.m_Testing__2;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/_3".
+        /// </summary>
+        public InputAction @_3 => m_Wrapper.m_Testing__3;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/_4".
+        /// </summary>
+        public InputAction @_4 => m_Wrapper.m_Testing__4;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/_5".
+        /// </summary>
+        public InputAction @_5 => m_Wrapper.m_Testing__5;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/Left".
+        /// </summary>
+        public InputAction @Left => m_Wrapper.m_Testing_Left;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/Right".
+        /// </summary>
+        public InputAction @Right => m_Wrapper.m_Testing_Right;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/Up".
+        /// </summary>
+        public InputAction @Up => m_Wrapper.m_Testing_Up;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/Down".
+        /// </summary>
+        public InputAction @Down => m_Wrapper.m_Testing_Down;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/What".
+        /// </summary>
+        public InputAction @What => m_Wrapper.m_Testing_What;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/Yes".
+        /// </summary>
+        public InputAction @Yes => m_Wrapper.m_Testing_Yes;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/No".
+        /// </summary>
+        public InputAction @No => m_Wrapper.m_Testing_No;
+        /// <summary>
+        /// Provides access to the underlying input action "Testing/Ack".
+        /// </summary>
+        public InputAction @Ack => m_Wrapper.m_Testing_Ack;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Testing; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="TestingActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(TestingActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="TestingActions" />
+        public void AddCallbacks(ITestingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TestingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TestingActionsCallbackInterfaces.Add(instance);
+            @_1.started += instance.On_1;
+            @_1.performed += instance.On_1;
+            @_1.canceled += instance.On_1;
+            @_2.started += instance.On_2;
+            @_2.performed += instance.On_2;
+            @_2.canceled += instance.On_2;
+            @_3.started += instance.On_3;
+            @_3.performed += instance.On_3;
+            @_3.canceled += instance.On_3;
+            @_4.started += instance.On_4;
+            @_4.performed += instance.On_4;
+            @_4.canceled += instance.On_4;
+            @_5.started += instance.On_5;
+            @_5.performed += instance.On_5;
+            @_5.canceled += instance.On_5;
+            @Left.started += instance.OnLeft;
+            @Left.performed += instance.OnLeft;
+            @Left.canceled += instance.OnLeft;
+            @Right.started += instance.OnRight;
+            @Right.performed += instance.OnRight;
+            @Right.canceled += instance.OnRight;
+            @Up.started += instance.OnUp;
+            @Up.performed += instance.OnUp;
+            @Up.canceled += instance.OnUp;
+            @Down.started += instance.OnDown;
+            @Down.performed += instance.OnDown;
+            @Down.canceled += instance.OnDown;
+            @What.started += instance.OnWhat;
+            @What.performed += instance.OnWhat;
+            @What.canceled += instance.OnWhat;
+            @Yes.started += instance.OnYes;
+            @Yes.performed += instance.OnYes;
+            @Yes.canceled += instance.OnYes;
+            @No.started += instance.OnNo;
+            @No.performed += instance.OnNo;
+            @No.canceled += instance.OnNo;
+            @Ack.started += instance.OnAck;
+            @Ack.performed += instance.OnAck;
+            @Ack.canceled += instance.OnAck;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="TestingActions" />
+        private void UnregisterCallbacks(ITestingActions instance)
+        {
+            @_1.started -= instance.On_1;
+            @_1.performed -= instance.On_1;
+            @_1.canceled -= instance.On_1;
+            @_2.started -= instance.On_2;
+            @_2.performed -= instance.On_2;
+            @_2.canceled -= instance.On_2;
+            @_3.started -= instance.On_3;
+            @_3.performed -= instance.On_3;
+            @_3.canceled -= instance.On_3;
+            @_4.started -= instance.On_4;
+            @_4.performed -= instance.On_4;
+            @_4.canceled -= instance.On_4;
+            @_5.started -= instance.On_5;
+            @_5.performed -= instance.On_5;
+            @_5.canceled -= instance.On_5;
+            @Left.started -= instance.OnLeft;
+            @Left.performed -= instance.OnLeft;
+            @Left.canceled -= instance.OnLeft;
+            @Right.started -= instance.OnRight;
+            @Right.performed -= instance.OnRight;
+            @Right.canceled -= instance.OnRight;
+            @Up.started -= instance.OnUp;
+            @Up.performed -= instance.OnUp;
+            @Up.canceled -= instance.OnUp;
+            @Down.started -= instance.OnDown;
+            @Down.performed -= instance.OnDown;
+            @Down.canceled -= instance.OnDown;
+            @What.started -= instance.OnWhat;
+            @What.performed -= instance.OnWhat;
+            @What.canceled -= instance.OnWhat;
+            @Yes.started -= instance.OnYes;
+            @Yes.performed -= instance.OnYes;
+            @Yes.canceled -= instance.OnYes;
+            @No.started -= instance.OnNo;
+            @No.performed -= instance.OnNo;
+            @No.canceled -= instance.OnNo;
+            @Ack.started -= instance.OnAck;
+            @Ack.performed -= instance.OnAck;
+            @Ack.canceled -= instance.OnAck;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="TestingActions.UnregisterCallbacks(ITestingActions)" />.
+        /// </summary>
+        /// <seealso cref="TestingActions.UnregisterCallbacks(ITestingActions)" />
+        public void RemoveCallbacks(ITestingActions instance)
+        {
+            if (m_Wrapper.m_TestingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="TestingActions.AddCallbacks(ITestingActions)" />
+        /// <seealso cref="TestingActions.RemoveCallbacks(ITestingActions)" />
+        /// <seealso cref="TestingActions.UnregisterCallbacks(ITestingActions)" />
+        public void SetCallbacks(ITestingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TestingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TestingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="TestingActions" /> instance referencing this action map.
+    /// </summary>
+    public TestingActions @Testing => new TestingActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Flight" which allows adding and removing callbacks.
     /// </summary>
@@ -1668,5 +2180,104 @@ public partial class @FlightControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightThumbstick(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Testing" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="TestingActions.AddCallbacks(ITestingActions)" />
+    /// <seealso cref="TestingActions.RemoveCallbacks(ITestingActions)" />
+    public interface ITestingActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void On_1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void On_2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void On_3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void On_4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "5" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void On_5(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Up" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Down" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "What" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnWhat(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Yes" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnYes(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "No" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNo(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Ack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAck(InputAction.CallbackContext context);
     }
 }

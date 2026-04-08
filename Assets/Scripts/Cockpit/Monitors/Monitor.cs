@@ -21,6 +21,8 @@ public class Monitor : MonoBehaviour
     public bool LoopVideo = false;
     public bool VideoIsPlaying = false;
 
+    private StaticModulator staticModulator;
+
     public MonitorScreen screenDisplay;
     public MonitorTextDisplay textDisplay;
     private VideoPlayer player;
@@ -29,20 +31,31 @@ public class Monitor : MonoBehaviour
     {
         screenDisplay = GetComponentInChildren<MonitorScreen>();
         textDisplay = GetComponentInChildren<MonitorTextDisplay>();
+        staticModulator = GetComponentInChildren<StaticModulator>();
         player = GetComponent<VideoPlayer>();
         //if (Scrolling) textDisplay.RandomizeScrolling();
     }
 
     void Update()
     {
+        if (staticModulator) StaticStrength = staticModulator.Output;
+
         if (textDisplay)
         {
-            textDisplay.TextContent = TextContent;
-            textDisplay.FontSize = FontSize;
-            textDisplay.Scrolling = ScrollRate!=0;
-            textDisplay.scrollRate = ScrollRate;
-            textDisplay.TextColor = TextColor;
-            textDisplay.wordWrap = WordWrap;
+            if (ShowText)
+            {
+                textDisplay.gameObject.SetActive(true);
+                textDisplay.TextContent = TextContent;
+                textDisplay.FontSize = FontSize;
+                textDisplay.Scrolling = ScrollRate != 0;
+                textDisplay.scrollRate = ScrollRate;
+                textDisplay.TextColor = TextColor;
+                textDisplay.wordWrap = WordWrap;
+            }
+            else
+            {
+                textDisplay.gameObject.SetActive(false);
+            }
         }
         if (screenDisplay)
         {
@@ -50,6 +63,9 @@ public class Monitor : MonoBehaviour
             screenDisplay.staticStrength = StaticStrength;
             screenDisplay.useClearScreen = useClearScreen;
         }
+
+
+
         if (player)
         {
             VideoIsPlaying = player.isPlaying;
@@ -70,6 +86,7 @@ public class Monitor : MonoBehaviour
             player.clip = Video;
             player.Stop();
             player.Play();
+            VideoIsPlaying = player.isPlaying;
         }
     }
 
