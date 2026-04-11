@@ -7,8 +7,9 @@ public class MonitorScreen : MonoBehaviour
 
     //works similar to Radar
     public bool useClearScreen = true;
+    public bool useBlit = true;
 
-    public RenderTexture texture;
+    public RenderTexture renderTexture;
     public Renderer render;
     public Material screenMaterial;
     public Texture2D screenTex;
@@ -44,7 +45,7 @@ public class MonitorScreen : MonoBehaviour
     {
         if (!Game.I.useMonitorScreens) return;
         //force regeneration if key values change
-        if (TextureRes != oldRes) { texture = null; screenTex = null; }
+        if (TextureRes != oldRes) { renderTexture = null; screenTex = null; }
 
 
         InitMaterial();
@@ -71,7 +72,7 @@ public class MonitorScreen : MonoBehaviour
 
     private void UpdateTexture()
     {
-        if (!texture || !screenTex) return;
+        if (!renderTexture || !screenTex) return;
 
         if (staticStrength > 0)
         {
@@ -82,19 +83,21 @@ public class MonitorScreen : MonoBehaviour
         {
             screenMaterial.SetFloat("_Strength", 0);
         }
-        ClearScreen();
+        if (!useBlit) return;
+        //ClearScreen();
         //screenTex.SetPixel(0, 0, Color.white);
 
+        /*
         DrawCircle(0, 0, 10, Color.white);
         DrawCircle(0, 2, 10, Color.yellow);
         DrawCircle(2, 0, 10, Color.red);
         DrawCircle(centerX, centerY, 10, Color.white);
+        */
 
-
-        screenTex.Apply(false);
-        screenMaterial.SetTexture("_MainTex", screenTex);
-        Graphics.Blit(screenTex, texture, screenMaterial);
-        Graphics.Blit(screenTex, texture);
+        //screenTex.Apply(false);
+        //screenMaterial.SetTexture("_MainTex", screenTex);
+        Graphics.Blit(screenTex, renderTexture, screenMaterial);
+        //Graphics.Blit(screenTex, renderTexture);
     }
 
 
@@ -131,7 +134,7 @@ public class MonitorScreen : MonoBehaviour
         Texture2D temp = new Texture2D(4, 4, TextureFormat.RGB24, false);
 
         //Graphics.Blit(screenTex, temp);
-        RenderTexture.active = texture;
+        RenderTexture.active = renderTexture;
         temp.ReadPixels(new Rect(0,0,4,4), 0, 0);
         temp.Apply(false);
         temp.ReadPixels(new Rect(0, 0, 4, 4), 0, 0);
@@ -211,26 +214,26 @@ public class MonitorScreen : MonoBehaviour
         if (!render) return;
         if (screenMaterial) return;
         screenMaterial = render.material;
-        texture = null;
+        renderTexture = null;
         screenTex = null;
     }
 
     private void InitTexture()
     {
-        if (texture) return;
+        if (renderTexture) return;
         TextureRes = Mathf.Clamp(TextureRes, 1, 2048);
         oldRes = TextureRes;
-        texture = new RenderTexture(TextureRes, TextureRes, 0, RenderTextureFormat.ARGB32);
-        texture.filterMode = FilterMode.Trilinear;
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.autoGenerateMips = false;
+        renderTexture = new RenderTexture(TextureRes, TextureRes, 0, RenderTextureFormat.ARGB32);
+        renderTexture.filterMode = FilterMode.Trilinear;
+        renderTexture.wrapMode = TextureWrapMode.Clamp;
+        renderTexture.autoGenerateMips = false;
 
-        texture.Create();
+        renderTexture.Create();
         if (screenMaterial)
         {
             screenMaterial.EnableKeyword("_EMISSION");
-            screenMaterial.mainTexture = texture;
-            screenMaterial.SetTexture("_EmissionMap", texture);
+            screenMaterial.mainTexture = renderTexture;
+            screenMaterial.SetTexture("_EmissionMap", renderTexture);
             screenMaterial.SetColor("_EmissionColor", Color.white * 5);
         }
     }

@@ -64,6 +64,7 @@ public class Monitor : MonoBehaviour
             screenDisplay.useClearScreen = useClearScreen;
         }
 
+        if (player && screenDisplay) player.targetTexture = screenDisplay.renderTexture;
 
 
         if (player)
