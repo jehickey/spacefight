@@ -12,9 +12,13 @@ public class ResBoosterEditorWindow : EditorWindow
     int outputHeight = 4096;
     string outputFilename = "upscaled.png";
 
-    bool showProcessed = false;
+    int maxResolution = 8192;
+    bool resOverride = false;
+    bool allowExecution = false;
+    bool isNormalMap = false;
 
-    //preview zooming
+    //preview controls
+    bool showProcessed = false;
     Vector2 scrollPos;
     float zoom = 1;
     float zoomMin = .1f;
@@ -28,42 +32,81 @@ public class ResBoosterEditorWindow : EditorWindow
 
     void OnGUI()
     {
+        DrawSettings();
+        GUILayout.Space(10);
 
-        GUILayout.Label("Python Terrain Upscaler", EditorStyles.boldLabel);
+        using (new EditorGUI.DisabledScope(!allowExecution))
+        {
+            if (GUILayout.Button("Run Python Upscaler"))
+            {
+                EditorApplication.delayCall += RunPythonScript;
+            }
+        }
 
-        // Input texture
-        inputTexture = (Texture2D)EditorGUILayout.ObjectField(
-            "Input Texture",
-            inputTexture,
-            typeof(Texture2D),
-            false
-        );
+        GUILayout.Space(10);
+        DrawPreview();
+    }
 
-        // Output folder (drag a folder from Project window)
+    void DrawSettings()
+    {
+        allowExecution = true;      //assume true until something says otherwise
+
+        EditorGUILayout.BeginHorizontal();
+        //Output Settings
+        EditorGUILayout.BeginVertical();
+        GUILayout.Label("Upscaler Settings", EditorStyles.boldLabel);
         outputFolder = (DefaultAsset)EditorGUILayout.ObjectField(
             "Output Folder",
             outputFolder,
             typeof(DefaultAsset),
             false
         );
+        if (outputFolder == null) allowExecution = false;
 
         outputFilename = EditorGUILayout.TextField("Output Filename", outputFilename);
+        if (outputFilename == null) allowExecution = false;
 
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.BeginVertical();
         outputWidth = EditorGUILayout.IntField("Output Width", outputWidth);
         outputHeight = EditorGUILayout.IntField("Output Height", outputHeight);
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.Space(5);
+        EditorGUILayout.BeginVertical();
+        resOverride = GUILayout.Toggle(resOverride, "Override Limits");
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndHorizontal();
 
-        GUILayout.Space(10);
+        isNormalMap = GUILayout.Toggle(isNormalMap, "Normal Map");
 
-        if (GUILayout.Button("Run Python Upscaler"))
+        if (outputWidth <= 0 || outputHeight <= 0) allowExecution = false;
+        if ((outputWidth & (outputWidth - 1)) != 0)
         {
-            RunPythonScript();
+            EditorGUILayout.HelpBox($"Resolutions are not in powers of two!", MessageType.Warning);
         }
+        if (!resOverride && (outputWidth > maxResolution || outputHeight > maxResolution))
+        {
+            EditorGUILayout.HelpBox($"Resolution exceeds maximum of {maxResolution}!", MessageType.Error);
+            allowExecution = false;
+        }
+        EditorGUILayout.EndVertical ();
 
-        GUILayout.Space(20);
-        DrawPreview();
+        EditorGUILayout.Space(10);
 
+        //Input texture
+        EditorGUILayout.BeginVertical(GUILayout.Width(50));
+        GUILayout.Label("Input Texture", EditorStyles.boldLabel);
+        inputTexture = (Texture2D)EditorGUILayout.ObjectField(
+            GUIContent.none,
+            inputTexture,
+            typeof(Texture2D),
+            false
+        );
+        if (inputTexture == null) allowExecution = false;
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.EndHorizontal();
     }
-
 
     void DrawPreview()
     {
@@ -130,7 +173,7 @@ public class ResBoosterEditorWindow : EditorWindow
         }
         GUILayout.EndScrollView();
 
-        GUILayout.Label($"Zoom: {zoom:0.00}x  ({showImage.width}x{showImage.height})");
+        if (showImage) GUILayout.Label($"Zoom: {zoom:0.00}x  ({showImage.width}x{showImage.height})");
 
         //preview click-and-drag panning
         if (e.type == EventType.MouseDrag && previewRect.Contains(e.mousePosition))
@@ -196,13 +239,8 @@ public class ResBoosterEditorWindow : EditorWindow
         AssetDatabase.Refresh();
         if (p.ExitCode == 0)
         {
-            //string projectRelativePath = outputPath.Replace(Application.dataPath, "Assets");
             string projectRelativePath = FileUtil.GetProjectRelativePath(outputPath);
             outputTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(projectRelativePath);
-            //UnityEngine.Debug.Log($"relpath: {projectRelativePath}");
-            //UnityEngine.Debug.Log("Application.dataPath = " + Application.dataPath);
-            //UnityEngine.Debug.Log("outputPath = " + outputPath);
-            //UnityEngine.Debug.Log("Project root = " + Directory.GetParent(Application.dataPath).FullName);
 
             if (outputTexture == null)
             {
@@ -213,8 +251,32 @@ public class ResBoosterEditorWindow : EditorWindow
                 TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(projectRelativePath);
                 if (importer)
                 {
+
+                    
                     importer.maxTextureSize = Mathf.Max(outputWidth, outputHeight);
+                    importer.mipmapEnabled = true;
+                    importer.mipmapFilter = TextureImporterMipFilter.KaiserFilter;
+                    importer.mipMapBias = 0;
+                    importer.filterMode = FilterMode.Trilinear;
                     importer.textureCompression = TextureImporterCompression.Uncompressed;
+                    importer.wrapMode = TextureWrapMode.Clamp;
+                    importer.npotScale = TextureImporterNPOTScale.None;
+                    importer.alphaSource = TextureImporterAlphaSource.None;
+                    importer.alphaIsTransparency = false;
+
+                    if (!isNormalMap)
+                    {
+                        importer.textureType = TextureImporterType.Default;
+                        importer.sRGBTexture = true;
+                        importer.anisoLevel = 4;
+                    }
+                    if (isNormalMap)
+                    {
+                        importer.textureType = TextureImporterType.NormalMap;
+                        importer.sRGBTexture = false;
+                        importer.anisoLevel = 8;
+                    }
+                    
                     importer.SaveAndReimport();
                 }
                 showProcessed = true;
