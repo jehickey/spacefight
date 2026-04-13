@@ -1,0 +1,16 @@
+[
+  {
+    "name": "upscale",
+    "params": {
+      "width": 2048,
+      "height": 2048
+    }
+  },
+  {
+    "name": "gaussian_blur",
+    "params": {
+      "size": 51,
+      "sigma": 0.9
+    }
+  }
+]
