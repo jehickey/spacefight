@@ -48,7 +48,8 @@ def main():
     img=None
 
     if (args.list_modules):
-        print (json.dumps(get_modules(), indent=2, default=str))
+        #print (json.dumps(get_modules(), indent=2, default=str))
+        print (json.dumps(get_modules(), default=str))
         return
 
     if (args.input_path is None or args.output_path is None):

@@ -3,7 +3,7 @@ import cv2
 
 MODULES = {}
 
-def register_module(name):
+def register_module_old(name):
     def decorator(func):
         MODULES[name] = {
             "func": func,
@@ -13,6 +13,56 @@ def register_module(name):
         return func
     return decorator
 
+
+import inspect
+
+MODULES = {}
+
+import inspect
+import json
+
+MODULES = []
+
+def register_module(name):
+    def decorator(func):
+        sig = inspect.signature(func)
+        params = []
+
+        # Skip the first parameter (usually the image/context)
+        for param_name, param in list(sig.parameters.items())[1:]:
+            default = param.default
+            annotation = param.annotation
+
+            # Determine type name
+            if annotation is not inspect._empty:
+                type_name = annotation.__name__
+            else:
+                if isinstance(default, int):
+                    type_name = "int"
+                elif isinstance(default, float):
+                    type_name = "float"
+                elif isinstance(default, bool):
+                    type_name = "bool"
+                else:
+                    type_name = "string"
+
+            params.append({
+                "name": param_name,
+                "type": type_name,
+                "defaultVal": default
+            })
+
+        MODULES.append({
+            "name": name,
+            "parameters": params
+        })
+
+        return func
+    return decorator
+
+
+def get_modules_json():
+    return json.dumps({"modules": MODULES}, separators=(',', ':'))
 
 @register_module("upscale")
 def module_upscale(img, width=1025, height=1024):
