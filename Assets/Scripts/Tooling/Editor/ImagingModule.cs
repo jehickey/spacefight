@@ -1,32 +1,23 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.TextCore.Text;
 using UnityEngine;
-
-
-[Serializable]
-public class ParameterDefinition
-{
-    public string name;
-    public string type;
-    public float defaultVal;
-    public float value;
-}
+using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 
 [Serializable]
 public class ImagingModule
 {
+    public int id;
     public string name;
     //public ParameterDefinition[] parameters;
     public List<ParameterDefinition> parameters = new List<ParameterDefinition>();
-    
-
-    public int id;
+    public bool breakpoint;
 
     //ui info
     public bool fullDisplay;
+    public bool highlight;
     public int lastIndex;
     public Rect rect;
     public bool isSelected;
@@ -47,11 +38,23 @@ public class ImagingModule
         GenerateID();
     }
 
+    public ImagingModule(ModuleDefinition module)
+    {
+        name = module.name;
+        id = module.id;
+        if (id==0) GenerateID();
+        parameters.Clear();
+        parameters.AddRange( module.parameters);
+
+
+    }
+
     public ImagingModule(ImagingModule original)
     {
         name = original.name;
         rect = Rect.zero;
         isSelected = false;
+        breakpoint = original.breakpoint;
         GenerateID();
         foreach (ParameterDefinition parameter in original.parameters)
         {
@@ -81,37 +84,56 @@ public class ImagingModule
     public Rect Draw(int index, Vector2 pos)
     {
         InitStyles();
-        float width = 100;
+        float width = 190;
         float height = 30;
         //Rect rect = Rect.zero;
         //ImagingModule mod = pipelineModules[i];
         if (index > -1 && !floating) lastIndex = index;
 
         GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(width));
-        GUILayout.Label(name, EditorStyles.boldLabel);
+        //highlight = GUILayout.Toggle(highlight, "Highlight");
+        GUIStyle titleStyle = new GUIStyle(EditorStyles.boldLabel);
+        if (highlight)
+        {
+            titleStyle.normal.textColor = Color.red;
+            titleStyle.hover.textColor = Color.red;
+            titleStyle.fontSize = 14;
+        }
+        GUILayout.Label(name, titleStyle);
 
         //GUI.Box(rect, name, EditorStyles.helpBox);
         foreach (ParameterDefinition p in parameters)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(p.name, smallLabel, GUILayout.Width(50));
-            p.value = EditorGUILayout.FloatField(p.value, smallField, GUILayout.Width(50));
+            switch (p.type) {
+                case "float":
+                    p.value = EditorGUILayout.FloatField(p.value, smallField, GUILayout.Width(50));
+                    break;
+                case "int":
+                    p.value = EditorGUILayout.IntField((int)p.value, smallField, GUILayout.Width(50));
+                    break;
+                default:
+                    break;
+            }
             GUILayout.EndHorizontal();
         }
+        breakpoint = GUILayout.Toggle(breakpoint, "Breakpoint");
         GUILayout.EndVertical();
-
-        if (pos == Vector2.zero)
-        {
-            //rect = GUILayoutUtility.GetRect(width, height, GUILayout.ExpandWidth(true));
-        }
-        else
-        {
-            //rect = new Rect(pos.x, pos.y, width, height);
-        }
-
-
-        Rect rect = GUILayoutUtility.GetLastRect();
+        if (Event.current.type == EventType.Repaint) rect = GUILayoutUtility.GetLastRect();
+        //detecting mouseover in IMGUI is a complete nightmare. Forget that.
         return rect;
+    }
+
+
+    Texture2D MakeTex(int width, int height, Color col)
+    {
+        Color[] pix = new Color[width * height];
+        for (int i = 0; i < pix.Length; i++) pix[i] = col;
+        Texture2D result = new Texture2D(width, height);
+        result.SetPixels(pix);
+        result.Apply();
+        return result;
     }
 
 

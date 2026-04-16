@@ -1,12 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using System;
-using System.Reflection;
-
-
 
 public class ImagingEditorWindow : EditorWindow
 {
@@ -35,30 +33,17 @@ public class ImagingEditorWindow : EditorWindow
     List<ImagingModule> pipelineModules = new List<ImagingModule>();
     Vector2 pipelineScroll;
     ImagingModule movingModule;
+    Rect pipelineRect;
+    int currentBreakpoint = 0;
+
 
     //available pipeline modules
-    List <ImagingModule> availableModules = new List<ImagingModule>();
+    List<ImagingModule> availableModules = new List<ImagingModule>();
     //List<ModuleDefinition> availableModules = new List<ModuleDefinition> ();
 
     //editor audio effects
     bool allowAudio = true;
     MethodInfo audioPlayMethod;
-
-
-    [Serializable]
-    public class ModuleList
-    {
-        public ImagingModule[] modules;
-    }
-
-    [Serializable]
-    public class ModuleDefinition
-    {
-        public string name;
-        public ParameterDefinition[] parameters;
-    }
-
-
 
 
     [MenuItem("Tools/Map Imaging Tool")]
@@ -70,6 +55,7 @@ public class ImagingEditorWindow : EditorWindow
     private void OnEnable()
     {
         InitAudio();
+        GetAvailableModules();
     }
 
     void InitAudio()
@@ -111,7 +97,6 @@ public class ImagingEditorWindow : EditorWindow
             }
         }
 
-        GetAvailableModules();
         DrawSettings();
         GUILayout.Space(10);
 
@@ -139,6 +124,8 @@ public class ImagingEditorWindow : EditorWindow
         EditorGUILayout.EndVertical();
         GUILayout.Space(5);
         EditorGUILayout.EndHorizontal();
+
+        DrawConsole();
     }
 
     void DrawSettings()
@@ -282,12 +269,9 @@ public class ImagingEditorWindow : EditorWindow
     }
 
 
-
-    Rect pipelineRect;
-
     void DrawPipeline()
     {
-        //UnityEngine.Debug.Log($"Drawing pipeline {Time.frameCount}");
+        //UnityEngine.Debug.Log($"Drawing pipeline");
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Pipeline", EditorStyles.boldLabel);
         if (GUILayout.Button("Clear"))
@@ -300,6 +284,7 @@ public class ImagingEditorWindow : EditorWindow
 
         for (int i=0; i<pipelineModules.Count; i++)
         {
+            //UnityEngine.Debug.Log($"Drawing module {pipelineModules[i].name} id {pipelineModules[i].id} at index {i}");
             GUILayout.Space(5);
             //Rect rect = DrawImagingModule(pipelineModules[i], i, Vector2.zero);
             Rect rect = pipelineModules[i].Draw (i, Vector2.zero);
@@ -325,7 +310,7 @@ public class ImagingEditorWindow : EditorWindow
             //UnityEngine.Debug.Log($"Dragging module {DragAndDrop.GetGenericData("ModuleMove")} from pipeline");
             //DrawImagingModule(movingModule, -1, e.mousePosition);
         }
-
+        TrackBreakpoint();
         GUILayout.EndScrollView();
         if (e.type == EventType.Repaint)            pipelineRect = GUILayoutUtility.GetLastRect();
         HandlePipelineDrop();
@@ -424,10 +409,25 @@ public class ImagingEditorWindow : EditorWindow
     }
 
 
+    void TrackBreakpoint()
+    {
+        foreach (ImagingModule mod in pipelineModules)
+        {
+            if (mod.breakpoint)
+            {
+                if (currentBreakpoint > 0 && currentBreakpoint != mod.id)
+                {
+                    ImagingModule currentBreak = FindModuleByID(currentBreakpoint);
+                    if (currentBreak != null) currentBreak.breakpoint = false;
+                    currentBreakpoint = mod.id;
+                }
+            }
+        }
+    }
+
 
     void DrawModuleList()
     {
-
         GUILayout.Label("Modules", EditorStyles.boldLabel);
         foreach (ImagingModule module in availableModules)
         {
@@ -453,71 +453,155 @@ public class ImagingEditorWindow : EditorWindow
     }
 
 
+
+    Vector2 consoleScroll;
+    List<string> consoleLines = new List<string>();
+
+    void DrawConsole()
+    {
+        consoleScroll = GUILayout.BeginScrollView(consoleScroll, GUILayout.Height(200));
+        string consoleText = string.Join("\n", consoleLines);
+        EditorGUILayout.TextArea(consoleText, EditorStyles.textArea);
+        GUILayout.EndScrollView();
+    }
+
+
+    private void AddToConsole(string data)
+    {
+        consoleLines.Add(data);
+        //UnityEngine.Debug.Log($"Console: {data}");
+    }
+
+
+    ImagingModule FindModuleByID(int id)
+    {
+        if (id==0) return null;
+        return pipelineModules.Find(m => m.id == id);
+    }
+     
     void RemoveModuleById(int id)
     {
-        ImagingModule mod = pipelineModules.Find(m => m.id == id);
+        ImagingModule mod = FindModuleByID(id);
         if (mod != null) pipelineModules.Remove(mod);
     }
 
+    void HighlightModule (int id)
+    {
+        UnityEngine.Debug.Log($"Highlighting module id {id}");
+        foreach (ImagingModule mods in pipelineModules)
+        {
+             mods.highlight = false;
+        }
+        ImagingModule mod = FindModuleByID(id);
+        if (mod != null)
+        {
+            mod.highlight = true;
+                UnityEngine.Debug.Log($"Module {mod.name} #{mod.id} is now highlighted");
+        }
+    }
 
 
     void GetAvailableModules()
     {
         if (availableModules.Count > 0) return;
-        string json = "[{\"name\": \"upscale\", \"parameters\": [{\"name\": \"width\", \"type\": \"int\", \"defaultVal\": 1024}, {\"name\": \"height\", \"type\": \"int\", \"defaultVal\": 1024}]}, {\"name\": \"gaussian_blur\", \"parameters\": [{\"name\": \"size\", \"type\": \"int\", \"defaultVal\": 5}, {\"name\": \"sigma\", \"type\": \"float\", \"defaultVal\": 0.25}]}, {\"name\": \"wavelet_boost\", \"parameters\": []}]";
-        string wrapped = "{\"modules\":" + json + "}";
-        ModuleList list = JsonUtility.FromJson<ModuleList>(wrapped);
-        UnityEngine.Debug.Log(list.modules);
-        foreach (var module in list.modules)
-        {
-            //UnityEngine.Debug.Log(module.name);
-            foreach (var p in module.parameters)
+
+        RunScript("--list-modules",
+            onJsonLine: (json) =>
+                {
+                    string wrapped = "{\"modules\":" + json + "}";
+                    ModuleList list = JsonUtility.FromJson<ModuleList>(wrapped);
+                    EditorApplication.delayCall += () =>
+                    {
+                        availableModules.Clear();
+                        foreach (ModuleDefinition mod in list.modules)
+                        {
+                            //UnityEngine.Debug.Log(mod.name);
+                            availableModules.Add(new ImagingModule(mod));
+                        }
+                    };
+                },
+            onComplete: () =>
             {
-                //UnityEngine.Debug.Log($"{p.name}: {p.type} = {p.defaultVal}");
+                UnityEngine.Debug.Log("Module list loaded.");
             }
-        }
-        availableModules.Clear();
-        availableModules.AddRange(list.modules);
-
-        //availableModules.Add(new ImagingModule("ModuleA"));
-        //availableModules.Add(new ImagingModule("ModuleB"));
-        //availableModules.Add(new ImagingModule("ModuleC"));
+            );
     }
-
-
 
 
 
     void RunPipeline()
     {
-
-        if (inputTexture == null)
-        {
-            UnityEngine.Debug.LogError("No input texture selected.");
-            return;
-        }
-
-        if (outputFolder == null)
-        {
-            UnityEngine.Debug.LogError("No output folder selected.");
-            return;
-        }
-
-        // Resolve paths
+        consoleLines.Clear();
         string inputPath = Path.GetFullPath(AssetDatabase.GetAssetPath(inputTexture));
-
         string folderPath = Path.GetFullPath(AssetDatabase.GetAssetPath(outputFolder));
         string outputPath = Path.Combine(folderPath, outputFilename);
         outputPath = outputPath.Replace("\\", "/");
 
-        PlaySound(clip);
-        int result = RunPythonScript($"--input \"{inputPath}\" --output \"{outputPath}\" --width {outputWidth} --height {outputHeight}");
-        if (result != 0) return;
+        ModuleList pipelineOut = new ModuleList(pipelineModules);
+        string pipelineJson = JsonUtility.ToJson(pipelineOut);//.Trim('{', '}');
+        string jsonPath = $"{folderPath}/pipeline.json";
+        File.WriteAllText(jsonPath, pipelineJson);
+        //pipelineJson.Replace("\"", "\\\"");
 
+        UnityEngine.Debug.Log($"JSON: {pipelineJson}");
+
+        RunScript($"--input-path \"{inputPath}\" --output-path \"{outputPath}\" --modules-file \"{jsonPath}\"",
+            onJsonLine: (line) =>
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    //UnityEngine.Debug.Log($"Received json line: {line}");
+                    PipelineEvent evt = JsonUtility.FromJson<PipelineEvent>(line);
+                    switch (evt.type)
+                    {
+                        case "pipeline_start":
+                            HighlightModule(0);
+                            break;
+
+                        case "pipeline_end":
+                            HighlightModule(0);
+                            break;
+
+                        case "module_start":
+                            HighlightModule(evt.moduleid);
+                            break;
+
+                        case "module_end":
+                            HighlightModule(0);
+                            break;
+
+                        case "module_error":
+                            UnityEngine.Debug.Log($"Module Error: {evt.type} msg:{evt.message}");
+                            break;
+                        case "error":
+                            UnityEngine.Debug.Log($"Error: {evt.type} msg:{evt.message}");
+                            break;
+                        default:
+                            UnityEngine.Debug.Log($"Unknown Signal: {evt.type}");
+                            break;
+                    }
+                };
+            },
+            onComplete: () =>
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    ImportImage(outputPath);
+                    UnityEngine.Debug.Log($"Generated: {outputPath}");
+                };
+            });
+
+
+        //int result = RunPythonScript($"--input \"{inputPath}\" --output \"{outputPath}\" --width {outputWidth} --height {outputHeight}");
+        PlaySound(clip);
+        //if (result != 0) return;
+    }
+
+    void ImportImage(string path) {
 
         AssetDatabase.Refresh();
         outputTexture = null;
-        string projectRelativePath = FileUtil.GetProjectRelativePath(outputPath);
+        string projectRelativePath = FileUtil.GetProjectRelativePath(path);
         outputTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(projectRelativePath);
 
         if (outputTexture == null)
@@ -526,11 +610,10 @@ public class ImagingEditorWindow : EditorWindow
         }
         else
         {
+            //UnityEngine.Debug.Log("Doing Import");
             TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(projectRelativePath);
             if (importer)
             {
-
-
                 importer.maxTextureSize = Mathf.Max(outputWidth, outputHeight);
                 importer.mipmapEnabled = true;
                 importer.mipmapFilter = TextureImporterMipFilter.KaiserFilter;
@@ -559,16 +642,22 @@ public class ImagingEditorWindow : EditorWindow
             }
             showProcessed = true;
         }
-        UnityEngine.Debug.Log($"Generated: {outputPath}");
     }
 
 
-    int RunPythonScript(string arguments)
+    Process process;
+    Action<string> onJsonLine;     // called for each JSON line
+    Action onComplete;             // called when process ends
+
+    public void RunScript(string arguments, Action<string> onJsonLine, Action onComplete)
     {
-        string scriptPath = Path.Combine(Application.dataPath, "Scripts/Tooling/Python/ResBooster.py");
+        string scriptPath = Path.Combine(Application.dataPath, "Scripts/Tooling/Python/imager.py");
         string pythonExe = "python";
 
-        ProcessStartInfo psi = new ProcessStartInfo
+        this.onJsonLine = onJsonLine;
+        this.onComplete = onComplete;
+
+        var psi = new ProcessStartInfo()
         {
             FileName = pythonExe,
             Arguments = $"\"{scriptPath}\" {arguments}",
@@ -578,55 +667,44 @@ public class ImagingEditorWindow : EditorWindow
             CreateNoWindow = true
         };
 
-        Process p = Process.Start(psi);
-        string stdout = p.StandardOutput.ReadToEnd();
-        string stderr = p.StandardError.ReadToEnd();
-        p.WaitForExit();
+        AddToConsole($"> {psi.FileName} {psi.Arguments}");
+        process = new Process();
+        process.StartInfo = psi;
 
-        UnityEngine.Debug.Log(stdout);
-        if (!string.IsNullOrEmpty(stderr))
-            UnityEngine.Debug.LogError(stderr);
-
-        if (p.ExitCode != 0)
+        //process.OutputDataReceived += HandleOutput;
+        process.OutputDataReceived += (s, e) =>
         {
-            UnityEngine.Debug.LogError($"Python script failed with exit code {p.ExitCode}");
-        }
-
-        return p.ExitCode;
-    }
-
-
-    int RunPythonScript2(string arguments)
-    {
-        string scriptPath = Path.Combine(Application.dataPath, "Scripts/Tooling/Python/ResBooster.py");
-        string pythonExe = "python";
-
-        ProcessStartInfo psi = new ProcessStartInfo
-        {
-            FileName = pythonExe,
-            Arguments = $"\"{scriptPath}\" {arguments}",
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
+            if (!string.IsNullOrEmpty(e.Data)) onJsonLine?.Invoke(e.Data);
+            //onConsoleLine?.Invoke(e.Data); 
+            AddToConsole(e.Data);
         };
 
-        Process p = Process.Start(psi);
-        string stdout = p.StandardOutput.ReadToEnd();
-        string stderr = p.StandardError.ReadToEnd();
-        p.WaitForExit();
+        process.ErrorDataReceived += (s, e) => {
+            if (!string.IsNullOrEmpty(e.Data)) UnityEngine.Debug.LogError(e.Data);
+            AddToConsole(e.Data);
+        };
+        process.Exited += (s, e) => onComplete?.Invoke();
+        process.EnableRaisingEvents = true;
 
-        UnityEngine.Debug.Log(stdout);
-        if (!string.IsNullOrEmpty(stderr))
-            UnityEngine.Debug.LogError(stderr);
-
-        if (p.ExitCode != 0)
-        {
-            UnityEngine.Debug.LogError($"Python script failed with exit code {p.ExitCode}");
-        }
-
-        return p.ExitCode;
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
     }
+
+
+    void HandleOutput(object sender, DataReceivedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(e.Data))
+            onJsonLine?.Invoke(e.Data);
+    }
+
+    public void Kill()
+    {
+        if (process != null && !process.HasExited)
+            process.Kill();
+    }
+
+
 
 
 

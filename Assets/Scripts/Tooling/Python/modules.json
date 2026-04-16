@@ -1,16 +1,43 @@
-[
+{[
   {
+    "id": 6675,
     "name": "upscale",
-    "params": {
-      "width": 2048,
-      "height": 2048
-    }
+    "parameters": [
+      {
+        "name": "width",
+        "type": "int",
+        "defaultVal": 1025.0,
+        "value": 1025.0
+      },
+      {
+        "name": "height",
+        "type": "int",
+        "defaultVal": 1024.0,
+        "value": 1024.0
+      }
+    ]
   },
   {
+    "id": 3420,
     "name": "gaussian_blur",
-    "params": {
-      "size": 51,
-      "sigma": 0.9
-    }
+    "parameters": [
+      {
+        "name": "size",
+        "type": "int",
+        "defaultVal": 5.0,
+        "value": 5.0
+      },
+      {
+        "name": "sigma",
+        "type": "float",
+        "defaultVal": 0.25,
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "id": 2254,
+    "name": "wavelet_boost",
+    "parameters": []
   }
-]
+]}

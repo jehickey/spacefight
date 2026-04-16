@@ -1,5 +1,7 @@
 import numpy as np
 import cv2
+import json
+import inspect
 
 MODULES = {}
 
@@ -14,14 +16,8 @@ def register_module_old(name):
     return decorator
 
 
-import inspect
 
 MODULES = {}
-
-import inspect
-import json
-
-MODULES = []
 
 def register_module(name):
     def decorator(func):
@@ -52,10 +48,15 @@ def register_module(name):
                 "defaultVal": default
             })
 
-        MODULES.append({
+        #MODULES.append({
+        #    "name": name,
+        #    "parameters": params
+        #})
+        MODULES[name] = {
             "name": name,
-            "parameters": params
-        })
+            "parameters": params,
+            "func": func
+        }
 
         return func
     return decorator
@@ -65,13 +66,15 @@ def get_modules_json():
     return json.dumps({"modules": MODULES}, separators=(',', ':'))
 
 @register_module("upscale")
-def module_upscale(img, width=1025, height=1024):
-    print (f"Upscaling image to {width}x{height}")
+def module_upscale(img, width=1024, height=1024):
+    width=int(width)
+    height=int(height)
+    #print (f"Upscaling image to {width}x{height}")
     return cv2.resize(img, (width,height), interpolation=cv2.INTER_LANCZOS4)        
     
 @register_module("gaussian_blur")
 def module_gaussian(img, size=5, sigma=0.25):
-    print (f"Applying Gaussian blur with size={size} and sigma={sigma}")
+    #print (f"Applying Gaussian blur with size={size} and sigma={sigma}")
     return cv2.GaussianBlur(img, (size, size), sigma)
 
 @register_module("wavelet_boost")
