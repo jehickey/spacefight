@@ -28,6 +28,7 @@ public class ImagingEditorWindow : EditorWindow
     float zoom = 1;
     float zoomMin = .1f;
     float zoomMax = 8;
+    Rect previewScrollRect;
 
     //pipeline list
     List<ImagingModule> pipelineModules = new List<ImagingModule>();
@@ -238,34 +239,39 @@ public class ImagingEditorWindow : EditorWindow
             return;
         }
 
-        //preview image
-        Event e = Event.current;
-        scrollPos = GUILayout.BeginScrollView(scrollPos, true, true);
-        Rect previewRect = GUILayoutUtility.GetRect(width, height, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
-        GUI.DrawTexture(previewRect, showImage, ScaleMode.StretchToFill);
-        Rect texRect = new Rect(0, 0, width, height);
-
-        GUILayout.EndScrollView();
-        Rect scrollRect = GUILayoutUtility.GetLastRect();
         //preview zooming
-        if (e.type == EventType.ScrollWheel && scrollRect.Contains(e.mousePosition))
+        Event e = Event.current;
+        if (e.type == EventType.ScrollWheel && previewScrollRect.Contains(e.mousePosition))
         {
-            Vector2 pixelPos = e.mousePosition / zoom;
-            Vector2 screenPos = (e.mousePosition - scrollPos);
+            Vector2 localMouse = e.mousePosition - previewScrollRect.position;
+            //localmouse seems to be stable at all pab and zoom
+            Vector2 pixelPos = (localMouse + scrollPos) / zoom;
+            Vector2 screenPos = (localMouse - scrollPos);
+            UnityEngine.Debug.Log($"{localMouse} / {pixelPos} / {screenPos}");
             float zoomDelta = -e.delta.y * .05f;
             zoom = Mathf.Clamp(zoom + zoomDelta, zoomMin, zoomMax);
             scrollPos = pixelPos * zoom - (screenPos);
             e.Use();
         }
 
-        if (showImage) GUILayout.Label($"Zoom: {zoom:0.00}x  ({showImage.width}x{showImage.height})");
-
         //preview click-and-drag panning
-        if (e.type == EventType.MouseDrag && scrollRect.Contains(e.mousePosition))
+        if (e.type == EventType.MouseDrag && previewScrollRect.Contains(e.mousePosition))
         {
             scrollPos -= e.delta;
             e.Use();
         }
+
+
+        //preview image
+        scrollPos = GUILayout.BeginScrollView(scrollPos, true, true);
+        Rect previewRect = GUILayoutUtility.GetRect(width, height, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+        GUI.DrawTexture(previewRect, showImage, ScaleMode.StretchToFill);
+        Rect texRect = new Rect(0, 0, width, height);
+        GUILayout.EndScrollView();
+
+        if (e.type == EventType.Repaint)  previewScrollRect = GUILayoutUtility.GetLastRect();
+
+        if (showImage) GUILayout.Label($"Zoom: {zoom:0.00}x  ({showImage.width}x{showImage.height})");
     }
 
 
