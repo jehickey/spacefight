@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
 
 
 [Serializable]
@@ -85,7 +83,7 @@ public class ImagingModule
     {
         InitStyles();
         float width = 190;
-        float height = 30;
+        //float height = 30;
         //Rect rect = Rect.zero;
         //ImagingModule mod = pipelineModules[i];
         if (index > -1 && !floating) lastIndex = index;
